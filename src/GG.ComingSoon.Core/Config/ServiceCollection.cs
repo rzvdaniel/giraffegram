@@ -6,8 +6,11 @@ using Microsoft.Extensions.Hosting;
 
 namespace GG.ComingSoon.Core.Config;
 
-public static class SeviceCollection
+public static class ServiceCollection
 {
+    private const string MsSqlConnection = "MsSqlConnection";
+    private const string MySqlConnection = "MySqlConnection";
+
     public static void AddComingSoon(this IServiceCollection services, IHostApplicationBuilder builder, IConfiguration configuration)
     {
         var configurationManager = builder.Configuration;
@@ -17,12 +20,10 @@ public static class SeviceCollection
             options => _ = configService.DatabaseType switch
             {
                 ConfigurationService.MsSqlDatabaseType => options.UseSqlServer(
-                    configurationManager.GetConnectionString("MsSqlConnection"),
-                    x => x.MigrationsAssembly("Automaton.Studio.Server.MsSql.Migrations")),
+                    configurationManager.GetConnectionString(MsSqlConnection)),
 
                 ConfigurationService.MySqlDatabaseType => options.UseMySQL(
-                configurationManager.GetConnectionString("MySqlConnection"),
-                    x => x.MigrationsAssembly("Automaton.Studio.Server.MySql.Migrations")),
+                configurationManager.GetConnectionString(MySqlConnection)),
 
                 _ => throw new Exception($"Unsupported database provider: {configService.DatabaseType}")
             });
