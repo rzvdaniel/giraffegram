@@ -1,5 +1,6 @@
 using GG.ComingSoon.Core;
 using GG.ComingSoon.Core.Dto;
+using Google.Protobuf.Collections;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GG.CommingSoon.Api.Controllers;
@@ -25,6 +26,13 @@ public class EmailSubscriptionController : ControllerBase
         if (!ModelState.IsValid)
         {
             return BadRequest(ModelState);
+        }
+
+        var emailExists = await emailSubscriptionService.Exists(emailSubscription.Email, cancellationToken);
+
+        if (emailExists)
+        {
+            return NoContent();
         }
 
         await emailSubscriptionService.Add(emailSubscription, cancellationToken);

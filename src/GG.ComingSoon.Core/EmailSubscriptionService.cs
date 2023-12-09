@@ -24,4 +24,11 @@ public class EmailSubscriptionService(EmailSubscriptionDbContext dbContext)
 
         await dbContext.SaveChangesAsync(cancellationToken);
     }
+
+    public async Task<bool> Exists(string email, CancellationToken cancellationToken)
+    {
+        var emailExists = await dbContext.EmailSubscriptions.AnyAsync(x => x.Email == email, cancellationToken);
+
+        return emailExists;
+    }
 }
