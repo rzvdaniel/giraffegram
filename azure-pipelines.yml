@@ -43,5 +43,5 @@ steps:
 - task: PublishPipelineArtifact@1
   inputs:
     targetPath: '$(Pipeline.Workspace)'
-    artifact: 'GG.ComingSoon.Api'
+    artifact: 'GG.ComingSoon.Api.Deploy'
     publishLocation: 'pipeline'
