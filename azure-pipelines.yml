@@ -10,7 +10,7 @@ pool:
   vmImage: 'windows-latest'
 
 variables:
-  commingSoonApi: '**/src/GG.ComingSoon.Api.sln'
+  commingSoonApi: 'src/GG.ComingSoon.Api.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
 
