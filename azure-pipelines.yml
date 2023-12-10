@@ -39,9 +39,3 @@ steps:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)\GG.ComingSoon.Api.zip'
     ArtifactName: 'GG.ComingSoon.Api'
     publishLocation: 'Container'
-
-- task: PublishPipelineArtifact@1
-  inputs:
-    targetPath: '$(Pipeline.Workspace)'
-    artifact: 'GG.ComingSoon.Api.Deploy'
-    publishLocation: 'pipeline'
