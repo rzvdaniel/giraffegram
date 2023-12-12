@@ -10,7 +10,7 @@ pool:
   vmImage: 'windows-latest'
 
 variables:
-  commingSoonApi: '**/src/GG.ComingSoon.Api.sln'
+  commingSoonApi: './GG.ComingSoon.Api.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
 
@@ -19,12 +19,12 @@ steps:
 
 - task: NuGetCommand@2
   inputs:
-    restoreSolution: '$(solution)'
+    restoreSolution: '**/src/$(commingSoonApi)'
 
 - task: VSBuild@1
   displayName: Build Coming Soon Api
   inputs:
-    solution: '$(commingSoonApi)'
+    solution: '**/src/$(commingSoonApi)'
     msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:DesktopBuildPackageLocation="$(build.artifactStagingDirectory)\GG.ComingSoon.Api.zip" /p:DeployIisAppPath="Default Web Site"'
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
@@ -33,3 +33,9 @@ steps:
   inputs:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)\GG.ComingSoon.Api.zip'
+    ArtifactName: 'GG.ComingSoon.Api'
+    publishLocation: 'Container'
