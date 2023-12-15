@@ -1,17 +1,35 @@
 using GG.ComingSoon.Core.Config;
 
+var allowSpecificOrigins = "allowSpecificOrigins";
+
 var builder = WebApplication.CreateBuilder(args);
+
+//builder.Services.AddCors(options =>
+//{
+//    options.AddPolicy(name: allowSpecificOrigins,
+//        policy =>
+//        {
+//            policy.WithOrigins
+//            (
+//                "https://www.giraffegram.com"
+//            );
+//        });
+//});
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-var configurationBuilder = new ConfigurationBuilder()
+var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+
+var configuration = new ConfigurationBuilder()
     .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+    .AddJsonFile($"appsettings.{environment}.json", optional: true, reloadOnChange: true)
+    .AddEnvironmentVariables()
     .Build();
 
-builder.Services.AddComingSoon(builder, configurationBuilder);
+builder.Services.AddComingSoon(builder, configuration);
 
 var app = builder.Build();
 
@@ -21,6 +39,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseCors(x => x
+    .AllowAnyOrigin()
+    .AllowAnyMethod()
+    .AllowAnyHeader());
 
 app.UseStatusCodePages();
 

@@ -9,8 +9,7 @@ import { LayoutComponent } from 'app/layout/layout.component';
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 export const appRoutes: Route[] = [
 
-    // Redirect all routes to '/coming-soon'
-    {path: '**', pathMatch : 'full', redirectTo: 'coming-soon/fullscreen'},
+    {path: '', pathMatch : 'full', redirectTo: 'coming-soon/fullscreen'},
 
     // Maintenance routes
     {
@@ -24,5 +23,9 @@ export const appRoutes: Route[] = [
         children: [
             {path: 'coming-soon', loadChildren: () => import('app/modules/admin/pages/coming-soon/coming-soon.routes')}
         ]   
-    }
+    },
+
+    // 404 & Catch all
+    {path: '404-not-found', pathMatch: 'full', loadChildren: () => import('app/modules/admin/pages/coming-soon/coming-soon.routes')},
+    {path: '**', pathMatch : 'full', redirectTo: 'coming-soon/fullscreen'}
 ];

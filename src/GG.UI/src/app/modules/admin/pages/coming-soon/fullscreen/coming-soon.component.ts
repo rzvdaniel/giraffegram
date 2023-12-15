@@ -9,6 +9,9 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseAlertComponent, FuseAlertType } from '@fuse/components/alert';
 import { AuthService } from 'app/core/auth/auth.service';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { inject } from '@angular/core';
+import { catchError, Observable, of, switchMap, throwError, tap } from 'rxjs';
 
 @Component({
     selector     : 'coming-soon-classic',
@@ -29,12 +32,19 @@ export class ComingSoonFullscreenComponent implements OnInit
     comingSoonForm: UntypedFormGroup;
     showAlert: boolean = false;
 
+    private subscribeUrl = 'https://comingsoonapi.giraffegram.com/EmailSubscription';
+
+    httpOptions = {
+        headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+    };
+
     /**
      * Constructor
      */
     constructor(
         private _authService: AuthService,
         private _formBuilder: UntypedFormBuilder,
+        private http: HttpClient,
     )
     {
     }
@@ -58,8 +68,23 @@ export class ComingSoonFullscreenComponent implements OnInit
     // @ Public methods
     // -----------------------------------------------------------------------------------------------------
 
+    public registerEmail(): Observable<string> {
+        let email = this.comingSoonForm.get('email').value;
+        let emailJson = JSON.stringify({'email': email});
+        return this.http.post<string>(this.subscribeUrl, emailJson, this.httpOptions).pipe(
+            tap((email: string) => {
+                // Set the alert
+                this.alert = {
+                    type   : 'success',
+                    message: 'You have been registered to the list.',
+                };
+            }),
+            catchError(this.handleError<string>())
+        );
+    }
+
     /**
-     * Sign in
+     * Register
      */
     register(): void
     {
@@ -76,21 +101,39 @@ export class ComingSoonFullscreenComponent implements OnInit
         this.showAlert = false;
 
         // Do your action here...
-        // Emulate server delay
-        setTimeout(() =>
-        {
+        this.registerEmail().subscribe(result => {
             // Re-enable the form
             this.comingSoonForm.enable();
 
             // Reset the form
             this.comingSoonNgForm.resetForm();
 
-            // Set the alert
-            this.alert = {
-                type   : 'success',
-                message: 'You have been registered to the list.',
-            };
-
-        }, 1000);
+            // Show the alert
+            this.showAlert = true;
+        });
     }
+
+    /**
+     * Handle Http operation that failed.
+     * Let the app continue.
+     *
+     * @param operation - name of the operation that failed
+     * @param result - optional value to return as the observable result
+     */
+    private handleError<T>(operation = 'operation', result?: T) {
+        return (error: any): Observable<T> => {
+    
+        // TODO: send the error to remote logging infrastructure
+        console.error(error); // log to console instead
+
+        // Set the alert
+        this.alert = {
+            type   : 'error',
+            message: 'Something went wrong, please try again.',
+        };
+        
+        // Let the app keep running by returning an empty result.
+        return of(result as T);
+        };
+    }  
 }

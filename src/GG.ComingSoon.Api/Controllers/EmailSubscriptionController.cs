@@ -1,6 +1,5 @@
 using GG.ComingSoon.Core;
 using GG.ComingSoon.Core.Dto;
-using Google.Protobuf.Collections;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GG.CommingSoon.Api.Controllers;
@@ -37,6 +36,6 @@ public class EmailSubscriptionController : ControllerBase
 
         await emailSubscriptionService.Add(emailSubscription, cancellationToken);
 
-        return Ok($"Email {emailSubscription.Email} subscribed!");
+        return new JsonResult(emailSubscription.Email);
     }
 }

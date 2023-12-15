@@ -9,6 +9,10 @@ import { ComingSoonSplitScreenComponent } from 'app/modules/admin/pages/coming-s
 
 export default [
     {
+        path     : '',
+        component: ComingSoonFullscreenComponent,
+    },
+    {
         path     : 'classic',
         component: ComingSoonClassicComponent,
     },
