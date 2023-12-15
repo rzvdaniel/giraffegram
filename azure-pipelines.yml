@@ -39,7 +39,7 @@ steps:
     credentialsOption: 'inputs'
     serverUrl: 'ftp://34.227.55.226'
     username: 'giraffeg'
-    password: 'K35&0#pE9gyKPj'
+    password: 'PQlOMnP3S8Mu0sojrmGn'
     rootDirectory: '$(System.DefaultWorkingDirectory)\src\GG.ComingSoon.Api\obj\Release\net8.0\PubTmp\Out'
     filePatterns: '**'
     remoteDirectory: 'comingsoonapi.giraffegram.com'
