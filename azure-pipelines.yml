@@ -37,7 +37,7 @@ steps:
 - task: FtpUpload@2
   inputs:
     credentialsOption: 'inputs'
-    serverUrl: '34.227.55.226'
+    serverUrl: 'ftp://34.227.55.226'
     username: 'giraffeg'
     password: 'K35&0#pE9gyKPj'
     rootDirectory: '$(System.DefaultWorkingDirectory)\src\GG.ComingSoon.Api\obj\Release\net8.0\PubTmp\Out'
