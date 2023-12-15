@@ -34,8 +34,17 @@ steps:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
-- task: PublishBuildArtifacts@1
+- task: FtpUpload@2
   inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)\GG.ComingSoon.Api.zip'
-    ArtifactName: 'GG.ComingSoon.Api'
-    publishLocation: 'Container'
+    credentialsOption: 'inputs'
+    serverUrl: 'ftp://34.227.55.226'
+    username: 'giraffeg'
+    password: 'PQlOMnP3S8Mu0sojrmGn'
+    rootDirectory: '$(System.DefaultWorkingDirectory)\src\GG.ComingSoon.Api\obj\Release\net8.0\PubTmp\Out'
+    filePatterns: '**'
+    remoteDirectory: 'comingsoonapi.giraffegram.com'
+    clean: false
+    cleanContents: false
+    preservePaths: false
+    trustSSL: false
+
