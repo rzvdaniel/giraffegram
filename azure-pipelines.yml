@@ -21,6 +21,12 @@ steps:
   inputs:
     restoreSolution: '**/src/$(commingSoonApi)'
 
+- task: FileTransform@1
+  inputs:
+    folderPath: '$(System.DefaultWorkingDirectory)\src\GG.ComingSoon.Api'
+    fileType: 'json'
+    targetFiles: '**\appsettings.config'
+
 - task: VSBuild@1
   displayName: Build Coming Soon Api
   inputs:
