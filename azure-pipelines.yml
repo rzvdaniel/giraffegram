@@ -25,7 +25,7 @@ steps:
   inputs:
     folderPath: '$(System.DefaultWorkingDirectory)\src\GG.ComingSoon.Api'
     fileType: 'json'
-    targetFiles: '**\appsettings.config'
+    targetFiles: '**\appsettings.json'
 
 - task: VSBuild@1
   displayName: Build Coming Soon Api
