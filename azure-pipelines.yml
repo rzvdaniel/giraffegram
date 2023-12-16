@@ -40,17 +40,9 @@ steps:
     fileType: 'json'
     targetFiles: '**\appsettings.json'
 
-- task: FtpUpload@2
+- task: PublishPipelineArtifact@1
   inputs:
-    credentialsOption: 'inputs'
-    serverUrl: $(GiraffegramFtpUrl)
-    username: $(GiraffegramFtpUser)
-    password: $(GiraffegramFtpPassword)
-    rootDirectory: '$(System.DefaultWorkingDirectory)\src\GG.ComingSoon.Api\obj\Release\net8.0\PubTmp\Out'
-    filePatterns: '**'
-    remoteDirectory: 'comingsoonapi.giraffegram.com'
-    clean: false
-    cleanContents: false
-    preservePaths: false
-    trustSSL: false
+    targetPath: '$(Pipeline.Workspace)'
+    artifact: 'Giraffegram'
+    publishLocation: 'pipeline'
 
