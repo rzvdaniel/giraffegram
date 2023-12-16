@@ -34,7 +34,7 @@ steps:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
-- script: dir '$(build.artifactStagingDirectory)'
+- script: dir $(build.artifactStagingDirectory)
 
 - task: FileTransform@1
   inputs:
