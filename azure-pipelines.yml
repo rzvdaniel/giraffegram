@@ -43,9 +43,9 @@ steps:
 - task: FtpUpload@2
   inputs:
     credentialsOption: 'inputs'
-    serverUrl: 'ftp://34.227.55.226'
-    username: 'giraffeg'
-    password: 'PQlOMnP3S8Mu0sojrmGn'
+    serverUrl: $(GiraffegramFtpUrl)
+    username: $(GiraffegramFtpUser)
+    password: $(GiraffegramFtpPassword)
     rootDirectory: '$(System.DefaultWorkingDirectory)\src\GG.ComingSoon.Api\obj\Release\net8.0\PubTmp\Out'
     filePatterns: '**'
     remoteDirectory: 'comingsoonapi.giraffegram.com'
