@@ -36,9 +36,11 @@ steps:
 
 - task: FileTransform@1
   inputs:
-    folderPath: '$(System.DefaultWorkingDirectory)\src\GG.ComingSoon.Api\obj\Release\net8.0\PubTmp\Out'
+    folderPath: '$(build.artifactStagingDirectory)'
     fileType: 'json'
     targetFiles: '**\appsettings.json'
+
+- script: dir '$(build.artifactStagingDirectory)'
 
 - task: PublishPipelineArtifact@1
   inputs:
