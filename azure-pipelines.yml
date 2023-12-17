@@ -51,3 +51,26 @@ jobs:
       artifact: 'ComingsoonApi'
       publishLocation: 'pipeline'
 
+- job: GiraffeGram
+
+  pool:
+    vmImage: 'windows-latest'
+
+  steps:
+  - task: Npm@1
+    inputs:
+      command: 'install'
+      workingDir: '$(Build.SourcesDirectory)\src\GG.UI'
+
+  - task: Npm@1
+    inputs:
+      command: 'custom'
+      workingDir: '$(Build.SourcesDirectory)\src\GG.UI'
+      customCommand: 'run build'
+  - task: PublishPipelineArtifact@1
+    inputs:
+      targetPath: '$(Build.SourcesDirectory)\src\GG.UI\dist'
+      artifact: 'Giraffegram'
+      publishLocation: 'pipeline'
+      
+  
