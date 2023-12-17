@@ -25,7 +25,7 @@ steps:
   displayName: Build Coming Soon Api
   inputs:
     solution: '**/src/$(commingSoonApi)'
-    msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:DesktopBuildPackageLocation="$(build.artifactStagingDirectory)\GG.ComingSoon.Api.zip" /p:DeployIisAppPath="Default Web Site"'
+    msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:OutDir=$(build.artifactStagingDirectory) /p:PackageAsSingleFile=false /p:SkipInvalidConfigurations=true /p:DesktopBuildPackageLocation="$(build.artifactStagingDirectory)" /p:DeployIisAppPath="Default Web Site"'
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
@@ -34,17 +34,17 @@ steps:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
-- task: FtpUpload@2
+- script: dir $(build.artifactStagingDirectory)
+
+- task: FileTransform@1
   inputs:
-    credentialsOption: 'inputs'
-    serverUrl: 'ftp://34.227.55.226'
-    username: 'giraffeg'
-    password: 'PQlOMnP3S8Mu0sojrmGn'
-    rootDirectory: '$(System.DefaultWorkingDirectory)\src\GG.ComingSoon.Api\obj\Release\net8.0\PubTmp\Out'
-    filePatterns: '**'
-    remoteDirectory: 'comingsoonapi.giraffegram.com'
-    clean: false
-    cleanContents: false
-    preservePaths: false
-    trustSSL: false
+    folderPath: '$(build.artifactStagingDirectory)'
+    fileType: 'json'
+    targetFiles: '**\appsettings.json'
+
+- task: PublishPipelineArtifact@1
+  inputs:
+    targetPath: '$(build.artifactStagingDirectory)'
+    artifact: 'Giraffegram'
+    publishLocation: 'pipeline'
 
