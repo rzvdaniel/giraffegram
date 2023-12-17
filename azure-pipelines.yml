@@ -51,7 +51,7 @@ jobs:
       artifact: 'ComingsoonApi'
       publishLocation: 'pipeline'
 
-- job: GiraffeGram
+- job: Giraffegram
 
   pool:
     vmImage: 'windows-latest'
