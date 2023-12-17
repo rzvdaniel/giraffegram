@@ -1,11 +1,8 @@
 <div class="flex flex-col sm:flex-row items-center md:items-start sm:justify-center md:justify-start flex-auto min-w-0">
+
     <div
         class="md:flex md:justify-end w-full sm:w-auto md:h-full py-8 px-4 sm:p-12 md:p-16 md:pt-24 sm:rounded-2xl md:rounded-none sm:shadow md:shadow-none sm:bg-card">
         <div class="w-full max-w-80 sm:w-80 mx-auto sm:mx-0">
-            <!-- Logo -->
-            <div class="w-24">
-                <img src="assets/images/logo/logo.png">
-            </div>
 
             <!-- Title -->
             <div class="mt-8 text-4xl font-extrabold tracking-tight leading-tight">Almost there!</div>
@@ -54,8 +51,9 @@
             </form>
         </div>
     </div>
-    <div
-        class="relative hidden md:flex flex-auto items-center justify-center h-full p-16 lg:px-28 overflow-hidden bg-gray-800 dark:border-l">
+
+    <div 
+        class="relative md:flex flex-auto items-center justify-center h-full p-16 order-first lg:px-28 overflow-hidden lg:order-last bg-gray-800 dark:border-l sm:order-first">
         <!-- Background - @formatter:off -->
         <!-- Rings -->
         <svg class="absolute inset-0 pointer-events-none" viewBox="0 0 960 540" width="100%" height="100%"
@@ -79,7 +77,10 @@
         <!-- @formatter:on -->
         <!-- Content -->
         <div class="z-10 relative w-full max-w-2xl">
-            <div class="text-7xl font-bold leading-none text-gray-100">
+            <div class="text-7xl font-bold leading-none text-gray-100">              
+                <div class="w-24">
+                    <img src="assets/images/logo/logo.png">
+                </div>
                 <div>Welcome to</div>
                 <div>Giraffegram</div>
             </div>
@@ -92,7 +93,7 @@
                 <!-- Single sign-on buttons -->
                 <div class="flex items-center mt-8 space-x-4">
                     <a type="button" [color]="'primary'" href="https://github.com/rzvdaniel/giraffegram" target="_blank" mat-flat-button>
-                       Github <mat-icon class="icon-size-5" [svgIcon]="'feather:github'" style="padding-right: 5px"></mat-icon>
+                    Github <mat-icon class="icon-size-5" [svgIcon]="'feather:github'" style="padding-right: 5px"></mat-icon>
                     </a>
 
                     <a type="button" [color]="'primary'" href="https://twitter.com/GiraffegramApp" target="_blank" mat-flat-button>
@@ -104,4 +105,5 @@
             </div>
         </div>
     </div>
+
 </div>
