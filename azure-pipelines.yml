@@ -44,6 +44,10 @@ steps:
 
 - script: dir '$(build.artifactStagingDirectory)'
 
+- script: 
+- bash: | 
+    cat appsettings.json 
+
 - task: PublishPipelineArtifact@1
   inputs:
     targetPath: '$(build.artifactStagingDirectory)'
