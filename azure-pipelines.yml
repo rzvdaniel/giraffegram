@@ -45,6 +45,6 @@ steps:
 - task: PublishPipelineArtifact@1
   inputs:
     targetPath: '$(build.artifactStagingDirectory)'
-    artifact: 'Giraffegram'
+    artifact: 'ComingsoonApi'
     publishLocation: 'pipeline'
 
