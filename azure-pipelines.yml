@@ -42,9 +42,7 @@ steps:
     fileType: 'json'
     targetFiles: '**\appsettings.json'
 
-- script: 
-- bash: | 
-    cat appsettings.json 
+- bash: echo < appsettings.json
 
 - task: PublishPipelineArtifact@1
   inputs:
