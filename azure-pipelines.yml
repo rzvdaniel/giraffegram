@@ -42,8 +42,6 @@ steps:
     fileType: 'json'
     targetFiles: '**\appsettings.json'
 
-- bash: echo < appsettings.json
-
 - task: PublishPipelineArtifact@1
   inputs:
     targetPath: '$(build.artifactStagingDirectory)'
