@@ -42,8 +42,6 @@ steps:
     fileType: 'json'
     targetFiles: '**\appsettings.json'
 
-- script: dir '$(build.artifactStagingDirectory)'
-
 - script: 
 - bash: | 
     cat appsettings.json 
