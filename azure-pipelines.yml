@@ -6,45 +6,76 @@
 trigger:
 - main
 
-pool:
-  vmImage: 'windows-latest'
+jobs:
+- job: ComingSoonApi
 
-variables:
-  commingSoonApi: './GG.ComingSoon.Api.sln'
-  buildPlatform: 'Any CPU'
-  buildConfiguration: 'Release'
+  pool:
+    vmImage: 'windows-latest'
 
-steps:
-- task: NuGetToolInstaller@1
+  variables:
+    commingSoonApi: './GG.ComingSoon.Api.sln'
+    buildPlatform: 'Any CPU'
+    buildConfiguration: 'Release'
 
-- task: NuGetCommand@2
-  inputs:
-    restoreSolution: '**/src/$(commingSoonApi)'
+  steps:
+  - task: NuGetToolInstaller@1
 
-- task: VSBuild@1
-  displayName: Build Coming Soon Api
-  inputs:
-    solution: '**/src/$(commingSoonApi)'
-    msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:OutDir=$(build.artifactStagingDirectory) /p:PackageAsSingleFile=false /p:SkipInvalidConfigurations=true /p:DesktopBuildPackageLocation="$(build.artifactStagingDirectory)" /p:DeployIisAppPath="Default Web Site"'
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
+  - task: NuGetCommand@2
+    inputs:
+      restoreSolution: '**/src/$(commingSoonApi)'
 
-- task: VSTest@2
-  inputs:
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
+  - task: VSBuild@1
+    displayName: Build ComingsoonApi
+    inputs:
+      solution: '**/src/$(commingSoonApi)'
+      msbuildArgs: '/p:DeployOnBuild=true /p:OutDir=$(build.artifactStagingDirectory) /p:PackageAsSingleFile=false /p:SkipInvalidConfigurations=true /p:DesktopBuildPackageLocation="$(build.artifactStagingDirectory)" /p:DeployIisAppPath="Default Web Site"'
+      platform: '$(buildPlatform)'
+      configuration: '$(buildConfiguration)'
 
-- script: dir $(build.artifactStagingDirectory)
+  - task: VSTest@2
+    inputs:
+      platform: '$(buildPlatform)'
+      configuration: '$(buildConfiguration)'
 
-- task: FileTransform@1
-  inputs:
-    folderPath: '$(build.artifactStagingDirectory)'
-    fileType: 'json'
-    targetFiles: '**\appsettings.json'
+  - script: dir $(build.artifactStagingDirectory)
 
-- task: PublishPipelineArtifact@1
-  inputs:
-    targetPath: '$(build.artifactStagingDirectory)'
-    artifact: 'Giraffegram'
-    publishLocation: 'pipeline'
+  - task: FileTransform@1
+    displayName: Transform ComingsoonApi appsettings
+    inputs:
+      folderPath: '$(build.artifactStagingDirectory)'
+      fileType: 'json'
+      targetFiles: '**\appsettings.json'
 
+  - task: PublishPipelineArtifact@1
+    displayName: Publish ComingsoonApi artifact
+    inputs:
+      targetPath: '$(build.artifactStagingDirectory)'
+      artifact: 'ComingsoonApi'
+      publishLocation: 'pipeline'
+
+- job: Giraffegram
+
+  pool:
+    vmImage: 'windows-latest'
+
+  steps:
+  - task: Npm@1
+    displayName: Install npm
+    inputs:
+      command: 'install'
+      workingDir: '$(Build.SourcesDirectory)\src\GG.UI'
+
+  - task: Npm@1
+    displayName: Build Giraffegram
+    inputs:
+      command: 'custom'
+      workingDir: '$(Build.SourcesDirectory)\src\GG.UI'
+      customCommand: 'run build'
+  - task: PublishPipelineArtifact@1
+    displayName: Publish Giraffegram artifact
+    inputs:
+      targetPath: '$(Build.SourcesDirectory)\src\GG.UI\dist\fuse'
+      artifact: 'Giraffegram'
+      publishLocation: 'pipeline'
+      
+  
