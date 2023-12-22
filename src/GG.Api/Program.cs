@@ -36,6 +36,7 @@ services.AddDatabaseDeveloperPageExceptionFilter();
 
 services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
 {
+    options.User.RequireUniqueEmail = true;
     options.Password.RequireDigit = configurationService.RequireDigit;
     options.Password.RequireLowercase = configurationService.RequireLowercase;
     options.Password.RequireUppercase = configurationService.RequireUppercase;

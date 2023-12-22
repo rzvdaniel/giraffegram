@@ -17,9 +17,9 @@ public class AccountController(UserManagerService userManagerService) : BaseCont
             return BadRequest(ModelState);
         }
 
-        var user = await userManagerService.GetUserByEmailOrUserName(model.Email);
+        var existingUser = await userManagerService.GetUserByEmailOrUserName(model.Email);
 
-        if (user != null)
+        if (existingUser != null)
         {
             return StatusCode(StatusCodes.Status409Conflict);
         }

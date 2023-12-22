@@ -59,24 +59,20 @@ public class UserManagerService(UserManager<ApplicationUser> userManager, RoleMa
         }
     }
 
-    public async Task<ApplicationUser> GetUserById(Guid userId)
+    public async Task<ApplicationUser?> GetUserById(Guid userId)
     {
         var result = await userManager.FindByIdAsync(userId.ToString());
-        if (result == null)
-            throw new Exception($"User with userId {userId} not found!");
+
 
         return result;
     }
 
-    public async Task<ApplicationUser> GetUserByEmailOrUserName(string emailOrUserName)
+    public async Task<ApplicationUser?> GetUserByEmailOrUserName(string emailOrUserName)
     {
-        var result = await userManager.FindByEmailAsync(emailOrUserName) ??
+        var user = await userManager.FindByEmailAsync(emailOrUserName) ??
                      await userManager.FindByNameAsync(emailOrUserName);
 
-        if (result == null)
-            throw new Exception($"User with Email or UserName '{emailOrUserName}' not found!");
-
-        return result;
+        return user;
     }
 
     public async Task<bool> ValidateCredentialsAsync(string usernameOrEmail, string password)
