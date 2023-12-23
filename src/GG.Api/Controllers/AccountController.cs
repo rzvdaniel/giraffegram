@@ -8,7 +8,7 @@ namespace GG.Api.Controllers;
 
 public class AccountController(UserManagerService userManagerService) : BaseController
 {
-    [HttpPost]
+    [HttpPost("register")]
     [AllowAnonymous]
     public async Task<IActionResult> Register([FromBody] RegisterUser model)
     {
