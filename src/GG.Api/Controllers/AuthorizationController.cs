@@ -1,10 +1,4 @@
-﻿/*
- * Licensed under the Apache License, Version 2.0 (http://www.apache.org/licenses/LICENSE-2.0)
- * See https://github.com/openiddict/openiddict-core for more information concerning
- * the license and the contributors participating to this project.
- */
-
-using GG.Auth.Services;
+﻿using GG.Auth.Services;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
@@ -22,13 +16,13 @@ public class AuthorizationController(AuthorizationService authorizationService) 
     {
         var request = HttpContext.GetOpenIddictServerRequest();
 
-        if (request.IsPasswordGrantType())
+        if (request != null && request.IsPasswordGrantType())
         {
             var identity = await authorizationService.SignIn(request.Username, request.Password);
 
             if (identity == null)
             {
-                var properties = new AuthenticationProperties(new Dictionary<string, string>
+                var properties = new AuthenticationProperties(new Dictionary<string, string?>
                 {
                     [OpenIddictServerAspNetCoreConstants.Properties.Error] = Errors.InvalidGrant,
                     [OpenIddictServerAspNetCoreConstants.Properties.ErrorDescription] =
@@ -66,7 +60,7 @@ public class AuthorizationController(AuthorizationService authorizationService) 
             case Claims.Name:
                 yield return Destinations.AccessToken;
 
-                if (claim.Subject.HasScope(Scopes.Profile))
+                if (claim.Subject != null && claim.Subject.HasScope(Scopes.Profile))
                     yield return Destinations.IdentityToken;
 
                 yield break;
@@ -74,7 +68,7 @@ public class AuthorizationController(AuthorizationService authorizationService) 
             case Claims.Email:
                 yield return Destinations.AccessToken;
 
-                if (claim.Subject.HasScope(Scopes.Email))
+                if (claim.Subject != null && claim.Subject.HasScope(Scopes.Email))
                     yield return Destinations.IdentityToken;
 
                 yield break;
@@ -82,7 +76,7 @@ public class AuthorizationController(AuthorizationService authorizationService) 
             case Claims.Role:
                 yield return Destinations.AccessToken;
 
-                if (claim.Subject.HasScope(Scopes.Roles))
+                if (claim.Subject != null && claim.Subject.HasScope(Scopes.Roles))
                     yield return Destinations.IdentityToken;
 
                 yield break;
