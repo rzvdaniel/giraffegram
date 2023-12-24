@@ -21,7 +21,7 @@ builder.Services.AddControllers();
 
 // Add services to the container.
 var services = builder.Services;
-services.AddTransient<UserManagerService>();
+services.AddTransient<AccountService>();
 services.AddTransient<AuthorizationService>();
 
 services.AddDbContext<ApplicationDbContext>(
@@ -84,22 +84,23 @@ services.AddOpenIddict()
 // Register the OpenIddict server components.
 .AddServer(options =>
 {
-    // Enable the token endpoint.
-    options.SetTokenEndpointUris("api/authorization/token");
+    options.SetTokenEndpointUris("api/authorization/token")
+        .SetUserinfoEndpointUris("api/account/userinfo");
 
-    // Enable the password flow.
-    options.AllowPasswordFlow();
+    options.AllowPasswordFlow()
+        .AllowRefreshTokenFlow();
 
     // Accept anonymous clients (i.e clients that don't send a client_id).
     options.AcceptAnonymousClients();
 
     // Register the signing and encryption credentials.
     options.AddDevelopmentEncryptionCertificate()
-            .AddDevelopmentSigningCertificate();
+        .AddDevelopmentSigningCertificate();
 
     // Register the ASP.NET Core host and configure the ASP.NET Core-specific options.
     options.UseAspNetCore()
-            .EnableTokenEndpointPassthrough();
+        .EnableTokenEndpointPassthrough()
+        .EnableUserinfoEndpointPassthrough();
 })
 
 // Register the OpenIddict validation components.
@@ -116,9 +117,11 @@ var app = builder.Build();
 
 app.UseHttpsRedirection();
 
-app.UseAuthentication();
 app.UseRouting();
+
+app.UseAuthentication();
 app.UseAuthorization();
+
 app.MapControllers();
 
 app.Run();

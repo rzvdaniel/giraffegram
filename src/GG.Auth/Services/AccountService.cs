@@ -1,10 +1,13 @@
 ﻿using GG.Auth.Entities;
 using GG.Auth.Models;
 using Microsoft.AspNetCore.Identity;
+using OpenIddict.Abstractions;
+using System.Security.Claims;
+using static OpenIddict.Abstractions.OpenIddictConstants;
 
 namespace GG.Auth.Services;
 
-public class UserManagerService(UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager)
+public class AccountService(UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager)
 {
     public async Task<IdentityResult> CreateUser(ApplicationUser user, string password)
     {
@@ -63,6 +66,12 @@ public class UserManagerService(UserManager<ApplicationUser> userManager, RoleMa
     {
         var result = await userManager.FindByIdAsync(userId.ToString());
 
+        return result;
+    }
+
+    public async Task<ApplicationUser?> GetUserById(string userId)
+    {
+        var result = await userManager.FindByIdAsync(userId);
 
         return result;
     }
@@ -70,7 +79,7 @@ public class UserManagerService(UserManager<ApplicationUser> userManager, RoleMa
     public async Task<ApplicationUser?> GetUserByEmailOrUserName(string emailOrUserName)
     {
         var user = await userManager.FindByEmailAsync(emailOrUserName) ??
-                     await userManager.FindByNameAsync(emailOrUserName);
+            await userManager.FindByNameAsync(emailOrUserName);
 
         return user;
     }
@@ -78,7 +87,7 @@ public class UserManagerService(UserManager<ApplicationUser> userManager, RoleMa
     public async Task<bool> ValidateCredentialsAsync(string usernameOrEmail, string password)
     {
         var user = await userManager.FindByEmailAsync(usernameOrEmail) ??
-                   await userManager.FindByNameAsync(usernameOrEmail);
+            await userManager.FindByNameAsync(usernameOrEmail);
 
         if (user != null)
         {
@@ -192,5 +201,33 @@ public class UserManagerService(UserManager<ApplicationUser> userManager, RoleMa
         {
             throw new Exception("Error in Removing Role!");
         }
+    }
+
+    public async Task<Dictionary<string, object>> GetUserClaims(ApplicationUser user, ClaimsPrincipal User)
+    {
+        var claims = new Dictionary<string, object>(StringComparer.Ordinal)
+        {
+            // Note: the "sub" claim is a mandatory claim and must be included in the JSON response.
+            [Claims.Subject] = await userManager.GetUserIdAsync(user)
+        };
+
+        if (User.HasScope(Scopes.Email))
+        {
+            claims[Claims.Email] = await userManager.GetEmailAsync(user);
+            claims[Claims.EmailVerified] = await userManager.IsEmailConfirmedAsync(user);
+        }
+
+        if (User.HasScope(Scopes.Phone))
+        {
+            claims[Claims.PhoneNumber] = await userManager.GetPhoneNumberAsync(user);
+            claims[Claims.PhoneNumberVerified] = await userManager.IsPhoneNumberConfirmedAsync(user);
+        }
+
+        if (User.HasScope(Scopes.Roles))
+        {
+            claims[Claims.Role] = await userManager.GetRolesAsync(user);
+        }
+
+        return claims;
     }
 }

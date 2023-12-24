@@ -8,7 +8,7 @@ using static OpenIddict.Abstractions.OpenIddictConstants;
 
 namespace GG.Auth.Services;
 
-public class AuthorizationService(UserManagerService userManagerService, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
+public class AuthorizationService(AccountService userManagerService, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
 {
     public async Task<ClaimsIdentity?> SignIn(string? userName, string? password)
     {

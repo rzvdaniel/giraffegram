@@ -12,11 +12,12 @@ namespace GG.Api.Controllers;
 public class AuthorizationController(AuthorizationService authorizationService) : BaseController
 {
     [HttpPost("token"), IgnoreAntiforgeryToken, Produces("application/json")]
-    public async Task<IActionResult> Exchange()
+    public async Task<IActionResult> SignIn()
     {
-        var request = HttpContext.GetOpenIddictServerRequest();
+        var request = HttpContext.GetOpenIddictServerRequest() ??
+            throw new InvalidOperationException("The OpenID Connect request cannot be retrieved.");
 
-        if (request != null && request.IsPasswordGrantType())
+        if (request.IsPasswordGrantType())
         {
             var identity = await authorizationService.SignIn(request.Username, request.Password);
 
