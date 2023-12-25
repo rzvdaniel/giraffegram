@@ -1,4 +1,5 @@
-﻿using GG.Auth.Entities;
+﻿using GG.Auth.Dtos;
+using GG.Auth.Entities;
 using GG.Auth.Models;
 using GG.Auth.Services;
 using Microsoft.AspNetCore.Authentication;
@@ -13,8 +14,8 @@ namespace GG.Api.Controllers;
 public class AccountController(AccountService accountService) : BaseController
 {
     [AllowAnonymous]
-    [HttpPost("register")]
-    public async Task<IActionResult> Register([FromBody] RegisterUser model)
+    [HttpPost("registeruser")]
+    public async Task<IActionResult> RegisterUser([FromBody] RegisterUserDto model)
     {
         if (!ModelState.IsValid)
         {
@@ -40,6 +41,33 @@ public class AccountController(AccountService accountService) : BaseController
         return Ok();
     }
 
+    [HttpPost("registerclient")]
+    public async Task<IActionResult> RegisterClient ([FromBody] RegisterClientDto clientDto)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        var existingClient = await accountService.GetClientById(clientDto.ClientId);
+
+        if (existingClient != null)
+        {
+            return StatusCode(StatusCodes.Status409Conflict);
+        }
+
+        var client = new RegisterClient 
+        { 
+            ClientId = clientDto.ClientId,
+            ClientPassword = Guid.NewGuid().ToString(),
+            DisplayName = clientDto.DisplayName
+        };
+
+        await accountService.CreateClient(client);
+
+        return Ok(client);
+    }
+
     [Authorize(AuthenticationSchemes = OpenIddictServerAspNetCoreDefaults.AuthenticationScheme)]
     [HttpGet("userinfo"), HttpPost("userinfo"), Produces("application/json")]
     public async Task<IActionResult> UserInfo()
@@ -61,7 +89,7 @@ public class AccountController(AccountService accountService) : BaseController
                 }));
         }
 
-        var claims = await accountService.GetUserClaims(user, User);
+        var claims = await accountService.GetUserClaims(user);
 
         return Ok(claims);
     }

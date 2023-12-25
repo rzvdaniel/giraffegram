@@ -35,6 +35,24 @@ public class AuthorizationController(AuthorizationService authorizationService) 
 
             return SignIn(new ClaimsPrincipal(identity), OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
         }
+        else if (request.IsClientCredentialsGrantType())
+        {
+            var identity = await authorizationService.SignIn(request.ClientId);
+
+            if (identity == null)
+            {
+                var properties = new AuthenticationProperties(new Dictionary<string, string?>
+                {
+                    [OpenIddictServerAspNetCoreConstants.Properties.Error] = Errors.InvalidGrant,
+                    [OpenIddictServerAspNetCoreConstants.Properties.ErrorDescription] =
+                        "The application details cannot be found in the database."
+                });
+
+                return Forbid(properties, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
+            }
+
+            return SignIn(new ClaimsPrincipal(identity), OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
+        }
 
         throw new NotImplementedException("The specified grant type is not implemented.");
     }

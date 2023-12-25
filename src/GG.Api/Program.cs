@@ -89,7 +89,8 @@ services.AddOpenIddict()
         .SetUserinfoEndpointUris("api/account/userinfo");
 
     options.AllowPasswordFlow()
-        .AllowRefreshTokenFlow();
+        .AllowRefreshTokenFlow()
+        .AllowClientCredentialsFlow();
 
     // Accept anonymous clients (i.e clients that don't send a client_id).
     options.AcceptAnonymousClients();

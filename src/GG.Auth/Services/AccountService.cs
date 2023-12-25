@@ -1,13 +1,18 @@
-﻿using GG.Auth.Entities;
+﻿using GG.Auth.Dtos;
+using GG.Auth.Entities;
 using GG.Auth.Models;
 using Microsoft.AspNetCore.Identity;
+using MySqlX.XDevAPI;
 using OpenIddict.Abstractions;
 using System.Security.Claims;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 
 namespace GG.Auth.Services;
 
-public class AccountService(UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager)
+public class AccountService(
+    UserManager<ApplicationUser> userManager, 
+    RoleManager<ApplicationRole> roleManager,
+    IOpenIddictApplicationManager applicationManager)
 {
     public async Task<IdentityResult> CreateUser(ApplicationUser user, string password)
     {
@@ -29,6 +34,28 @@ public class AccountService(UserManager<ApplicationUser> userManager, RoleManage
                 "User Creation Failed - Identity Exception. Errors were: \n\r\n\r",
                 (current, error) => current + " - " + error.Description + "\n\r"); 
         }
+
+        return result;
+    }
+
+    public async Task<object?> CreateClient(RegisterClient client)
+    {
+        if (await applicationManager.FindByClientIdAsync(client.ClientId) != null)
+        {
+            throw new Exception($"Client with id {client.ClientId} already registered");
+        }
+
+        var result = await applicationManager.CreateAsync(new OpenIddictApplicationDescriptor
+        {
+            ClientId = client.ClientId,
+            ClientSecret = client.ClientPassword,
+            DisplayName = client.DisplayName,
+            Permissions =
+            {
+                Permissions.Endpoints.Token,
+                Permissions.GrantTypes.ClientCredentials
+            }
+        });
 
         return result;
     }
@@ -82,6 +109,13 @@ public class AccountService(UserManager<ApplicationUser> userManager, RoleManage
             await userManager.FindByNameAsync(emailOrUserName);
 
         return user;
+    }
+
+    public async Task<object?> GetClientById(string clientId)
+    {
+        var result = await applicationManager.FindByClientIdAsync(clientId);
+
+        return result;
     }
 
     public async Task<bool> ValidateCredentialsAsync(string usernameOrEmail, string password)
@@ -203,7 +237,7 @@ public class AccountService(UserManager<ApplicationUser> userManager, RoleManage
         }
     }
 
-    public async Task<Dictionary<string, object>> GetUserClaims(ApplicationUser user, ClaimsPrincipal User)
+    public async Task<Dictionary<string, object>> GetUserClaims(ApplicationUser user)
     {
         // Note: the complete list of standard claims supported by the OpenID Connect specification
         // can be found here: http://openid.net/specs/openid-connect-core-1_0.html#StandardClaims

@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace GG.Auth.Models;
+namespace GG.Auth.Dtos;
 
-public class RegisterUser
+public class RegisterUserDto
 {
     [Required]
     [EmailAddress]
