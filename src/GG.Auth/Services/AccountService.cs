@@ -205,28 +205,17 @@ public class AccountService(UserManager<ApplicationUser> userManager, RoleManage
 
     public async Task<Dictionary<string, object>> GetUserClaims(ApplicationUser user, ClaimsPrincipal User)
     {
+        // Note: the complete list of standard claims supported by the OpenID Connect specification
+        // can be found here: http://openid.net/specs/openid-connect-core-1_0.html#StandardClaims
+
         var claims = new Dictionary<string, object>(StringComparer.Ordinal)
         {
             // Note: the "sub" claim is a mandatory claim and must be included in the JSON response.
-            [Claims.Subject] = await userManager.GetUserIdAsync(user)
+            [Claims.Subject] = await userManager.GetUserIdAsync(user),
+            [Claims.Email] = await userManager.GetEmailAsync(user),
+            [Claims.EmailVerified] = await userManager.IsEmailConfirmedAsync(user),
+            [Claims.Role] = await userManager.GetRolesAsync(user)
         };
-
-        if (User.HasScope(Scopes.Email))
-        {
-            claims[Claims.Email] = await userManager.GetEmailAsync(user);
-            claims[Claims.EmailVerified] = await userManager.IsEmailConfirmedAsync(user);
-        }
-
-        if (User.HasScope(Scopes.Phone))
-        {
-            claims[Claims.PhoneNumber] = await userManager.GetPhoneNumberAsync(user);
-            claims[Claims.PhoneNumberVerified] = await userManager.IsPhoneNumberConfirmedAsync(user);
-        }
-
-        if (User.HasScope(Scopes.Roles))
-        {
-            claims[Claims.Role] = await userManager.GetRolesAsync(user);
-        }
 
         return claims;
     }

@@ -63,9 +63,6 @@ public class AccountController(AccountService accountService) : BaseController
 
         var claims = await accountService.GetUserClaims(user, User);
 
-        // Note: the complete list of standard claims supported by the OpenID Connect specification
-        // can be found here: http://openid.net/specs/openid-connect-core-1_0.html#StandardClaims
-
         return Ok(claims);
     }
 }
