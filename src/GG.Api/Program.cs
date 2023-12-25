@@ -4,6 +4,7 @@ using GG.Auth.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Quartz;
+using static OpenIddict.Abstractions.OpenIddictConstants;
 
 var builder = WebApplication.CreateBuilder(args);
 var configurationManager = builder.Configuration;
@@ -89,6 +90,9 @@ services.AddOpenIddict()
 
     options.AllowPasswordFlow()
         .AllowRefreshTokenFlow();
+
+    // Mark the "openid", "email", "profile" and "roles" scopes as supported scopes.
+    options.RegisterScopes(Scopes.OpenId, Scopes.Email, Scopes.Profile, Scopes.Roles);
 
     // Accept anonymous clients (i.e clients that don't send a client_id).
     options.AcceptAnonymousClients();
