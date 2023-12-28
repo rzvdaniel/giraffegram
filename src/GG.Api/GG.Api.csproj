@@ -21,6 +21,7 @@
     <PackageReference Include="OpenIddict.EntityFrameworkCore" Version="5.0.1" />
     <PackageReference Include="OpenIddict.Quartz" Version="5.0.1" />
     <PackageReference Include="Quartz.Extensions.Hosting" Version="3.8.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
 
   <ItemGroup>
