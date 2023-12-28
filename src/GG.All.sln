@@ -1,0 +1,58 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34321.82
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GG.Api", "GG.Api\GG.Api.csproj", "{F1107B77-7658-472E-A104-106E53D7FEAC}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GG.Auth", "GG.Auth\GG.Auth.csproj", "{9B4B31D2-04F5-4172-B391-B8336169D6E1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GG.Migrations.MsSql", "GG.MsSql.Migrations\GG.Migrations.MsSql.csproj", "{6437CA56-862F-48C7-B1CF-3224DD84EB0B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GG.ComingSoon.Core", "GG.ComingSoon.Core\GG.ComingSoon.Core.csproj", "{BC9A673E-B753-40FF-B5BA-A50B3C4269BA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GG.ComingSoon.Api", "GG.ComingSoon.Api\GG.ComingSoon.Api.csproj", "{BEFF15F7-1B42-414B-8CD6-46198D1DA29E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ComingSoon", "ComingSoon", "{632A946F-1E13-425B-908C-13083B1CCF37}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Migrations", "Migrations", "{A66E6FE2-504C-49A0-99DD-D7702F89161D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F1107B77-7658-472E-A104-106E53D7FEAC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F1107B77-7658-472E-A104-106E53D7FEAC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F1107B77-7658-472E-A104-106E53D7FEAC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F1107B77-7658-472E-A104-106E53D7FEAC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9B4B31D2-04F5-4172-B391-B8336169D6E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9B4B31D2-04F5-4172-B391-B8336169D6E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9B4B31D2-04F5-4172-B391-B8336169D6E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9B4B31D2-04F5-4172-B391-B8336169D6E1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6437CA56-862F-48C7-B1CF-3224DD84EB0B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6437CA56-862F-48C7-B1CF-3224DD84EB0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6437CA56-862F-48C7-B1CF-3224DD84EB0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6437CA56-862F-48C7-B1CF-3224DD84EB0B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BC9A673E-B753-40FF-B5BA-A50B3C4269BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BC9A673E-B753-40FF-B5BA-A50B3C4269BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BC9A673E-B753-40FF-B5BA-A50B3C4269BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BC9A673E-B753-40FF-B5BA-A50B3C4269BA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BEFF15F7-1B42-414B-8CD6-46198D1DA29E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BEFF15F7-1B42-414B-8CD6-46198D1DA29E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BEFF15F7-1B42-414B-8CD6-46198D1DA29E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BEFF15F7-1B42-414B-8CD6-46198D1DA29E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{6437CA56-862F-48C7-B1CF-3224DD84EB0B} = {A66E6FE2-504C-49A0-99DD-D7702F89161D}
+		{BC9A673E-B753-40FF-B5BA-A50B3C4269BA} = {632A946F-1E13-425B-908C-13083B1CCF37}
+		{BEFF15F7-1B42-414B-8CD6-46198D1DA29E} = {632A946F-1E13-425B-908C-13083B1CCF37}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {AC19C1DC-5D98-44D7-9AB3-71F675BD4ED3}
+	EndGlobalSection
+EndGlobal
