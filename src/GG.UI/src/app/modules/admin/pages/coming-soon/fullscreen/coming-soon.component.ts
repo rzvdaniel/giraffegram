@@ -10,8 +10,8 @@ import { fuseAnimations } from '@fuse/animations';
 import { FuseAlertComponent, FuseAlertType } from '@fuse/components/alert';
 import { AuthService } from 'app/core/auth/auth.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { inject } from '@angular/core';
 import { catchError, Observable, of, switchMap, throwError, tap } from 'rxjs';
+import { environment } from 'environment/environment';
 
 @Component({
     selector     : 'coming-soon-classic',
@@ -31,8 +31,6 @@ export class ComingSoonFullscreenComponent implements OnInit
     };
     comingSoonForm: UntypedFormGroup;
     showAlert: boolean = false;
-
-    private subscribeUrl = 'https://comingsoonapi.giraffegram.com/EmailSubscription';
 
     httpOptions = {
         headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -71,9 +69,8 @@ export class ComingSoonFullscreenComponent implements OnInit
     public registerEmail(): Observable<string> {
         let email = this.comingSoonForm.get('email').value;
         let emailJson = JSON.stringify({'email': email});
-        return this.http.post<string>(this.subscribeUrl, emailJson, this.httpOptions).pipe(
+        return this.http.post<string>(`${environment.commingSoonApi}/EmailSubscription`, emailJson, this.httpOptions).pipe(
             tap((email: string) => {
-                // Set the alert
                 this.alert = {
                     type   : 'success',
                     message: 'You have been registered to the list.',
@@ -122,18 +119,17 @@ export class ComingSoonFullscreenComponent implements OnInit
      */
     private handleError<T>(operation = 'operation', result?: T) {
         return (error: any): Observable<T> => {
-    
-        // TODO: send the error to remote logging infrastructure
-        console.error(error); // log to console instead
+            // TODO: send the error to remote logging infrastructure
+            console.error(error); // log to console instead
 
-        // Set the alert
-        this.alert = {
-            type   : 'error',
-            message: 'Something went wrong, please try again.',
-        };
-        
-        // Let the app keep running by returning an empty result.
-        return of(result as T);
+            // Set the alert
+            this.alert = {
+                type   : 'error',
+                message: 'Something went wrong, please try again.',
+            };
+            
+            // Let the app keep running by returning an empty result.
+            return of(result as T);
         };
     }  
 }
