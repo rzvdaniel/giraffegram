@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GG.ComingSoon.Api", "GG.Com
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GG.ComingSoon.Core", "GG.ComingSoon.Core\GG.ComingSoon.Core.csproj", "{31811059-629E-462E-80FA-B469019A703C}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GG.ComingSoonMigrations.MsSql", "GG.ComingSoonMsSql.Migrations\GG.ComingSoonMigrations.MsSql.csproj", "{18EDBC3B-F8BF-4F74-A8D5-F427EB50EA49}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{31811059-629E-462E-80FA-B469019A703C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{31811059-629E-462E-80FA-B469019A703C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{31811059-629E-462E-80FA-B469019A703C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{18EDBC3B-F8BF-4F74-A8D5-F427EB50EA49}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{18EDBC3B-F8BF-4F74-A8D5-F427EB50EA49}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{18EDBC3B-F8BF-4F74-A8D5-F427EB50EA49}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{18EDBC3B-F8BF-4F74-A8D5-F427EB50EA49}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

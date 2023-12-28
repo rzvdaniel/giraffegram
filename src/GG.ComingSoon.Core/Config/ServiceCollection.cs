@@ -16,14 +16,15 @@ public static class ServiceCollection
         var configurationManager = builder.Configuration;
         var configService = new ConfigurationService(configuration);
 
+        var msSqlConnection = configurationManager.GetConnectionString(MsSqlConnection);
+        var mySqlConnection = configurationManager.GetConnectionString(MySqlConnection) ?? string.Empty;
+
         services.AddDbContext<EmailSubscriptionDbContext>(
             options => _ = configService.DatabaseType switch
             {
-                ConfigurationService.MsSqlDatabaseType => options.UseSqlServer(
-                    configurationManager.GetConnectionString(MsSqlConnection)),
+                ConfigurationService.MsSqlDatabaseType => options.UseSqlServer(msSqlConnection, x => x.MigrationsAssembly("GG.ComingSoonMigrations.MsSql")),
 
-                ConfigurationService.MySqlDatabaseType => options.UseMySQL(
-                configurationManager.GetConnectionString(MySqlConnection)),
+                ConfigurationService.MySqlDatabaseType => options.UseMySQL(mySqlConnection, x => x.MigrationsAssembly("GG.ComingSoonMigrations.MySql")),
 
                 _ => throw new Exception($"Unsupported database provider: {configService.DatabaseType}")
             });

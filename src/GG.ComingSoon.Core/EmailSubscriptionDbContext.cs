@@ -10,7 +10,6 @@ public class EmailSubscriptionDbContext : DbContext
     public EmailSubscriptionDbContext(DbContextOptions<EmailSubscriptionDbContext> options)
         : base(options)
     {
-        Database.EnsureCreated();
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder options)
