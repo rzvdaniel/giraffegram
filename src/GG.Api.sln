@@ -7,7 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GG.Api", "GG.Api\GG.Api.csp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GG.Auth", "GG.Auth\GG.Auth.csproj", "{9B4B31D2-04F5-4172-B391-B8336169D6E1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GG.Migrations.MsSql", "GG.MsSql.Migrations\GG.Migrations.MsSql.csproj", "{6437CA56-862F-48C7-B1CF-3224DD84EB0B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GG.Migrations.MsSql", "GG.MsSql.Migrations\GG.Migrations.MsSql.csproj", "{6437CA56-862F-48C7-B1CF-3224DD84EB0B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Migrations", "Migrations", "{C28BC96C-34E5-402A-8D1C-AB1ACA5AFDF2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -30,6 +32,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{6437CA56-862F-48C7-B1CF-3224DD84EB0B} = {C28BC96C-34E5-402A-8D1C-AB1ACA5AFDF2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {AC19C1DC-5D98-44D7-9AB3-71F675BD4ED3}
