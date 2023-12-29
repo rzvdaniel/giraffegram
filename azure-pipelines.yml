@@ -59,7 +59,7 @@ jobs:
     vmImage: 'windows-latest'
 
   variables:
-    giraffeGramApi: './GG.Api.sln'
+    giraffegramApi: './GG.Api.sln'
     buildPlatform: 'Any CPU'
     buildConfiguration: 'Release'
 
@@ -68,12 +68,12 @@ jobs:
 
   - task: NuGetCommand@2
     inputs:
-      restoreSolution: '**/src/$(giraffeGramApi)'
+      restoreSolution: '**/src/$(giraffegramApi)'
 
   - task: VSBuild@1
-    displayName: Build GiraffeGramApi
+    displayName: Build GiraffegramApi
     inputs:
-      solution: '**/src/$(giraffeGramApi)'
+      solution: '**/src/$(giraffegramApi)'
       msbuildArgs: '/p:DeployOnBuild=true /p:OutDir=$(build.artifactStagingDirectory) /p:PackageAsSingleFile=false /p:SkipInvalidConfigurations=true /p:DesktopBuildPackageLocation="$(build.artifactStagingDirectory)" /p:DeployIisAppPath="Default Web Site"'
       platform: '$(buildPlatform)'
       configuration: '$(buildConfiguration)'
@@ -86,17 +86,17 @@ jobs:
   - script: dir $(build.artifactStagingDirectory)
 
   - task: FileTransform@1
-    displayName: Transform GiraffeGramApi appsettings
+    displayName: Transform GiraffegramApi appsettings
     inputs:
       folderPath: '$(build.artifactStagingDirectory)'
       fileType: 'json'
       targetFiles: '**\appsettings.json'
 
   - task: PublishPipelineArtifact@1
-    displayName: Publish GiraffeGramApi artifact
+    displayName: Publish GiraffegramApi artifact
     inputs:
       targetPath: '$(build.artifactStagingDirectory)'
-      artifact: 'GiraffeGramApi'
+      artifact: 'GiraffegramApi'
       publishLocation: 'pipeline'
 
 - job: GiraffegramWeb
@@ -112,16 +112,16 @@ jobs:
       workingDir: '$(Build.SourcesDirectory)\src\GG.UI'
 
   - task: Npm@1
-    displayName: Build Giraffegram
+    displayName: Build Giraffegram Web
     inputs:
       command: 'custom'
       workingDir: '$(Build.SourcesDirectory)\src\GG.UI'
       customCommand: 'run build'
   - task: PublishPipelineArtifact@1
-    displayName: Publish Giraffegram artifact
+    displayName: Publish Giraffegram Web artifact
     inputs:
       targetPath: '$(Build.SourcesDirectory)\src\GG.UI\dist\fuse'
-      artifact: 'Giraffegram'
+      artifact: 'GiraffegramWeb'
       publishLocation: 'pipeline'
       
   
