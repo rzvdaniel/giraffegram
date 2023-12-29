@@ -53,7 +53,53 @@ jobs:
       artifact: 'ComingsoonApi'
       publishLocation: 'pipeline'
 
-- job: Giraffegram
+- job: GiraffegramApi
+
+  pool:
+    vmImage: 'windows-latest'
+
+  variables:
+    giraffeGramApi: './GG.Api.sln'
+    buildPlatform: 'Any CPU'
+    buildConfiguration: 'Release'
+
+  steps:
+  - task: NuGetToolInstaller@1
+
+  - task: NuGetCommand@2
+    inputs:
+      restoreSolution: '**/src/$(giraffeGramApi)'
+
+  - task: VSBuild@1
+    displayName: Build GiraffeGramApi
+    inputs:
+      solution: '**/src/$(giraffeGramApi)'
+      msbuildArgs: '/p:DeployOnBuild=true /p:OutDir=$(build.artifactStagingDirectory) /p:PackageAsSingleFile=false /p:SkipInvalidConfigurations=true /p:DesktopBuildPackageLocation="$(build.artifactStagingDirectory)" /p:DeployIisAppPath="Default Web Site"'
+      platform: '$(buildPlatform)'
+      configuration: '$(buildConfiguration)'
+
+  - task: VSTest@2
+    inputs:
+      platform: '$(buildPlatform)'
+      configuration: '$(buildConfiguration)'
+
+  - script: dir $(build.artifactStagingDirectory)
+
+  - task: FileTransform@1
+    displayName: Transform GiraffeGramApi appsettings
+    inputs:
+      folderPath: '$(build.artifactStagingDirectory)'
+      fileType: 'json'
+      targetFiles: '**\appsettings.json'
+
+  - task: PublishPipelineArtifact@1
+    displayName: Publish GiraffeGramApi artifact
+    inputs:
+      targetPath: '$(build.artifactStagingDirectory)'
+      artifact: 'GiraffeGramApi'
+      publishLocation: 'pipeline'
+
+- job: GiraffegramWeb
 
   pool:
     vmImage: 'windows-latest'
