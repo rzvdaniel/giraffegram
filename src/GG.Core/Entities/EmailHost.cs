@@ -19,8 +19,7 @@ public class EmailHost
     public required string Host { get; set; }
 
     [Required]
-    [MaxLength(5)]
-    public required string Port { get; set; }
+    public required int Port { get; set; }
 
     public bool? UseSsl { get; set; }
 

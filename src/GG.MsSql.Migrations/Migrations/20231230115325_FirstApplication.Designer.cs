@@ -9,11 +9,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace GG.Migrations.MsSql.Migrations.ApplicationDb
+namespace GG.Migrations.MsSql.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20231230112446_EmailHost")]
-    partial class EmailHost
+    [Migration("20231230115325_FirstApplication")]
+    partial class FirstApplication
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -44,10 +44,8 @@ namespace GG.Migrations.MsSql.Migrations.ApplicationDb
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
-                    b.Property<string>("Port")
-                        .IsRequired()
-                        .HasMaxLength(5)
-                        .HasColumnType("nvarchar(5)");
+                    b.Property<int>("Port")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");

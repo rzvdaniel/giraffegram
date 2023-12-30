@@ -4,19 +4,16 @@ using GG.Auth;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace GG.Migrations.MsSql.Migrations
+namespace GG.Migrations.MsSql.Migrations.AuthDb
 {
     [DbContext(typeof(AuthDbContext))]
-    [Migration("20231223212931_OpenIddict")]
-    partial class OpenIddict
+    partial class AuthDbContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

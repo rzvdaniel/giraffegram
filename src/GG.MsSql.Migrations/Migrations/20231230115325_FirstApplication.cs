@@ -3,10 +3,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace GG.Migrations.MsSql.Migrations.ApplicationDb
+namespace GG.Migrations.MsSql.Migrations
 {
     /// <inheritdoc />
-    public partial class EmailHost : Migration
+    public partial class FirstApplication : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -18,7 +18,7 @@ namespace GG.Migrations.MsSql.Migrations.ApplicationDb
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
                     Host = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
-                    Port = table.Column<string>(type: "nvarchar(5)", maxLength: 5, nullable: false),
+                    Port = table.Column<int>(type: "int", nullable: false),
                     UseSsl = table.Column<bool>(type: "bit", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UserPassword = table.Column<string>(type: "nvarchar(max)", nullable: false),
