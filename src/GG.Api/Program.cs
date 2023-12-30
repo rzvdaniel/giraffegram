@@ -1,10 +1,12 @@
 using GG.Auth;
+using GG.Auth.Config;
 using GG.Auth.Entities;
 using GG.Auth.Services;
+using GG.Core;
+using GG.Core.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Quartz;
-using static OpenIddict.Abstractions.OpenIddictConstants;
 
 var builder = WebApplication.CreateBuilder(args);
 var configurationManager = builder.Configuration;
@@ -12,18 +14,24 @@ var configurationManager = builder.Configuration;
 var msSqlConnection = configurationManager.GetConnectionString("MsSqlConnection");
 var mySqlConnection = configurationManager.GetConnectionString("MySqlConnection")??string.Empty;
 
-var configurationBuilder = new ConfigurationBuilder()
+var configuration = new ConfigurationBuilder()
     .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
     .Build();
 
-var configurationService = new ConfigurationService(configurationBuilder);
+var configurationService = new ConfigurationService(configuration);
 
-builder.Services.AddControllers();
-
-// Add services to the container.
 var services = builder.Services;
+
 services.AddTransient<AccountService>();
 services.AddTransient<AuthorizationService>();
+services.AddTransient<EmailService>();
+services.AddTransient<EmailHostService>();
+services.AddTransient<UserContextService>();
+
+services.AddControllers();
+services.AddHttpContextAccessor();
+
+services.AddAuth(builder, configuration);
 
 services.AddDbContext<ApplicationDbContext>(
     options =>
@@ -36,11 +44,6 @@ services.AddDbContext<ApplicationDbContext>(
 
             _ => throw new Exception($"Unsupported database provider: {configurationService.DatabaseType}")
         };
-
-        // Register the entity sets needed by OpenIddict.
-        // Note: use the generic overload if you need
-        // to replace the default OpenIddict entities.
-        options.UseOpenIddict();
     });
 
 services.AddDatabaseDeveloperPageExceptionFilter();
@@ -54,7 +57,7 @@ services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
     options.Password.RequireNonAlphanumeric = configurationService.RequireNonAlphanumeric;
     options.Password.RequiredLength = configurationService.RequiredLength;
 })
-.AddEntityFrameworkStores<ApplicationDbContext>()
+.AddEntityFrameworkStores<AuthDbContext>()
 .AddDefaultTokenProviders();
 
 // OpenIddict offers native integration with Quartz.NET to perform scheduled tasks
@@ -76,7 +79,7 @@ services.AddOpenIddict()
     // Configure OpenIddict to use the Entity Framework Core stores and models.
     // Note: call ReplaceDefaultEntities() to replace the default OpenIddict entities.
     options.UseEntityFrameworkCore()
-            .UseDbContext<ApplicationDbContext>();
+            .UseDbContext<AuthDbContext>();
 
     // Enable Quartz.NET integration.
     options.UseQuartz();
@@ -123,7 +126,10 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(options =>
+    {
+        options.DisplayOperationId();
+    });
 }
 
 app.UseHttpsRedirection();

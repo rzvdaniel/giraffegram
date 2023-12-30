@@ -15,13 +15,10 @@ public class AccountController(AccountService accountService) : BaseController
 {
     [AllowAnonymous]
     [HttpPost("registeruser")]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
     public async Task<IActionResult> RegisterUser([FromBody] RegisterUserDto model)
     {
-        if (!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
-        }
-
         var existingUser = await accountService.GetUserByEmailOrUserName(model.Email);
 
         if (existingUser != null)
@@ -38,17 +35,14 @@ public class AccountController(AccountService accountService) : BaseController
             AddErrors(result);
         }
 
-        return Ok();
+        return Created();
     }
 
     [HttpPost("registerclient")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
     public async Task<IActionResult> RegisterClient ([FromBody] RegisterClientDto clientDto)
     {
-        if (!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
-        }
-
         var existingClient = await accountService.GetClientById(clientDto.ClientId);
 
         if (existingClient != null)
@@ -68,12 +62,13 @@ public class AccountController(AccountService accountService) : BaseController
         return Ok(client);
     }
 
-    [Authorize(AuthenticationSchemes = OpenIddictServerAspNetCoreDefaults.AuthenticationScheme)]
     [HttpGet("userinfo"), HttpPost("userinfo"), Produces("application/json")]
+    [Authorize(AuthenticationSchemes = OpenIddictServerAspNetCoreDefaults.AuthenticationScheme)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> UserInfo()
     {
-        var userId = User.GetClaim(Claims.Subject) 
-            ?? throw new InvalidOperationException("User information cannot be retrieved from the request.");
+        var userId = User.GetClaim(Claims.Subject) ?? 
+            throw new InvalidOperationException("User information cannot be retrieved from the request.");
 
         var user = await accountService.GetUserById(userId);
 

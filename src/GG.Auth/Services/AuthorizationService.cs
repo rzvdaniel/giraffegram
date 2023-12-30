@@ -16,6 +16,11 @@ public class AuthorizationService(
 {
     public async Task<ClaimsIdentity?> SignIn(string? userName, string? password)
     {
+        if (string.IsNullOrEmpty(userName) || string.IsNullOrEmpty(password))
+        {
+            return null;
+        }
+
         var user = await userManagerService.GetUserByEmailOrUserName(userName);
 
         if (user == null)
@@ -50,6 +55,11 @@ public class AuthorizationService(
     {
         // Note: the client credentials are automatically validated by OpenIddict:
         // if client_id or client_secret are invalid, this action won't be invoked.
+
+        if (string.IsNullOrEmpty(clientId))
+        {
+            throw new InvalidOperationException("The application details cannot be found in the database.");
+        }
 
         var application = await applicationManager.FindByClientIdAsync(clientId);
 

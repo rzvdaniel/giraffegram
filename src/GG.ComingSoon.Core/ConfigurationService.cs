@@ -11,7 +11,7 @@ public class ConfigurationService
     public const string MsSqlDatabaseType = "MsSql";
     public const string MySqlDatabaseType = "MySql";
 
-    public string DatabaseType => appConfig.DatabaseType;
+    public string DatabaseType => appConfig.DatabaseType??MsSqlDatabaseType;
 
     public ConfigurationService(IConfiguration configuration)
     {

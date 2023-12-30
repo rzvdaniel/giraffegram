@@ -5,6 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <InvariantGlobalization>false</InvariantGlobalization>
+	<IncludeOpenAPIAnalyzers>true</IncludeOpenAPIAnalyzers>
     <UserSecretsId>4cce2d3a-eb46-412c-abd2-bfe734380102</UserSecretsId>
   </PropertyGroup>
 
@@ -31,6 +32,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\GG.Auth\GG.Auth.csproj" />
+    <ProjectReference Include="..\GG.Core\GG.Core.csproj" />
     <ProjectReference Include="..\GG.MsSql.Migrations\GG.Migrations.MsSql.csproj" />
   </ItemGroup>
 

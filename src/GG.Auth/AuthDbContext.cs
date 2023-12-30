@@ -6,12 +6,12 @@ using Microsoft.EntityFrameworkCore.Storage;
 
 namespace GG.Auth;
 
-public class ApplicationDbContext : 
+public class AuthDbContext : 
     IdentityDbContext<ApplicationUser, ApplicationRole, Guid>, IDataContext
 {
     private IDbContextTransaction? transaction;
 
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+    public AuthDbContext(DbContextOptions<AuthDbContext> options)
     : base(options)
     {
     }

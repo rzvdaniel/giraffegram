@@ -1,6 +1,7 @@
 using GG.ComingSoon.Core.Config;
 
-var allowSpecificOrigins = "allowSpecificOrigins";
+// TODO! Fix CORS
+//var allowSpecificOrigins = "allowSpecificOrigins";
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -37,7 +38,10 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(options =>
+    {
+        options.DisplayOperationId();
+    });
 }
 
 app.UseCors(x => x

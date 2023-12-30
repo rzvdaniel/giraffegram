@@ -62,7 +62,8 @@ public class AccountService(
 
     public async Task UpdatePassword(Guid userId, string oldPassword, string newPassword)
     {
-        var user = await GetUserById(userId);
+        var user = await GetUserById(userId) ?? 
+            throw new Exception("Error in updating password!");
 
         var result = await userManager.ChangePasswordAsync(user, oldPassword, newPassword);
 
@@ -74,7 +75,8 @@ public class AccountService(
 
     public async Task UpdateProfile(UserProfile userProfile)
     {
-        var user = await GetUserById(userProfile.Id);
+        var user = await GetUserById(userProfile.Id) ??
+             throw new Exception("Error in updating Profile!"); ;
 
         user.FirstName = userProfile.FirstName;
         user.LastName = userProfile.LastName;
@@ -184,12 +186,18 @@ public class AccountService(
 
     public async Task<IEnumerable<string>> GetRoles(Guid userId)
     {
-        return await userManager.GetRolesAsync(await GetUserById(userId));
+        var user = await GetUserById(userId) ??
+             throw new Exception("Error in retrieving user roles!");
+
+        return await userManager.GetRolesAsync(user);
     }
 
     public async Task AddRole(Guid userId, string roleName)
     {
-        var result = await userManager.AddToRoleAsync(await GetUserById(userId), roleName);
+        var user = await GetUserById(userId) ??
+            throw new Exception("Error in adding user role!");
+
+        var result = await userManager.AddToRoleAsync(user, roleName);
         if (!result.Succeeded)
         {
             throw new Exception("Error in Adding Role!");
@@ -204,7 +212,10 @@ public class AccountService(
         if (string.IsNullOrEmpty(role.Name))
             throw new Exception("Invalid role");
 
-        var result = await userManager.AddToRoleAsync(await GetUserById(userId), role.Name);
+        var user = await GetUserById(userId) ??
+            throw new Exception("Error in adding user role!");
+
+        var result = await userManager.AddToRoleAsync(user, role.Name);
 
         if (!result.Succeeded)
         {
@@ -214,7 +225,10 @@ public class AccountService(
 
     public async Task RemoveRole(Guid userId, string roleName)
     {
-        var result = await userManager.RemoveFromRoleAsync(await GetUserById(userId), roleName);
+        var user = await GetUserById(userId) ??
+            throw new Exception("Error in removing user role!");
+
+        var result = await userManager.RemoveFromRoleAsync(user, roleName);
         if (!result.Succeeded)
         {
             throw new Exception("Error in Removing Role!");
@@ -229,7 +243,10 @@ public class AccountService(
         if (string.IsNullOrEmpty(role.Name))
             throw new Exception("Invalid role");
 
-        var result = await userManager.RemoveFromRoleAsync(await GetUserById(userId), role.Name);
+        var user = await GetUserById(userId) ??
+            throw new Exception("Error in removing user role!");
+
+        var result = await userManager.RemoveFromRoleAsync(user, role.Name);
 
         if (!result.Succeeded)
         {
@@ -246,7 +263,7 @@ public class AccountService(
         {
             // Note: the "sub" claim is a mandatory claim and must be included in the JSON response.
             [Claims.Subject] = await userManager.GetUserIdAsync(user),
-            [Claims.Email] = await userManager.GetEmailAsync(user),
+            [Claims.Email] = await userManager.GetEmailAsync(user)??string.Empty,
             [Claims.EmailVerified] = await userManager.IsEmailConfirmedAsync(user),
             [Claims.Role] = await userManager.GetRolesAsync(user)
         };

@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GG.Migrations.MsSql", "GG.M
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Migrations", "Migrations", "{C28BC96C-34E5-402A-8D1C-AB1ACA5AFDF2}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GG.Core", "GG.Core\GG.Core.csproj", "{591A29AC-3C59-4118-92E0-302AD860F860}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,6 +31,10 @@ Global
 		{6437CA56-862F-48C7-B1CF-3224DD84EB0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6437CA56-862F-48C7-B1CF-3224DD84EB0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6437CA56-862F-48C7-B1CF-3224DD84EB0B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{591A29AC-3C59-4118-92E0-302AD860F860}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{591A29AC-3C59-4118-92E0-302AD860F860}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{591A29AC-3C59-4118-92E0-302AD860F860}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{591A29AC-3C59-4118-92E0-302AD860F860}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
