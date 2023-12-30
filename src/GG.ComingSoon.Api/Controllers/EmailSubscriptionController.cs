@@ -2,7 +2,7 @@ using GG.ComingSoon.Core;
 using GG.ComingSoon.Core.Dto;
 using Microsoft.AspNetCore.Mvc;
 
-namespace GG.CommingSoon.Api.Controllers;
+namespace GG.ComingSoon.Api.Controllers;
 
 [ApiController]
 [Route("[controller]")]
@@ -19,14 +19,10 @@ public class EmailSubscriptionController : ControllerBase
 
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult> Create(AddEmailSubscriptionDto emailSubscription, CancellationToken cancellationToken)
     {
-        if (!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
-        }
-
         var emailExists = await emailSubscriptionService.Exists(emailSubscription.Email, cancellationToken);
 
         if (emailExists)
