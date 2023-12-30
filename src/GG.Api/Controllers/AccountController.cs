@@ -4,14 +4,16 @@ using GG.Auth.Models;
 using GG.Auth.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using OpenIddict.Abstractions;
 using OpenIddict.Server.AspNetCore;
+using OpenIddict.Validation.AspNetCore;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 
 namespace GG.Api.Controllers;
 
-public class AccountController(AccountService accountService) : BaseController
+public class AccountController(AccountService accountService) : AppControllerBase
 {
     [AllowAnonymous]
     [HttpPost("registeruser")]
@@ -63,7 +65,6 @@ public class AccountController(AccountService accountService) : BaseController
     }
 
     [HttpGet("userinfo"), HttpPost("userinfo"), Produces("application/json")]
-    [Authorize(AuthenticationSchemes = OpenIddictServerAspNetCoreDefaults.AuthenticationScheme)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> UserInfo()
     {
@@ -87,5 +88,13 @@ public class AccountController(AccountService accountService) : BaseController
         var claims = await accountService.GetUserClaims(user);
 
         return Ok(claims);
+    }
+
+    private void AddErrors(IdentityResult result)
+    {
+        foreach (var error in result.Errors)
+        {
+            ModelState.AddModelError(error.Code, error.Description);
+        }
     }
 }

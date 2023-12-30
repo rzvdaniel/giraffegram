@@ -4,23 +4,21 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GG.Core.Services;
 
-public class EmailHostService(ApplicationDbContext dbContext, UserContextService userContextService)
+public class EmailHostService(ApplicationDbContext dbContext)
 {
-    private readonly Guid userId = userContextService.GetUserId();
-
-    public async Task<IEnumerable<EmailHost>> List()
+    public async Task<IEnumerable<EmailHost>> List(Guid userId, CancellationToken cancellationToken)
     {
         return await dbContext.EmailHosts.Where(x => x.EmailHostUsers.Any(x => x.UserId == userId)).ToListAsync();
     }
 
-    public EmailHost? Get(Guid id)
+    public async Task<EmailHost?> Get(Guid id, Guid userId, CancellationToken cancellationToken)
     {
-        var entity = dbContext.EmailHosts.SingleOrDefault(x => x.Id == id && x.EmailHostUsers.Any(x => x.UserId == userId));
+        var entity = await dbContext.EmailHosts.SingleOrDefaultAsync(x => x.Id == id && x.EmailHostUsers.Any(x => x.UserId == userId), cancellationToken);
 
         return entity;
     }
 
-    public async Task<Guid> Add(AddEmailHostDto emailHostDto, CancellationToken cancellationToken)
+    public async Task<Guid> Add(AddEmailHostDto emailHostDto, Guid userId, CancellationToken cancellationToken)
     {
         var emailHost = new EmailHost
         {
@@ -49,9 +47,9 @@ public class EmailHostService(ApplicationDbContext dbContext, UserContextService
         return emailHost.Id;
     }
 
-    public async Task<bool> Exists(string name, CancellationToken cancellationToken)
+    public async Task<bool> Exists(string name, Guid userId, CancellationToken cancellationToken)
     {
-        var hostExists = await dbContext.EmailHosts.AnyAsync(x => x.Name == name && x.EmailHostUsers.Any(x => x.UserId == userId));
+        var hostExists = await dbContext.EmailHosts.AnyAsync(x => x.Name == name && x.EmailHostUsers.Any(x => x.UserId == userId), cancellationToken);
 
         return hostExists;
     }

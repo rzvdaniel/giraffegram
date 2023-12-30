@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GG.Api.Controllers;
 
-public class EmailHostController : BaseController
+public class EmailHostController : AppControllerBase
 {
     private readonly ILogger<EmailHostController> logger;
     private readonly EmailHostService emailHostService;
@@ -21,30 +21,30 @@ public class EmailHostController : BaseController
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     public async Task<ActionResult> Create(AddEmailHostDto emailHost, CancellationToken cancellationToken)
     {
-        var emailHostExists = await emailHostService.Exists(emailHost.Name, cancellationToken);
+        var emailHostExists = await emailHostService.Exists(emailHost.Name, GetUserId(), cancellationToken);
 
         if (emailHostExists)
         {
             return StatusCode(StatusCodes.Status409Conflict);
         }
 
-        var id = await emailHostService.Add(emailHost, cancellationToken);
+        var id = await emailHostService.Add(emailHost, GetUserId(), cancellationToken);
 
         return Ok(id);
     }
 
     [HttpGet]
-    public async Task<IEnumerable<EmailHost>> Get()
+    public async Task<IEnumerable<EmailHost>> Get(CancellationToken cancellationToken)
     {
-        return await emailHostService.List();
+        return await emailHostService.List(GetUserId(), cancellationToken);
     }
 
     [HttpGet("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public ActionResult<EmailHost> Get(Guid id)
+    public ActionResult<EmailHost> Get(Guid id, CancellationToken cancellationToken)
     {
-        var emailHost = emailHostService.Get(id);
+        var emailHost = emailHostService.Get(id, GetUserId(), cancellationToken);
 
         if (emailHost is null)
         {

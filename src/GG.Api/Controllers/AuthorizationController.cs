@@ -1,6 +1,7 @@
 ﻿using GG.Auth.Services;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OpenIddict.Abstractions;
 using OpenIddict.Server.AspNetCore;
@@ -9,8 +10,9 @@ using static OpenIddict.Abstractions.OpenIddictConstants;
 
 namespace GG.Api.Controllers;
 
-public class AuthorizationController(AuthorizationService authorizationService) : BaseController
+public class AuthorizationController(AuthorizationService authorizationService) : AppControllerBase
 {
+    [AllowAnonymous]
     [HttpPost("token"), IgnoreAntiforgeryToken, Produces("application/json")]
     public async Task<IActionResult> SignIn()
     {

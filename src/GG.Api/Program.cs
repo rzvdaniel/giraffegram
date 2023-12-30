@@ -6,6 +6,7 @@ using GG.Core;
 using GG.Core.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using OpenIddict.Validation.AspNetCore;
 using Quartz;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,7 +17,7 @@ var mySqlConnection = configurationManager.GetConnectionString("MySqlConnection"
 
 var configuration = new ConfigurationBuilder()
     .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-    .Build();
+.Build();
 
 var configurationService = new ConfigurationService(configuration);
 
@@ -119,6 +120,9 @@ services.AddOpenIddict()
 });
 
 services.AddSwaggerGen();
+
+services.AddAuthentication();
+services.AddAuthorization();
 
 var app = builder.Build();
 
