@@ -1,14 +1,16 @@
-﻿using GG.Core.Services;
+﻿using GG.Core.Dto;
+using GG.Core.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GG.Api.Controllers;
 
 public class EmailController(EmailService emailService) : AppControllerBase
 {
-    [HttpPost("test")]
-    public IActionResult Test()
+    [HttpPost("send")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<IActionResult> Send(SendEmailDto sendEmailDto, CancellationToken cancellationToken)
     {
-        emailService.Test();
+        await emailService.Send(sendEmailDto, GetUserId(), cancellationToken);
 
         return Ok();
     }

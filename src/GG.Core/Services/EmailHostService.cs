@@ -18,6 +18,13 @@ public class EmailHostService(ApplicationDbContext dbContext)
         return entity;
     }
 
+    public async Task<EmailHost?> Get(string hostName, Guid userId, CancellationToken cancellationToken)
+    {
+        var entity = await dbContext.EmailHosts.SingleOrDefaultAsync(x => x.Name == hostName && x.EmailHostUsers.Any(x => x.UserId == userId), cancellationToken);
+
+        return entity;
+    }
+
     public async Task<Guid> Add(AddEmailHostDto emailHostDto, Guid userId, CancellationToken cancellationToken)
     {
         var emailHost = new EmailHost

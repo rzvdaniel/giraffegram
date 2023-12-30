@@ -1,41 +1,34 @@
-﻿using MailKit.Net.Smtp;
+﻿using GG.Core.Dto;
+using MailKit.Net.Smtp;
 using MimeKit;
 
 namespace GG.Core.Services;
 
-public class EmailService
+public class EmailService(EmailHostService emailHostService)
 {
-    public void Test()
+    public async Task Send(SendEmailDto email, Guid userId, CancellationToken cancellationToken)
     {
-        try
+        var message = new MimeMessage();
+        message.From.Add(new MailboxAddress(email.FromName, email.FromAddress));
+        message.To.Add(new MailboxAddress(email.ToName, email.ToAddress));
+        message.Subject = email.Subject;
+
+        message.Body = new TextPart("html")
         {
-            var message = new MimeMessage();
-            message.From.Add(new MailboxAddress("***", "***"));
-            message.To.Add(new MailboxAddress("***", "***"));
-            message.Subject = "How you doin'?";
+            Text = email.Message
+        };
 
-            message.Body = new TextPart("plain")
-            {
-                Text = @"Note to myself,
+        var emailServer = await emailHostService.Get(email.Server, userId, cancellationToken) ??
+            throw new Exception("Email server not found");
 
-                I just wanted to let you know that the test works."
-            };
+        using var client = new SmtpClient();
 
-            using (var client = new SmtpClient())
-            {
-                client.Connect("***", 465, true);
+        client.Connect(emailServer.Host, emailServer.Port, emailServer.UseSsl ?? true, cancellationToken);
 
-                // Note: only needed if the SMTP server requires authentication
-                client.Authenticate("***", "***");
+        // Note: only needed if the SMTP server requires authentication
+        client.Authenticate(emailServer.UserName, emailServer.UserPassword, cancellationToken);
 
-                client.Send(message);
-                client.Disconnect(true);
-            }
-        }
-        catch (Exception ex)
-        {
-
-            throw;
-        }
+        client.Send(message);
+        client.Disconnect(true, cancellationToken);
     }
 }

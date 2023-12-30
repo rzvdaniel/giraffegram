@@ -1,6 +1,6 @@
-﻿namespace GG.Core.Models
+﻿namespace GG.Core.Dto
 {
-    public class Email
+    public class SendEmailDto
     {
         public string? FromName { get; set; }
         public required string FromAddress { get; set; }
@@ -8,6 +8,6 @@
         public required string ToAddress { get; set; }
         public string? Subject { get; set; }
         public string? Message { get; set; }
-        public string? Server { get; set; }
+        public required string Server { get; set; }
     }
 }
