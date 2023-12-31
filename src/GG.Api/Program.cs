@@ -27,7 +27,6 @@ services.AddTransient<AccountService>();
 services.AddTransient<AuthorizationService>();
 services.AddTransient<EmailService>();
 services.AddTransient<EmailHostService>();
-services.AddTransient<UserContextService>();
 
 services.AddControllers();
 services.AddHttpContextAccessor();
