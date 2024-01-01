@@ -1,10 +1,7 @@
-﻿using GG.Auth.Dtos;
-using GG.Auth.Entities;
+﻿using GG.Auth.Entities;
 using GG.Auth.Models;
 using Microsoft.AspNetCore.Identity;
-using MySqlX.XDevAPI;
 using OpenIddict.Abstractions;
-using System.Security.Claims;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 
 namespace GG.Auth.Services;
@@ -38,7 +35,7 @@ public class AccountService(
         return result;
     }
 
-    public async Task<object?> CreateClient(RegisterClient client)
+    public async Task<object?> CreateClient(RegisterClient client, CancellationToken cancellationToken)
     {
         if (await applicationManager.FindByClientIdAsync(client.ClientId) != null)
         {
@@ -55,7 +52,7 @@ public class AccountService(
                 Permissions.Endpoints.Token,
                 Permissions.GrantTypes.ClientCredentials
             }
-        });
+        }, cancellationToken);
 
         return result;
     }

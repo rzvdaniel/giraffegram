@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using OpenIddict.Abstractions;
 using OpenIddict.Server.AspNetCore;
-using OpenIddict.Validation.AspNetCore;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 
 namespace GG.Api.Controllers;
@@ -43,7 +42,7 @@ public class AccountController(AccountService accountService) : AppControllerBas
     [HttpPost("registerclient")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
-    public async Task<IActionResult> RegisterClient ([FromBody] RegisterClientDto clientDto)
+    public async Task<IActionResult> RegisterClient ([FromBody] RegisterClientDto clientDto, CancellationToken cancellationToken)
     {
         var existingClient = await accountService.GetClientById(clientDto.ClientId);
 
@@ -59,7 +58,7 @@ public class AccountController(AccountService accountService) : AppControllerBas
             DisplayName = clientDto.DisplayName
         };
 
-        await accountService.CreateClient(client);
+        await accountService.CreateClient(client, cancellationToken);
 
         return Ok(client);
     }
