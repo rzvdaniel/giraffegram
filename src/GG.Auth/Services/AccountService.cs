@@ -75,8 +75,6 @@ public class AccountService(
         var user = await GetUserById(userProfile.Id) ??
              throw new Exception("Error in updating Profile!"); ;
 
-        user.FirstName = userProfile.FirstName;
-        user.LastName = userProfile.LastName;
         user.UserName = userProfile.UserName;
         user.Email = userProfile.Email;
 
@@ -144,8 +142,6 @@ public class AccountService(
     {
         await Task.CompletedTask;
         var result = userManager.Users.Where(u =>
-            (string.IsNullOrEmpty(firstName) || (!string.IsNullOrEmpty(u.FirstName) && u.FirstName.StartsWith(firstName))) &&
-            (string.IsNullOrEmpty(lastName) || (!string.IsNullOrEmpty(u.LastName) && u.LastName.StartsWith(lastName))) &&
             (string.IsNullOrEmpty(email) || u.Email == email))
             .Skip(pageIndex * pageSize)
             .Take(pageSize);
