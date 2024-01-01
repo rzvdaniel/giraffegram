@@ -3,17 +3,16 @@ using Microsoft.Extensions.Configuration;
 
 namespace GG.Auth.Services;
 
-public class ConfigurationService
+public class AuthConfigService
 {
     private readonly IConfiguration configuration;
-    private readonly AppConfig appConfig = new();
+    private readonly AuthConfig authConfig = new();
     private readonly UserPasswordConfig userPasswordConfig = new();
 
     public const string MsSqlDatabaseType = "MsSql";
     public const string MySqlDatabaseType = "MySql";
 
-    public string DatabaseType => appConfig.DatabaseType??"MySql";
-    public bool NoUserSignUp => !appConfig.UserSignUp;
+    public string DatabaseType => authConfig.DatabaseType??"MySql";
 
     public bool RequireDigit => userPasswordConfig.RequireDigit;
     public bool RequireLowercase => userPasswordConfig.RequireLowercase;
@@ -21,10 +20,10 @@ public class ConfigurationService
     public bool RequireNonAlphanumeric => userPasswordConfig.RequireNonAlphanumeric;
     public int RequiredLength => userPasswordConfig.RequiredLength;
 
-    public ConfigurationService(IConfiguration configuration)
+    public AuthConfigService(IConfiguration configuration)
     {
         this.configuration = configuration;
-        this.configuration.GetSection(nameof(AppConfig)).Bind(appConfig);
+        this.configuration.GetSection(nameof(AuthConfig)).Bind(authConfig);
         this.configuration.GetSection(nameof(UserPasswordConfig)).Bind(userPasswordConfig);
     }
 

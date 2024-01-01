@@ -1,7 +1,6 @@
 ﻿namespace GG.Auth.Config;
 
-public class AppConfig
+public class AuthConfig
 {
     public string? DatabaseType { get; set; }
-    public bool UserSignUp { get; set; }
 }
