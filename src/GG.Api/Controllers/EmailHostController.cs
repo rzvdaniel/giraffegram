@@ -45,7 +45,7 @@ public class EmailHostController : AppControllerBase
     [HttpGet("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<EmailHost>> Get(Guid id, CancellationToken cancellationToken)
+    public async Task<ActionResult<GetEmailHostDto>> Get(Guid id, CancellationToken cancellationToken)
     {
         var emailHost = await emailHostService.Get(id, GetUserId(), cancellationToken);
 
@@ -54,6 +54,18 @@ public class EmailHostController : AppControllerBase
             return NotFound();
         }
 
-        return Ok(emailHost);
+        var emailHostDto = new GetEmailHostDto
+        {
+            Id = emailHost.Id,
+            UserName = emailHost.UserName,
+            Name = emailHost.Name,
+            Host = emailHost.Host,
+            Port = emailHost.Port,
+            UseSsl = emailHost.UseSsl,
+            CreatedAt = emailHost.CreatedAt,
+            UpdatedAt = emailHost.UpdatedAt
+        };
+
+        return Ok(emailHostDto);
     }
 }

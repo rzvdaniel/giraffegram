@@ -11,11 +11,13 @@ public class AppConfigService
     public const string MsSqlDatabaseType = "MsSql";
     public const string MySqlDatabaseType = "MySql";
 
-    public string DatabaseType => appConfig.DatabaseType??
-        throw new InvalidOperationException("DatabaseType configuration not found");
+    public string DatabaseType => string.IsNullOrEmpty(appConfig.DatabaseType) ?
+        throw new InvalidOperationException("DatabaseType configuration not found") :
+        appConfig.DatabaseType;
 
-    public string UserEncryptionKey => appConfig.UserEncryptionKey ?? 
-        throw new InvalidOperationException("UserEncryptionKey configuration not found");
+    public string UserEncryptionKey => string.IsNullOrEmpty(appConfig.UserEncryptionKey) ? 
+        throw new InvalidOperationException("UserEncryptionKey configuration not found") : 
+        appConfig.UserEncryptionKey;
 
     public AppConfigService(IConfiguration configuration)
     {
