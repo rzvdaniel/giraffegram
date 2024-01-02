@@ -8,6 +8,6 @@ public class ClientUser
     public Guid UserId { get; set; }
 
     [Required]
-    public string ClientId { get; set; }
+    public required string ClientId { get; set; }
 
 }

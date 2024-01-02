@@ -19,7 +19,7 @@ public class AccountController(AccountService accountService) : AppControllerBas
     [HttpPost("registeruser")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
-    public async Task<IActionResult> RegisterUser([FromBody] RegisterUserDto model)
+    public async Task<IActionResult> RegisterUser([FromBody] UserRegisterDto model)
     {
         var existingUser = await accountService.GetUserByEmailOrUserName(model.Email);
 
@@ -43,7 +43,7 @@ public class AccountController(AccountService accountService) : AppControllerBas
     [HttpPost("registerclient")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
-    public async Task<IActionResult> RegisterClient ([FromBody] RegisterClientDto clientDto, CancellationToken cancellationToken)
+    public async Task<IActionResult> RegisterClient ([FromBody] ClientRegisterDto clientDto, CancellationToken cancellationToken)
     {
         var existingClient = await accountService.GetClientById(clientDto.ClientId);
 

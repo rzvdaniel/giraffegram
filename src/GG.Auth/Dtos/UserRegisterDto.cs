@@ -2,7 +2,7 @@
 
 namespace GG.Auth.Dtos;
 
-public class RegisterUserDto
+public class UserRegisterDto
 {
     [Required]
     [EmailAddress]

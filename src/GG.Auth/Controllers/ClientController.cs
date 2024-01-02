@@ -4,6 +4,7 @@ using GG.Auth.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using OpenIddict.Abstractions;
+using OpenIddict.EntityFrameworkCore.Models;
 
 namespace GG.Auth.Controllers;
 
@@ -12,7 +13,7 @@ public class ClientController(AccountService accountService, ClientService clien
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
-    public async Task<IActionResult> RegisterClient ([FromBody] RegisterClientDto clientDto, CancellationToken cancellationToken)
+    public async Task<IActionResult> Create ([FromBody] ClientRegisterDto clientDto, CancellationToken cancellationToken)
     {
         var existingClient = await accountService.GetClientById(clientDto.ClientId);
 
@@ -34,8 +35,23 @@ public class ClientController(AccountService accountService, ClientService clien
     }
 
     [HttpGet]
-    public IAsyncEnumerable<object> Get(CancellationToken cancellationToken)
+    public IAsyncEnumerable<OpenIddictEntityFrameworkCoreApplication> Get(CancellationToken cancellationToken)
     {
         return clientService.List(GetUserId(), cancellationToken);
+    }
+
+    [HttpGet("{clientId}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<ClientResultDto>> Get(string clientId, CancellationToken cancellationToken)
+    {
+        var application = await clientService.Get(clientId, GetUserId(), cancellationToken);
+
+        if (application is null)
+        {
+            return NotFound();
+        }
+
+        return Ok(application);
     }
 }
