@@ -23,12 +23,14 @@ public class ClientService(AuthDbContext dbContext, OpenIddictApplicationManager
 
     public async Task<object?> CreateClient(RegisterClient client, Guid userId, CancellationToken cancellationToken)
     {
-        if (await applicationManager.FindByClientIdAsync(client.ClientId) != null)
+        var existingApplication = await applicationManager.FindByClientIdAsync(client.ClientId, cancellationToken);
+
+        if (existingApplication != null)
         {
             throw new Exception($"Client with id {client.ClientId} already registered");
         }
 
-        var result = await applicationManager.CreateAsync(new OpenIddictApplicationDescriptor
+        var application = await applicationManager.CreateAsync(new OpenIddictApplicationDescriptor
         {
             ClientId = client.ClientId,
             ClientSecret = client.ClientPassword,
@@ -40,16 +42,19 @@ public class ClientService(AuthDbContext dbContext, OpenIddictApplicationManager
             }
         }, cancellationToken);
 
-        var emailHostUser = new ClientUser
+        if (application != null)
         {
-            ClientId = client.ClientId,
-            UserId = userId
-        };
+            var emailHostUser = new ClientUser
+            {
+                ClientId = client.ClientId,
+                UserId = userId
+            };
 
-        dbContext.ClientUsers.Add(emailHostUser);
+            dbContext.ClientUsers.Add(emailHostUser);
 
-        await dbContext.SaveChangesAsync(cancellationToken);
+            await dbContext.SaveChangesAsync(cancellationToken);
+        }
 
-        return result;
+        return application;
     }
 }
