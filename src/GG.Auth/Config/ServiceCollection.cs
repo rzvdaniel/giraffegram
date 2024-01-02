@@ -21,6 +21,7 @@ public static class ServiceCollection
         var configurationService = new AuthConfigService(configuration);
 
         services.AddTransient<AuthConfigService>();
+        services.AddTransient<ClientService>();
 
         services.AddDbContext<AuthDbContext>(
         options =>

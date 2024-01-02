@@ -4,20 +4,26 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GG.Auth;
 
-public class AuthDbContext : 
+public class AuthDbContext :
     IdentityDbContext<ApplicationUser, ApplicationRole, Guid>
 {
+    public DbSet<ClientUser> ClientUsers => Set<ClientUser>();
+
     public AuthDbContext(DbContextOptions<AuthDbContext> options)
     : base(options)
     {
     }
 
-    protected override void OnModelCreating(ModelBuilder builder)
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        base.OnModelCreating(builder);
+        base.OnModelCreating(modelBuilder);
 
-        // Customize the ASP.NET Identity model and override the defaults if needed.
-        // For example, you can rename the ASP.NET Identity table names and more.
-        // Add your customizations after calling base.OnModelCreating(builder);
+        modelBuilder.Entity<ClientUser>(entity =>
+        {
+            entity.HasKey(e => new { e.ClientId, e.UserId });
+            entity.HasIndex(e => e.ClientId, "IX_ClientUser_ClientId");
+            entity.Property(e => e.UserId).IsRequired();
+            entity.Property(e => e.ClientId).IsRequired();
+        });
     }
 }

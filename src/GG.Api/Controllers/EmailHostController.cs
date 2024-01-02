@@ -1,10 +1,8 @@
+using GG.Auth.Controllers;
 using GG.Core.Dto;
 using GG.Core.Entities;
 using GG.Core.Services;
-using Microsoft.AspNetCore;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using OpenIddict.Server.AspNetCore;
 
 namespace GG.Api.Controllers;
 
