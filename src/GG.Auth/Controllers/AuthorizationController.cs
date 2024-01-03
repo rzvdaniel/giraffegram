@@ -10,7 +10,7 @@ using static OpenIddict.Abstractions.OpenIddictConstants;
 
 namespace GG.Auth.Controllers;
 
-public class AuthorizationController(AuthorizationService authorizationService) : AppControllerBase
+public class AuthorizationController(AuthorizationService authorizationService) : AuthControllerBase
 {
     [AllowAnonymous]
     [HttpPost("token"), IgnoreAntiforgeryToken, Produces("application/json")]

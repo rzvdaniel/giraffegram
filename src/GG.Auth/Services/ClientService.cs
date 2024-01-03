@@ -45,7 +45,7 @@ public class ClientService(AuthDbContext dbContext, OpenIddictApplicationManager
         return applicationResult;
     }
 
-    public async Task<object?> CreateClient(RegisterClient client, Guid userId, CancellationToken cancellationToken)
+    public async Task<object?> CreateClient(ClientRegister client, Guid userId, CancellationToken cancellationToken)
     {
         var existingApplication = await applicationManager.FindByClientIdAsync(client.ClientId, cancellationToken);
 

@@ -1,6 +1,5 @@
 ﻿using GG.Auth.Dtos;
 using GG.Auth.Entities;
-using GG.Auth.Models;
 using GG.Auth.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -13,13 +12,13 @@ using static OpenIddict.Abstractions.OpenIddictConstants;
 
 namespace GG.Auth.Controllers;
 
-public class AccountController(AccountService accountService) : AppControllerBase
+public class UserController(AccountService accountService) : AuthControllerBase
 {
+    [HttpPost]
     [AllowAnonymous]
-    [HttpPost("registeruser")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
-    public async Task<IActionResult> RegisterUser([FromBody] UserRegisterDto model)
+    public async Task<IActionResult> Create([FromBody] UserRegisterDto model)
     {
         var existingUser = await accountService.GetUserByEmailOrUserName(model.Email);
 
@@ -38,30 +37,6 @@ public class AccountController(AccountService accountService) : AppControllerBas
         }
 
         return Created();
-    }
-
-    [HttpPost("registerclient")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status409Conflict)]
-    public async Task<IActionResult> RegisterClient ([FromBody] ClientRegisterDto clientDto, CancellationToken cancellationToken)
-    {
-        var existingClient = await accountService.GetClientById(clientDto.ClientId);
-
-        if (existingClient != null)
-        {
-            return StatusCode(StatusCodes.Status409Conflict);
-        }
-
-        var client = new RegisterClient 
-        { 
-            ClientId = clientDto.ClientId,
-            ClientPassword = Guid.NewGuid().ToString(),
-            DisplayName = clientDto.DisplayName
-        };
-
-        await accountService.CreateClient(client, cancellationToken);
-
-        return Ok(client);
     }
 
     [HttpGet("userinfo"), HttpPost("userinfo"), Produces("application/json")]

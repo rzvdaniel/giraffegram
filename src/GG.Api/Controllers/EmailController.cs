@@ -1,5 +1,4 @@
-﻿using GG.Auth.Controllers;
-using GG.Core.Dto;
+﻿using GG.Core.Dto;
 using GG.Core.Services;
 using Microsoft.AspNetCore.Mvc;
 

@@ -1,4 +1,3 @@
-using GG.Auth.Controllers;
 using GG.Core.Dto;
 using GG.Core.Entities;
 using GG.Core.Services;

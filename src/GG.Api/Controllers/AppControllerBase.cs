@@ -4,7 +4,7 @@ using OpenIddict.Abstractions;
 using OpenIddict.Validation.AspNetCore;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 
-namespace GG.Auth.Controllers;
+namespace GG.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]

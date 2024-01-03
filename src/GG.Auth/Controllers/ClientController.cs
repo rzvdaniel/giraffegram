@@ -3,17 +3,16 @@ using GG.Auth.Models;
 using GG.Auth.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using OpenIddict.Abstractions;
 using OpenIddict.EntityFrameworkCore.Models;
 
 namespace GG.Auth.Controllers;
 
-public class ClientController(AccountService accountService, ClientService clientService) : AppControllerBase
+public class ClientController(AccountService accountService, ClientService clientService) : AuthControllerBase
 {
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
-    public async Task<IActionResult> Create ([FromBody] ClientRegisterDto clientDto, CancellationToken cancellationToken)
+    public async Task<IActionResult> Create([FromBody] ClientRegisterDto clientDto, CancellationToken cancellationToken)
     {
         var existingClient = await accountService.GetClientById(clientDto.ClientId);
 
@@ -22,7 +21,7 @@ public class ClientController(AccountService accountService, ClientService clien
             return StatusCode(StatusCodes.Status409Conflict);
         }
 
-        var client = new RegisterClient 
+        var client = new ClientRegister 
         { 
             ClientId = clientDto.ClientId,
             ClientPassword = Guid.NewGuid().ToString(),

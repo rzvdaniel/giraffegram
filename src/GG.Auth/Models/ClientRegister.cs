@@ -1,6 +1,6 @@
 ﻿namespace GG.Auth.Models;
 
-public class RegisterClient
+public class ClientRegister
 {
     public required string ClientId { get; set; }
 
