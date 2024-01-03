@@ -5,8 +5,8 @@ namespace GG.Core;
 
 public class ApplicationDbContext : DbContext
 {
-    public DbSet<EmailHost> EmailHosts => Set<EmailHost>();
-    public DbSet<EmailHostUser> EmailHostUsers => Set<EmailHostUser>();
+    public DbSet<EmailAccount> EmailAccounts => Set<EmailAccount>();
+    public DbSet<EmailAccountUser> EmailAccountUsers => Set<EmailAccountUser>();
 
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base(options)
@@ -21,12 +21,12 @@ public class ApplicationDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.Entity<EmailHostUser>(entity =>
+        modelBuilder.Entity<EmailAccountUser>(entity =>
         {
-            entity.HasKey(e => new { e.EmailHostId, e.UserId });
-            entity.HasIndex(e => e.EmailHostId, "IX_.EmailHostUser_.EmailHostId");
+            entity.HasKey(e => new { e.EmailAccountId, e.UserId });
+            entity.HasIndex(e => e.EmailAccountId, "IX_.EmailHostUser_.EmailHostId");
             entity.Property(e => e.UserId).IsRequired();
-            entity.Property(e => e.EmailHostId).IsRequired();
+            entity.Property(e => e.EmailAccountId).IsRequired();
         });
     }
 }

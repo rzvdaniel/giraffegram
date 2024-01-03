@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace GG.Core.Entities;
 
-public class EmailHost
+public class EmailAccount
 {
     [Key]
     [Required]
@@ -34,5 +34,5 @@ public class EmailHost
 
     public DateTime? UpdatedAt { get; set; }
 
-    public virtual ICollection<EmailHostUser> EmailHostUsers { get; set; }
+    public virtual ICollection<EmailAccountUser> EmailAccountUsers { get; set; }
 }

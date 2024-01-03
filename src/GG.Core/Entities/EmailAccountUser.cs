@@ -4,11 +4,11 @@ using System.ComponentModel.DataAnnotations;
 
 namespace GG.Core.Entities;
 
-public class EmailHostUser
+public class EmailAccountUser
 {
     [Required]
     public Guid UserId { get; set; }
 
     [Required]
-    public Guid EmailHostId { get; set; }
+    public Guid EmailAccountId { get; set; }
 }

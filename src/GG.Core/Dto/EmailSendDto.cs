@@ -1,6 +1,6 @@
 ﻿namespace GG.Core.Dto;
 
-public class SendEmailDto
+public class EmailSendDto
 {
     public string? FromName { get; set; }
     public required string FromAddress { get; set; }

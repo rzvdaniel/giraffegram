@@ -4,9 +4,9 @@ using MimeKit;
 
 namespace GG.Core.Services;
 
-public class EmailService(EmailHostService emailHostService)
+public class EmailService(EmailAccountService emailHostService)
 {
-    public async Task Send(SendEmailDto email, Guid userId, CancellationToken cancellationToken)
+    public async Task Send(EmailSendDto email, Guid userId, CancellationToken cancellationToken)
     {
         var message = new MimeMessage();
         message.From.Add(new MailboxAddress(email.FromName, email.FromAddress));

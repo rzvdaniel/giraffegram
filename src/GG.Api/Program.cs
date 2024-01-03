@@ -26,7 +26,7 @@ var services = builder.Services;
 services.AddTransient<AccountService>();
 services.AddTransient<AuthorizationService>();
 services.AddTransient<EmailService>();
-services.AddTransient<EmailHostService>();
+services.AddTransient<EmailAccountService>();
 services.AddTransient<SecretKeyEncryptionService>();
 services.AddTransient<AppConfigService>();
 

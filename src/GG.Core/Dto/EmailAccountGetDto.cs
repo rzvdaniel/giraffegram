@@ -1,6 +1,6 @@
 ﻿namespace GG.Core.Dto;
 
-public class GetEmailHostDto
+public class EmailAccountGetDto
 {
     public Guid Id { get; set; }
 

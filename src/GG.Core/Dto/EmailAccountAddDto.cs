@@ -1,6 +1,6 @@
 ﻿namespace GG.Core.Dto;
 
-public class AddEmailHostDto
+public class EmailAccountAddDto
 {
     public required string Name { get; set; }
     public required string Host { get; set; }
