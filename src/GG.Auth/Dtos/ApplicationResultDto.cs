@@ -1,6 +1,6 @@
 ﻿namespace GG.Auth.Dtos;
 
-public class ClientResultDto
+public class ApplicationResultDto
 {
     public string? Id { get; set; }
 

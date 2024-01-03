@@ -8,7 +8,7 @@ using GG.Auth.Dtos;
 
 namespace GG.Auth.Services;
 
-public class ClientService(AuthDbContext dbContext, OpenIddictApplicationManager<OpenIddictEntityFrameworkCoreApplication> applicationManager)
+public class ApplicationService(AuthDbContext dbContext, OpenIddictApplicationManager<OpenIddictEntityFrameworkCoreApplication> applicationManager)
 {
     public IAsyncEnumerable<OpenIddictEntityFrameworkCoreApplication> List(Guid userId, CancellationToken cancellationToken)
     {
@@ -22,7 +22,7 @@ public class ClientService(AuthDbContext dbContext, OpenIddictApplicationManager
         return applications;
     }
 
-    public async ValueTask<ClientResultDto?> Get(string clientId, Guid userId, CancellationToken cancellationToken)
+    public async ValueTask<ApplicationResultDto?> Get(string clientId, Guid userId, CancellationToken cancellationToken)
     {
         var application = await applicationManager.GetAsync(apps =>
             apps.Where(app => app.ClientId == clientId && 
@@ -35,7 +35,7 @@ public class ClientService(AuthDbContext dbContext, OpenIddictApplicationManager
         if (application == null)
             return null;
 
-        var applicationResult = new ClientResultDto
+        var applicationResult = new ApplicationResultDto
         {
             ClientId = application.ClientId,
             Id = application.Id,
@@ -45,7 +45,7 @@ public class ClientService(AuthDbContext dbContext, OpenIddictApplicationManager
         return applicationResult;
     }
 
-    public async Task<object?> CreateClient(ClientRegister client, Guid userId, CancellationToken cancellationToken)
+    public async Task<object?> Create(ApplicationRegister client, Guid userId, CancellationToken cancellationToken)
     {
         var existingApplication = await applicationManager.FindByClientIdAsync(client.ClientId, cancellationToken);
 

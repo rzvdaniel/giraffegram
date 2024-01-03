@@ -35,7 +35,7 @@ public class AccountService(
         return result;
     }
 
-    public async Task<object?> CreateClient(ClientRegister client, CancellationToken cancellationToken)
+    public async Task<object?> CreateClient(ApplicationRegister client, CancellationToken cancellationToken)
     {
         if (await applicationManager.FindByClientIdAsync(client.ClientId) != null)
         {

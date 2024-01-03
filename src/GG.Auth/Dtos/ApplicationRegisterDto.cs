@@ -2,7 +2,7 @@
 
 namespace GG.Auth.Dtos;
 
-public class ClientRegisterDto
+public class ApplicationRegisterDto
 {
     [Required]
     public required string ClientId { get; set; }
