@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GG.Migrations.MsSql.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20231230115325_FirstApplication")]
-    partial class FirstApplication
+    [Migration("20240104212842_First")]
+    partial class First
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,7 +25,7 @@ namespace GG.Migrations.MsSql.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("GG.Core.Entities.EmailHost", b =>
+            modelBuilder.Entity("GG.Core.Entities.EmailAccount", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -63,36 +63,36 @@ namespace GG.Migrations.MsSql.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("EmailHosts");
+                    b.ToTable("EmailAccounts");
                 });
 
-            modelBuilder.Entity("GG.Core.Entities.EmailHostUser", b =>
+            modelBuilder.Entity("GG.Core.Entities.EmailAccountUser", b =>
                 {
-                    b.Property<Guid>("EmailHostId")
+                    b.Property<Guid>("EmailAccountId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("EmailHostId", "UserId");
+                    b.HasKey("EmailAccountId", "UserId");
 
-                    b.HasIndex(new[] { "EmailHostId" }, "IX_.EmailHostUser_.EmailHostId");
+                    b.HasIndex(new[] { "EmailAccountId" }, "IX_.EmailHostUser_.EmailHostId");
 
-                    b.ToTable("EmailHostUsers");
+                    b.ToTable("EmailAccountUsers");
                 });
 
-            modelBuilder.Entity("GG.Core.Entities.EmailHostUser", b =>
+            modelBuilder.Entity("GG.Core.Entities.EmailAccountUser", b =>
                 {
-                    b.HasOne("GG.Core.Entities.EmailHost", null)
-                        .WithMany("EmailHostUsers")
-                        .HasForeignKey("EmailHostId")
+                    b.HasOne("GG.Core.Entities.EmailAccount", null)
+                        .WithMany("EmailAccountUsers")
+                        .HasForeignKey("EmailAccountId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("GG.Core.Entities.EmailHost", b =>
+            modelBuilder.Entity("GG.Core.Entities.EmailAccount", b =>
                 {
-                    b.Navigation("EmailHostUsers");
+                    b.Navigation("EmailAccountUsers");
                 });
 #pragma warning restore 612, 618
         }

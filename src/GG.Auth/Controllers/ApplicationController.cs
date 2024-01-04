@@ -12,7 +12,7 @@ public class ApplicationController(AccountService accountService, ApplicationSer
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
-    public async Task<IActionResult> Create([FromBody] ApplicationRegisterDto applicationDto, CancellationToken cancellationToken)
+    public async Task<IActionResult> Create([FromBody] ApplicationRegisterationDto applicationDto, CancellationToken cancellationToken)
     {
         var existingClient = await accountService.GetClientById(applicationDto.ClientId);
 
@@ -21,7 +21,7 @@ public class ApplicationController(AccountService accountService, ApplicationSer
             return StatusCode(StatusCodes.Status409Conflict);
         }
 
-        var client = new ApplicationRegister 
+        var client = new ApplicationRegistration 
         { 
             ClientId = applicationDto.ClientId,
             ClientPassword = Guid.NewGuid().ToString(),

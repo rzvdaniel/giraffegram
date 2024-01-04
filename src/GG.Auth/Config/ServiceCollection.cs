@@ -44,7 +44,7 @@ public static class ServiceCollection
 
         services.AddDatabaseDeveloperPageExceptionFilter();
 
-        services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
+        services.AddIdentity<User, UserRole>(options =>
         {
             options.User.RequireUniqueEmail = true;
             options.Password.RequireDigit = configurationService.RequireDigit;

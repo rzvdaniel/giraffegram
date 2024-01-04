@@ -10,8 +10,8 @@ namespace GG.Auth.Services;
 
 public class AuthorizationService(
     AccountService userManagerService, 
-    UserManager<ApplicationUser> userManager,
-    SignInManager<ApplicationUser> signInManager,
+    UserManager<User> userManager,
+    SignInManager<User> signInManager,
     IOpenIddictApplicationManager applicationManager)
 {
     public async Task<ClaimsIdentity?> SignIn(string? userName, string? password)

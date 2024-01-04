@@ -7,11 +7,11 @@ using static OpenIddict.Abstractions.OpenIddictConstants;
 namespace GG.Auth.Services;
 
 public class AccountService(
-    UserManager<ApplicationUser> userManager, 
-    RoleManager<ApplicationRole> roleManager,
+    UserManager<User> userManager, 
+    RoleManager<UserRole> roleManager,
     IOpenIddictApplicationManager applicationManager)
 {
-    public async Task<IdentityResult> CreateUser(ApplicationUser user, string password)
+    public async Task<IdentityResult> CreateUser(User user, string password)
     {
         if (userManager.Users.Any(u => u.UserName == user.UserName))
         {
@@ -35,7 +35,7 @@ public class AccountService(
         return result;
     }
 
-    public async Task<object?> CreateClient(ApplicationRegister client, CancellationToken cancellationToken)
+    public async Task<object?> CreateClient(ApplicationRegistration client, CancellationToken cancellationToken)
     {
         if (await applicationManager.FindByClientIdAsync(client.ClientId) != null)
         {
@@ -86,21 +86,21 @@ public class AccountService(
         }
     }
 
-    public async Task<ApplicationUser?> GetUserById(Guid userId)
+    public async Task<User?> GetUserById(Guid userId)
     {
         var result = await userManager.FindByIdAsync(userId.ToString());
 
         return result;
     }
 
-    public async Task<ApplicationUser?> GetUserById(string userId)
+    public async Task<User?> GetUserById(string userId)
     {
         var result = await userManager.FindByIdAsync(userId);
 
         return result;
     }
 
-    public async Task<ApplicationUser?> GetUserByEmailOrUserName(string emailOrUserName)
+    public async Task<User?> GetUserByEmailOrUserName(string emailOrUserName)
     {
         var user = await userManager.FindByEmailAsync(emailOrUserName) ??
             await userManager.FindByNameAsync(emailOrUserName);
@@ -128,7 +128,7 @@ public class AccountService(
         return false;
     }
 
-    public async Task<bool> ValidatePasswordAsync(ApplicationUser user, string password)
+    public async Task<bool> ValidatePasswordAsync(User user, string password)
     {
         if (user != null)
         {
@@ -138,7 +138,7 @@ public class AccountService(
         return false;
     }
 
-    public async Task<IEnumerable<ApplicationUser>> GetUsers(string firstName, string lastName, string email, int pageIndex, int pageSize)
+    public async Task<IEnumerable<User>> GetUsers(string firstName, string lastName, string email, int pageIndex, int pageSize)
     {
         await Task.CompletedTask;
         var result = userManager.Users.Where(u =>
@@ -247,7 +247,7 @@ public class AccountService(
         }
     }
 
-    public async Task<Dictionary<string, object>> GetUserClaims(ApplicationUser user)
+    public async Task<Dictionary<string, object>> GetUserClaims(User user)
     {
         // Note: the complete list of standard claims supported by the OpenID Connect specification
         // can be found here: http://openid.net/specs/openid-connect-core-1_0.html#StandardClaims

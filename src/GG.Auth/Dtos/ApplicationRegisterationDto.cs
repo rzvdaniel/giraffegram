@@ -1,13 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace GG.Auth.Entities;
+namespace GG.Auth.Dtos;
 
-public class ClientUser
+public class ApplicationRegisterationDto
 {
-    [Required]
-    public Guid UserId { get; set; }
-
     [Required]
     public required string ClientId { get; set; }
 
+    public string? DisplayName { get; set; }
 }

@@ -5,9 +5,9 @@ using Microsoft.EntityFrameworkCore;
 namespace GG.Auth;
 
 public class AuthDbContext :
-    IdentityDbContext<ApplicationUser, ApplicationRole, Guid>
+    IdentityDbContext<User, UserRole, Guid>
 {
-    public DbSet<ClientUser> ClientUsers => Set<ClientUser>();
+    public DbSet<ApplicationUser> ApplicationUsers => Set<ApplicationUser>();
 
     public AuthDbContext(DbContextOptions<AuthDbContext> options)
     : base(options)
@@ -18,10 +18,10 @@ public class AuthDbContext :
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.Entity<ClientUser>(entity =>
+        modelBuilder.Entity<ApplicationUser>(entity =>
         {
             entity.HasKey(e => new { e.ClientId, e.UserId });
-            entity.HasIndex(e => e.ClientId, "IX_ClientUser_ClientId");
+            entity.HasIndex(e => e.ClientId, "IX_ApplicationUser_ClientId");
             entity.Property(e => e.UserId).IsRequired();
             entity.Property(e => e.ClientId).IsRequired();
         });

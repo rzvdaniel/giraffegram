@@ -27,7 +27,7 @@ public class UserController(AccountService accountService) : AuthControllerBase
             return StatusCode(StatusCodes.Status409Conflict);
         }
 
-        var newUser = new ApplicationUser { UserName = model.Email, Email = model.Email };
+        var newUser = new User { UserName = model.Email, Email = model.Email };
 
         var result = await accountService.CreateUser(newUser, model.Password);
 

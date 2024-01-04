@@ -2,6 +2,6 @@
 
 namespace GG.Auth.Entities;
 
-public class ApplicationRole : IdentityRole<Guid>
+public class UserRole : IdentityRole<Guid>
 {
 }

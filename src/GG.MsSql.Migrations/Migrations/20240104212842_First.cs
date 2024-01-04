@@ -6,13 +6,13 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace GG.Migrations.MsSql.Migrations
 {
     /// <inheritdoc />
-    public partial class FirstApplication : Migration
+    public partial class First : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "EmailHosts",
+                name: "EmailAccounts",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -27,41 +27,41 @@ namespace GG.Migrations.MsSql.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_EmailHosts", x => x.Id);
+                    table.PrimaryKey("PK_EmailAccounts", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "EmailHostUsers",
+                name: "EmailAccountUsers",
                 columns: table => new
                 {
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    EmailHostId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    EmailAccountId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_EmailHostUsers", x => new { x.EmailHostId, x.UserId });
+                    table.PrimaryKey("PK_EmailAccountUsers", x => new { x.EmailAccountId, x.UserId });
                     table.ForeignKey(
-                        name: "FK_EmailHostUsers_EmailHosts_EmailHostId",
-                        column: x => x.EmailHostId,
-                        principalTable: "EmailHosts",
+                        name: "FK_EmailAccountUsers_EmailAccounts_EmailAccountId",
+                        column: x => x.EmailAccountId,
+                        principalTable: "EmailAccounts",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_.EmailHostUser_.EmailHostId",
-                table: "EmailHostUsers",
-                column: "EmailHostId");
+                table: "EmailAccountUsers",
+                column: "EmailAccountId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "EmailHostUsers");
+                name: "EmailAccountUsers");
 
             migrationBuilder.DropTable(
-                name: "EmailHosts");
+                name: "EmailAccounts");
         }
     }
 }

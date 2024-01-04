@@ -13,7 +13,7 @@ public class ApplicationService(AuthDbContext dbContext, OpenIddictApplicationMa
     public IAsyncEnumerable<OpenIddictEntityFrameworkCoreApplication> List(Guid userId, CancellationToken cancellationToken)
     {
         var applications = applicationManager.ListAsync(apps => 
-            apps.Where(app => dbContext.ClientUsers
+            apps.Where(app => dbContext.ApplicationUsers
                 .Where(x => x.UserId == userId)
                 .Select(x => x.ClientId)
                 .Contains(app.ClientId)),
@@ -26,7 +26,7 @@ public class ApplicationService(AuthDbContext dbContext, OpenIddictApplicationMa
     {
         var application = await applicationManager.GetAsync(apps =>
             apps.Where(app => app.ClientId == clientId && 
-                dbContext.ClientUsers
+                dbContext.ApplicationUsers
                 .Where(x => x.UserId == userId)
                 .Select(x => x.ClientId)
                 .Contains(app.ClientId)),
@@ -45,20 +45,20 @@ public class ApplicationService(AuthDbContext dbContext, OpenIddictApplicationMa
         return applicationResult;
     }
 
-    public async Task<object?> Create(ApplicationRegister client, Guid userId, CancellationToken cancellationToken)
+    public async Task<object?> Create(ApplicationRegistration applicationRegistration, Guid userId, CancellationToken cancellationToken)
     {
-        var existingApplication = await applicationManager.FindByClientIdAsync(client.ClientId, cancellationToken);
+        var existingApplication = await applicationManager.FindByClientIdAsync(applicationRegistration.ClientId, cancellationToken);
 
         if (existingApplication != null)
         {
-            throw new Exception($"Client with id {client.ClientId} already registered");
+            throw new Exception($"Client with id {applicationRegistration.ClientId} already registered");
         }
 
         var application = await applicationManager.CreateAsync(new OpenIddictApplicationDescriptor
         {
-            ClientId = client.ClientId,
-            ClientSecret = client.ClientPassword,
-            DisplayName = client.DisplayName,
+            ClientId = applicationRegistration.ClientId,
+            ClientSecret = applicationRegistration.ClientPassword,
+            DisplayName = applicationRegistration.DisplayName,
             Permissions =
             {
                 Permissions.Endpoints.Token,
@@ -68,13 +68,13 @@ public class ApplicationService(AuthDbContext dbContext, OpenIddictApplicationMa
 
         if (application != null)
         {
-            var emailHostUser = new ClientUser
+            var emailHostUser = new ApplicationUser
             {
-                ClientId = client.ClientId,
+                ClientId = applicationRegistration.ClientId,
                 UserId = userId
             };
 
-            dbContext.ClientUsers.Add(emailHostUser);
+            dbContext.ApplicationUsers.Add(emailHostUser);
 
             await dbContext.SaveChangesAsync(cancellationToken);
         }
