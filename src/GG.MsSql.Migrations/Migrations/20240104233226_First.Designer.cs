@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GG.Migrations.MsSql.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240104212842_First")]
+    [Migration("20240104233226_First")]
     partial class First
     {
         /// <inheritdoc />
@@ -76,9 +76,50 @@ namespace GG.Migrations.MsSql.Migrations
 
                     b.HasKey("EmailAccountId", "UserId");
 
-                    b.HasIndex(new[] { "EmailAccountId" }, "IX_.EmailHostUser_.EmailHostId");
+                    b.HasIndex(new[] { "EmailAccountId" }, "IX_EmailAccountUser_EmailAccountId");
 
                     b.ToTable("EmailAccountUsers");
+                });
+
+            modelBuilder.Entity("GG.Core.Entities.EmailTemplate", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Body")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("EmailTemplates");
+                });
+
+            modelBuilder.Entity("GG.Core.Entities.EmailTemplateUser", b =>
+                {
+                    b.Property<Guid>("EmailTemplateId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("EmailTemplateId", "UserId");
+
+                    b.HasIndex(new[] { "EmailTemplateId" }, "IX_EmailTemplateUser_EmailTemplateId");
+
+                    b.ToTable("EmailTemplateUsers");
                 });
 
             modelBuilder.Entity("GG.Core.Entities.EmailAccountUser", b =>
@@ -90,9 +131,23 @@ namespace GG.Migrations.MsSql.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("GG.Core.Entities.EmailTemplateUser", b =>
+                {
+                    b.HasOne("GG.Core.Entities.EmailTemplate", null)
+                        .WithMany("EmailTemplateUsers")
+                        .HasForeignKey("EmailTemplateId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("GG.Core.Entities.EmailAccount", b =>
                 {
                     b.Navigation("EmailAccountUsers");
+                });
+
+            modelBuilder.Entity("GG.Core.Entities.EmailTemplate", b =>
+                {
+                    b.Navigation("EmailTemplateUsers");
                 });
 #pragma warning restore 612, 618
         }

@@ -7,6 +7,8 @@ public class ApplicationDbContext : DbContext
 {
     public DbSet<EmailAccount> EmailAccounts => Set<EmailAccount>();
     public DbSet<EmailAccountUser> EmailAccountUsers => Set<EmailAccountUser>();
+    public DbSet<EmailTemplate> EmailTemplates => Set<EmailTemplate>();
+    public DbSet<EmailTemplateUser> EmailTemplateUsers => Set<EmailTemplateUser>();
 
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base(options)
@@ -24,9 +26,17 @@ public class ApplicationDbContext : DbContext
         modelBuilder.Entity<EmailAccountUser>(entity =>
         {
             entity.HasKey(e => new { e.EmailAccountId, e.UserId });
-            entity.HasIndex(e => e.EmailAccountId, "IX_.EmailHostUser_.EmailHostId");
+            entity.HasIndex(e => e.EmailAccountId, "IX_EmailAccountUser_EmailAccountId");
             entity.Property(e => e.UserId).IsRequired();
             entity.Property(e => e.EmailAccountId).IsRequired();
+        });
+
+        modelBuilder.Entity<EmailTemplateUser>(entity =>
+        {
+            entity.HasKey(e => new { e.EmailTemplateId, e.UserId });
+            entity.HasIndex(e => e.EmailTemplateId, "IX_EmailTemplateUser_EmailTemplateId");
+            entity.Property(e => e.UserId).IsRequired();
+            entity.Property(e => e.EmailTemplateId).IsRequired();
         });
     }
 }

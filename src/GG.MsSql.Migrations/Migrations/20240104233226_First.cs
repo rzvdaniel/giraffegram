@@ -31,6 +31,21 @@ namespace GG.Migrations.MsSql.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "EmailTemplates",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
+                    Body = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EmailTemplates", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "EmailAccountUsers",
                 columns: table => new
                 {
@@ -48,10 +63,33 @@ namespace GG.Migrations.MsSql.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "EmailTemplateUsers",
+                columns: table => new
+                {
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    EmailTemplateId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EmailTemplateUsers", x => new { x.EmailTemplateId, x.UserId });
+                    table.ForeignKey(
+                        name: "FK_EmailTemplateUsers_EmailTemplates_EmailTemplateId",
+                        column: x => x.EmailTemplateId,
+                        principalTable: "EmailTemplates",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
-                name: "IX_.EmailHostUser_.EmailHostId",
+                name: "IX_EmailAccountUser_EmailAccountId",
                 table: "EmailAccountUsers",
                 column: "EmailAccountId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_EmailTemplateUser_EmailTemplateId",
+                table: "EmailTemplateUsers",
+                column: "EmailTemplateId");
         }
 
         /// <inheritdoc />
@@ -61,7 +99,13 @@ namespace GG.Migrations.MsSql.Migrations
                 name: "EmailAccountUsers");
 
             migrationBuilder.DropTable(
+                name: "EmailTemplateUsers");
+
+            migrationBuilder.DropTable(
                 name: "EmailAccounts");
+
+            migrationBuilder.DropTable(
+                name: "EmailTemplates");
         }
     }
 }
