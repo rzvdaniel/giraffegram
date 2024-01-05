@@ -27,6 +27,7 @@ services.AddTransient<AccountService>();
 services.AddTransient<AuthorizationService>();
 services.AddTransient<EmailService>();
 services.AddTransient<EmailAccountService>();
+services.AddTransient<EmailTemplateService>();
 services.AddTransient<SecretKeyEncryptionService>();
 services.AddTransient<AppConfigService>();
 
