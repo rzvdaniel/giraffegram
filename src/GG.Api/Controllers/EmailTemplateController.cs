@@ -24,9 +24,12 @@ public class EmailTemplateController(EmailTemplateService emailTemplateService) 
     }
 
     [HttpGet]
-    public async Task<IEnumerable<EmailTemplateGetDto>> Get(CancellationToken cancellationToken)
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<ActionResult<IEnumerable<EmailTemplateGetDto>>> Get(CancellationToken cancellationToken)
     {
-        return await emailTemplateService.List(GetUserId(), cancellationToken);
+        var emailTemplates = await emailTemplateService.List(GetUserId(), cancellationToken);
+
+        return Ok(emailTemplates);
     }
 
     [HttpGet("{id}")]
@@ -42,5 +45,23 @@ public class EmailTemplateController(EmailTemplateService emailTemplateService) 
         }
 
         return Ok(emailTemplateDto);
+    }
+
+    [HttpPut("{id}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public IActionResult Update(Guid id, EmailTemplateUpdateDto emailTemplate)
+    {
+        emailTemplateService.Update(id, emailTemplate, GetUserId());
+
+        return NoContent();
+    }
+
+    [HttpDelete("{id}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public IActionResult Delete(Guid id)
+    {
+        emailTemplateService.Delete(id, GetUserId());
+
+        return NoContent();
     }
 }

@@ -1,6 +1,7 @@
 ﻿using GG.Core.Dto;
 using GG.Core.Entities;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json;
 
 namespace GG.Core.Services;
 
@@ -27,10 +28,8 @@ public class EmailTemplateService(ApplicationDbContext dbContext)
     {
         var emailTemplate = await dbContext.EmailTemplates.SingleOrDefaultAsync(x => x.Id == id && x.EmailTemplateUsers.Any(x => x.UserId == userId), cancellationToken);
 
-        if(emailTemplate == null) 
-        { 
+        if (emailTemplate == null) 
             return null; 
-        }
 
         var emailTemplateGetDto = new EmailTemplateGetDto
         {
@@ -67,6 +66,32 @@ public class EmailTemplateService(ApplicationDbContext dbContext)
         await dbContext.SaveChangesAsync(cancellationToken);
 
         return emailTemplate.Id;
+    }
+
+    public void Update(Guid id, EmailTemplateUpdateDto flow, Guid userId)
+    {
+        var emailTemplate = dbContext.EmailTemplates.SingleOrDefault(x => x.Id == id && x.EmailTemplateUsers.Any(x => x.UserId == userId));
+
+        if (emailTemplate == null)
+            return;
+
+        emailTemplate.Name = flow.Name;
+        emailTemplate.Body = JsonSerializer.Serialize(flow);
+        emailTemplate.UpdatedAt = DateTime.UtcNow;
+
+        dbContext.SaveChanges();
+    }
+
+    public void Delete(Guid id, Guid userId)
+    {
+        var emailTemplate = dbContext.EmailTemplates.SingleOrDefault(x => x.Id == id && x.EmailTemplateUsers.Any(x => x.UserId == userId));
+
+        if (emailTemplate == null)
+            return;
+
+        dbContext.EmailTemplates.Remove(emailTemplate);
+
+        dbContext.SaveChanges();
     }
 
     public async Task<bool> Exists(string name, Guid userId, CancellationToken cancellationToken)
