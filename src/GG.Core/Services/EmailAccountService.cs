@@ -51,7 +51,7 @@ public class EmailAccountService(ApplicationDbContext dbContext, SecretKeyEncryp
             UseSsl = emailAccountDto.UseSsl,
             UserName = emailAccountDto.UserName,
             UserPassword = Encoding.Unicode.GetString(encryptedPassword),
-            CreatedAt = DateTime.UtcNow
+            Created = DateTime.UtcNow
         };
 
         dbContext.EmailAccounts.Add(emailAccount);

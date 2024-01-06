@@ -1,7 +1,6 @@
 ﻿using GG.Core.Dto;
 using GG.Core.Entities;
 using Microsoft.EntityFrameworkCore;
-using System.Text.Json;
 
 namespace GG.Core.Services;
 
@@ -15,9 +14,10 @@ public class EmailTemplateService(ApplicationDbContext dbContext)
             {
                 Id = x.Id,
                 Name = x.Name,
-                Body = x.Body,
-                CreatedAt = x.CreatedAt,
-                UpdatedAt = x.UpdatedAt
+                Text = x.Text,
+                Html = x.Html,
+                CreatedAt = x.Created,
+                UpdatedAt = x.Updated
             })
             .ToListAsync(cancellationToken);
 
@@ -35,9 +35,10 @@ public class EmailTemplateService(ApplicationDbContext dbContext)
         {
             Id = emailTemplate.Id,
             Name = emailTemplate.Name,
-            Body = emailTemplate.Body,
-            CreatedAt = emailTemplate.CreatedAt,
-            UpdatedAt = emailTemplate.UpdatedAt
+            Text = emailTemplate.Text,
+            Html = emailTemplate.Html,
+            CreatedAt = emailTemplate.Created,
+            UpdatedAt = emailTemplate.Updated
         };
 
         return emailTemplateGetDto;
@@ -49,8 +50,9 @@ public class EmailTemplateService(ApplicationDbContext dbContext)
         {
             Id = Guid.NewGuid(),
             Name = emailAccountDto.Name,
-            Body = emailAccountDto.Body,
-            CreatedAt = DateTime.UtcNow
+            Text = emailAccountDto.Text,
+            Html = emailAccountDto.Html,
+            Created = DateTime.UtcNow
         };
 
         dbContext.EmailTemplates.Add(emailTemplate);
@@ -68,16 +70,17 @@ public class EmailTemplateService(ApplicationDbContext dbContext)
         return emailTemplate.Id;
     }
 
-    public void Update(Guid id, EmailTemplateUpdateDto flow, Guid userId)
+    public void Update(Guid id, EmailTemplateUpdateDto emailTemplateDto, Guid userId)
     {
         var emailTemplate = dbContext.EmailTemplates.SingleOrDefault(x => x.Id == id && x.EmailTemplateUsers.Any(x => x.UserId == userId));
 
         if (emailTemplate == null)
             return;
 
-        emailTemplate.Name = flow.Name;
-        emailTemplate.Body = JsonSerializer.Serialize(flow);
-        emailTemplate.UpdatedAt = DateTime.UtcNow;
+        emailTemplate.Name = emailTemplateDto.Name;
+        emailTemplate.Text = emailTemplateDto.Text;
+        emailTemplate.Html = emailTemplateDto.Html;
+        emailTemplate.Updated = DateTime.UtcNow;
 
         dbContext.SaveChanges();
     }

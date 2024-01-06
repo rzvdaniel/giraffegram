@@ -50,8 +50,8 @@ public class EmailAccountController(EmailAccountService emailAccountService) : A
             Host = emailAccount.Host,
             Port = emailAccount.Port,
             UseSsl = emailAccount.UseSsl,
-            CreatedAt = emailAccount.CreatedAt,
-            UpdatedAt = emailAccount.UpdatedAt
+            CreatedAt = emailAccount.Created,
+            UpdatedAt = emailAccount.Updated
         };
 
         return Ok(emailAccountDto);

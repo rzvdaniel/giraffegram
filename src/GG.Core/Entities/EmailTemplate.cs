@@ -14,13 +14,14 @@ public class EmailTemplate
     [MaxLength(256)]
     public required string Name { get; set; }
 
-    [Required]
-    public required string Body { get; set; }
+    public string? Text { get; set; }
+
+    public string? Html { get; set; }
 
     [Required]
-    public DateTime CreatedAt { get; set; }
+    public DateTime Created { get; set; }
 
-    public DateTime? UpdatedAt { get; set; }
+    public DateTime? Updated { get; set; }
 
     public virtual ICollection<EmailTemplateUser> EmailTemplateUsers { get; set; }
 }

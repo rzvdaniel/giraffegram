@@ -30,9 +30,9 @@ public class EmailAccount
     public required string UserPassword { get; set; }
 
     [Required]
-    public DateTime CreatedAt { get; set; }
+    public DateTime Created { get; set; }
 
-    public DateTime? UpdatedAt { get; set; }
+    public DateTime? Updated { get; set; }
 
     public virtual ICollection<EmailAccountUser> EmailAccountUsers { get; set; }
 }
