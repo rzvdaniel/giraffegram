@@ -1,12 +1,9 @@
-using GG.Auth;
 using GG.Auth.Config;
-using GG.Auth.Entities;
 using GG.Auth.Services;
 using GG.Core;
+using GG.Core.Authentication;
 using GG.Core.Services;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using OpenIddict.Validation.AspNetCore;
 using Quartz;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -30,6 +27,8 @@ services.AddTransient<EmailAccountService>();
 services.AddTransient<EmailTemplateService>();
 services.AddTransient<SecretKeyEncryptionService>();
 services.AddTransient<AppConfigService>();
+services.AddTransient<ApiKeyService>();
+services.AddTransient<ApiKeyAuthFilter>();
 
 services.AddControllers();
 services.AddHttpContextAccessor();
@@ -70,7 +69,6 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllers()
-    .RequireAuthorization();
+app.MapControllers();
 
 app.Run();

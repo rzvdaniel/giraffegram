@@ -1,11 +1,32 @@
 ﻿using GG.Core.Dto;
 using MailKit.Net.Smtp;
+using Microsoft.EntityFrameworkCore;
 using MimeKit;
 
 namespace GG.Core.Services;
 
-public class EmailService(EmailAccountService emailHostService)
+public class EmailService(EmailAccountService emailHostService, ApplicationDbContext dbContext)
 {
+    public async Task<EmailTemplateGetDto?> Get(string emailTemplateName, Guid userId, CancellationToken cancellationToken)
+    {
+        var emailTemplate = await dbContext.EmailTemplates.SingleOrDefaultAsync(x => x.Name == emailTemplateName && x.EmailTemplateUsers.Any(x => x.UserId == userId), cancellationToken);
+
+        if (emailTemplate == null)
+            return null;
+
+        var emailTemplateGetDto = new EmailTemplateGetDto
+        {
+            Id = emailTemplate.Id,
+            Name = emailTemplate.Name,
+            Text = emailTemplate.Text,
+            Html = emailTemplate.Html,
+            Created = emailTemplate.Created,
+            Updated = emailTemplate.Updated
+        };
+
+        return emailTemplateGetDto;
+    }
+
     public async Task Send(EmailSendDto email, Guid userId, CancellationToken cancellationToken)
     {
         var message = new MimeMessage();

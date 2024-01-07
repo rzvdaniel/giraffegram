@@ -1,6 +1,6 @@
 ﻿namespace GG.Core.Dto;
 
-public class EmailTemplateGetDto
+public class EmailTemplateCreatedDto
 {
     public Guid Id { get; set; }
 
@@ -10,7 +10,5 @@ public class EmailTemplateGetDto
 
     public string? Html { get; set; }
 
-    public DateTime Created { get; set; }
-
-    public DateTime? Updated { get; set; }
+    public DateTime CreatedAt { get; set; }
 }

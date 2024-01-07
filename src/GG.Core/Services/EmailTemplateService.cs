@@ -16,8 +16,8 @@ public class EmailTemplateService(ApplicationDbContext dbContext)
                 Name = x.Name,
                 Text = x.Text,
                 Html = x.Html,
-                CreatedAt = x.Created,
-                UpdatedAt = x.Updated
+                Created = x.Created,
+                Updated = x.Updated
             })
             .ToListAsync(cancellationToken);
 
@@ -37,8 +37,28 @@ public class EmailTemplateService(ApplicationDbContext dbContext)
             Name = emailTemplate.Name,
             Text = emailTemplate.Text,
             Html = emailTemplate.Html,
-            CreatedAt = emailTemplate.Created,
-            UpdatedAt = emailTemplate.Updated
+            Created = emailTemplate.Created,
+            Updated = emailTemplate.Updated
+        };
+
+        return emailTemplateGetDto;
+    }
+
+    public async Task<EmailTemplateGetDto?> Get(string emailTemplateName, Guid userId, CancellationToken cancellationToken)
+    {
+        var emailTemplate = await dbContext.EmailTemplates.SingleOrDefaultAsync(x => x.Name == emailTemplateName && x.EmailTemplateUsers.Any(x => x.UserId == userId), cancellationToken);
+
+        if (emailTemplate == null)
+            return null;
+
+        var emailTemplateGetDto = new EmailTemplateGetDto
+        {
+            Id = emailTemplate.Id,
+            Name = emailTemplate.Name,
+            Text = emailTemplate.Text,
+            Html = emailTemplate.Html,
+            Created = emailTemplate.Created,
+            Updated = emailTemplate.Updated
         };
 
         return emailTemplateGetDto;

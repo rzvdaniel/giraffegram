@@ -9,6 +9,8 @@ public class ApplicationDbContext : DbContext
     public DbSet<EmailAccountUser> EmailAccountUsers => Set<EmailAccountUser>();
     public DbSet<EmailTemplate> EmailTemplates => Set<EmailTemplate>();
     public DbSet<EmailTemplateUser> EmailTemplateUsers => Set<EmailTemplateUser>();
+    public DbSet<ApiKey> ApiKeys => Set<ApiKey>();
+    public DbSet<ApiKeyUser> ApiKeyUsers => Set<ApiKeyUser>();
 
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base(options)
@@ -37,6 +39,14 @@ public class ApplicationDbContext : DbContext
             entity.HasIndex(e => e.EmailTemplateId, "IX_EmailTemplateUser_EmailTemplateId");
             entity.Property(e => e.UserId).IsRequired();
             entity.Property(e => e.EmailTemplateId).IsRequired();
+        });
+
+        modelBuilder.Entity<ApiKeyUser>(entity =>
+        {
+            entity.HasKey(e => new { e.ApiKeyId, e.UserId });
+            entity.HasIndex(e => e.ApiKeyId, "IX_ApiKeyUser_ApiKeyId");
+            entity.Property(e => e.UserId).IsRequired();
+            entity.Property(e => e.ApiKeyId).IsRequired();
         });
     }
 }

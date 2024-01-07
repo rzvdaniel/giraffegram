@@ -11,16 +11,16 @@ public class EmailTemplateController(EmailTemplateService emailTemplateService) 
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     public async Task<ActionResult> Create(EmailTemplateAddDto emailTemplateAddDto, CancellationToken cancellationToken)
     {
-        var emailHostExists = await emailTemplateService.Exists(emailTemplateAddDto.Name, GetUserId(), cancellationToken);
+        var emailTemplateExists = await emailTemplateService.Exists(emailTemplateAddDto.Name, GetUserId(), cancellationToken);
 
-        if (emailHostExists)
+        if (emailTemplateExists)
         {
             return StatusCode(StatusCodes.Status409Conflict);
         }
 
         var id = await emailTemplateService.Create(emailTemplateAddDto, GetUserId(), cancellationToken);
 
-        return CreatedAtAction(nameof(Get), new { id }, emailTemplateAddDto);
+        return CreatedAtAction(nameof(Get), new { id }, id);
     }
 
     [HttpGet]
