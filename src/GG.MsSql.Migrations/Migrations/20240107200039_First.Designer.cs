@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GG.Migrations.MsSql.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240106100915_First")]
+    [Migration("20240107200039_First")]
     partial class First
     {
         /// <inheritdoc />
@@ -24,6 +24,48 @@ namespace GG.Migrations.MsSql.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("GG.Core.Entities.ApiKey", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Key")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<DateTime?>("Updated")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ApiKeys");
+                });
+
+            modelBuilder.Entity("GG.Core.Entities.ApiKeyUser", b =>
+                {
+                    b.Property<Guid>("ApiKeyId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("ApiKeyId", "UserId");
+
+                    b.HasIndex(new[] { "ApiKeyId" }, "IX_ApiKeyUser_ApiKeyId");
+
+                    b.ToTable("ApiKeyUsers");
+                });
 
             modelBuilder.Entity("GG.Core.Entities.EmailAccount", b =>
                 {
@@ -124,6 +166,15 @@ namespace GG.Migrations.MsSql.Migrations
                     b.ToTable("EmailTemplateUsers");
                 });
 
+            modelBuilder.Entity("GG.Core.Entities.ApiKeyUser", b =>
+                {
+                    b.HasOne("GG.Core.Entities.ApiKey", null)
+                        .WithMany("ApiKeyUsers")
+                        .HasForeignKey("ApiKeyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("GG.Core.Entities.EmailAccountUser", b =>
                 {
                     b.HasOne("GG.Core.Entities.EmailAccount", null)
@@ -140,6 +191,11 @@ namespace GG.Migrations.MsSql.Migrations
                         .HasForeignKey("EmailTemplateId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("GG.Core.Entities.ApiKey", b =>
+                {
+                    b.Navigation("ApiKeyUsers");
                 });
 
             modelBuilder.Entity("GG.Core.Entities.EmailAccount", b =>

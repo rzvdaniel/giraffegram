@@ -12,6 +12,21 @@ namespace GG.Migrations.MsSql.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "ApiKeys",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
+                    Key = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
+                    Created = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Updated = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ApiKeys", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "EmailAccounts",
                 columns: table => new
                 {
@@ -44,6 +59,24 @@ namespace GG.Migrations.MsSql.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_EmailTemplates", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ApiKeyUsers",
+                columns: table => new
+                {
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ApiKeyId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ApiKeyUsers", x => new { x.ApiKeyId, x.UserId });
+                    table.ForeignKey(
+                        name: "FK_ApiKeyUsers_ApiKeys_ApiKeyId",
+                        column: x => x.ApiKeyId,
+                        principalTable: "ApiKeys",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -83,6 +116,11 @@ namespace GG.Migrations.MsSql.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_ApiKeyUser_ApiKeyId",
+                table: "ApiKeyUsers",
+                column: "ApiKeyId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_EmailAccountUser_EmailAccountId",
                 table: "EmailAccountUsers",
                 column: "EmailAccountId");
@@ -97,10 +135,16 @@ namespace GG.Migrations.MsSql.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "ApiKeyUsers");
+
+            migrationBuilder.DropTable(
                 name: "EmailAccountUsers");
 
             migrationBuilder.DropTable(
                 name: "EmailTemplateUsers");
+
+            migrationBuilder.DropTable(
+                name: "ApiKeys");
 
             migrationBuilder.DropTable(
                 name: "EmailAccounts");
