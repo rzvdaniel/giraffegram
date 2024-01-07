@@ -46,12 +46,13 @@ public class ApiKeyService(ApplicationDbContext dbContext)
     public async Task<ApiKeyCreateDto> Create(ApiKeyAddDto emailAccountDto, Guid userId, CancellationToken cancellationToken)
     {
         var key = CreateSecureRandomString();
+        var hashedKey = CreateSHA512Hash(key);
 
         var apiKey = new ApiKey
         {
             Id = Guid.NewGuid(),
             Name = emailAccountDto.Name,
-            Key = CreateSHA512Hash(key),
+            Key = hashedKey,
             Created = DateTime.UtcNow
         };
 
@@ -72,7 +73,7 @@ public class ApiKeyService(ApplicationDbContext dbContext)
             Id = apiKey.Id,
             Name = apiKey.Name,
             Key = key,
-            CreatedAt= apiKey.Created
+            CreatedAt = apiKey.Created
         };
 
         return apiKeyCreateDto;
