@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GG.Migrations.MsSql.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240107200039_First")]
+    [Migration("20240109231733_First")]
     partial class First
     {
         /// <inheritdoc />
@@ -94,14 +94,6 @@ namespace GG.Migrations.MsSql.Migrations
 
                     b.Property<bool?>("UseSsl")
                         .HasColumnType("bit");
-
-                    b.Property<string>("UserName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UserPassword")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 

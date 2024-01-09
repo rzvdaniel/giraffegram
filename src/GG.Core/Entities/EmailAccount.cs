@@ -24,12 +24,6 @@ public class EmailAccount
     public bool? UseSsl { get; set; }
 
     [Required]
-    public required string UserName { get; set; }
-
-    [Required]
-    public required string UserPassword { get; set; }
-
-    [Required]
     public DateTime Created { get; set; }
 
     public DateTime? Updated { get; set; }

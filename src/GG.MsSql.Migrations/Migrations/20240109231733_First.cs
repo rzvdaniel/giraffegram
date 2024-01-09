@@ -35,8 +35,6 @@ namespace GG.Migrations.MsSql.Migrations
                     Host = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
                     Port = table.Column<int>(type: "int", nullable: false),
                     UseSsl = table.Column<bool>(type: "bit", nullable: true),
-                    UserName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    UserPassword = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Updated = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },

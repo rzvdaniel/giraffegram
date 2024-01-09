@@ -92,14 +92,6 @@ namespace GG.Migrations.MsSql.Migrations
                     b.Property<bool?>("UseSsl")
                         .HasColumnType("bit");
 
-                    b.Property<string>("UserName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UserPassword")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Id");
 
                     b.ToTable("EmailAccounts");

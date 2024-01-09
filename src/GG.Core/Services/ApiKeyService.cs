@@ -43,6 +43,21 @@ public class ApiKeyService(ApplicationDbContext dbContext)
         return apiKeyGetDto;
     }
 
+    public async Task<Guid> GetUserId(string key, CancellationToken cancellationToken)
+    {
+        var userApiKeyHash = CreateSHA512Hash(key);
+
+        var apiKey = await dbContext.ApiKeys
+            .Include(x => x.ApiKeyUsers)
+            .SingleOrDefaultAsync(x => x.Key == userApiKeyHash, cancellationToken) ?? 
+            throw new Exception("Api key not found");
+
+        var apiKeyUser = apiKey.ApiKeyUsers.FirstOrDefault() ?? 
+            throw new Exception("Api key user not found"); ;
+
+        return apiKeyUser.UserId;
+    }
+
     public async Task<ApiKeyCreateDto> Create(ApiKeyAddDto emailAccountDto, Guid userId, CancellationToken cancellationToken)
     {
         var key = CreateSecureRandomString();
