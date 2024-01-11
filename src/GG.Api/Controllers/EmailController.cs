@@ -14,7 +14,9 @@ public class EmailController(EmailService emailService) : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> Send(EmailSendDto sendEmailDto, CancellationToken cancellationToken)
     {
-        await emailService.Send(sendEmailDto, cancellationToken);
+        string userApiKey = HttpContext.Request.Headers[ApiKeyAuthFilter.ApiKeyHeaderName].ToString();
+
+        await emailService.Send(sendEmailDto, userApiKey, cancellationToken);
 
         return Ok();
     }
