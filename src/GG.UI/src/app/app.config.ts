@@ -21,7 +21,7 @@ export const appConfig: ApplicationConfig = {
             withPreloading(PreloadAllModules),
             withInMemoryScrolling({scrollPositionRestoration: 'enabled'}),
         ),
-
+        
         // Material Date Adapter
         {
             provide : DateAdapter,
@@ -79,6 +79,7 @@ export const appConfig: ApplicationConfig = {
         // Fuse
         provideAuth(),
         provideIcons(),
+        //provideApp(),
         provideFuse({
             mockApi: {
                 delay   : 0,

@@ -17,26 +17,13 @@ export class AuthUtils
      * @param token
      * @param offsetSeconds
      */
-    static isTokenExpired(token: string, offsetSeconds?: number): boolean
+    static isTokenExpired(expiresInSeconds: number): boolean
     {
-        // Return if there is no token
-        if ( !token || token === '' )
-        {
-            return true;
-        }
-
-        // Get the expiration date
-        const date = this._getTokenExpirationDate(token);
-
-        offsetSeconds = offsetSeconds || 0;
-
-        if ( date === null )
-        {
-            return true;
-        }
+        const date = new Date()
+        date.setSeconds(date.getSeconds() + expiresInSeconds)
 
         // Check if the token is expired
-        return !(date.valueOf() > new Date().valueOf() + offsetSeconds * 1000);
+        return !(date.valueOf() > new Date().valueOf());
     }
 
     // -----------------------------------------------------------------------------------------------------
