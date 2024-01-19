@@ -18,8 +18,7 @@ export class AuthService
         {
             name: "Razvan Predescu",
             email: "rzvdaniel@gmail.com",
-            avatar: "",
-            status: "online"
+            avatar: ""
         } as User;
     }
 
@@ -102,8 +101,7 @@ export class AuthService
                 {
                     name: "Razvan Predescu",
                     email: "rzvdaniel@gmail.com",
-                    avatar: "",
-                    status: "online"
+                    avatar: ""
                 } as User;
 
                 // Return a new observable with the response
