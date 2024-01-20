@@ -1,4 +1,3 @@
-import { BooleanInput } from '@angular/cdk/coercion';
 import { NgClass, NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
@@ -21,11 +20,6 @@ import { Subject, takeUntil } from 'rxjs';
 })
 export class UserComponent implements OnInit, OnDestroy
 {
-    /* eslint-disable @typescript-eslint/naming-convention */
-    static ngAcceptInputType_showAvatar: BooleanInput;
-    /* eslint-enable @typescript-eslint/naming-convention */
-
-    @Input() showAvatar: boolean = true;
     user: User;
 
     private _unsubscribeAll: Subject<any> = new Subject<any>();
@@ -92,7 +86,6 @@ export class UserComponent implements OnInit, OnDestroy
         // Update the user
         this._userService.update({
             ...this.user,
-            status,
         }).subscribe();
     }
 

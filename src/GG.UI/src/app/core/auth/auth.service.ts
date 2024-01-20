@@ -12,16 +12,6 @@ export class AuthService
     private _httpClient = inject(HttpClient);
     private _userService = inject(UserService);
 
-    constructor()
-    {
-        this._userService.user =
-        {
-            name: "Razvan Predescu",
-            email: "rzvdaniel@gmail.com",
-            avatar: ""
-        } as User;
-    }
-
     // -----------------------------------------------------------------------------------------------------
     // @ Accessors
     // -----------------------------------------------------------------------------------------------------
@@ -99,9 +89,7 @@ export class AuthService
                 // Store the user on the user service
                 this._userService.user =
                 {
-                    name: "Razvan Predescu",
                     email: "rzvdaniel@gmail.com",
-                    avatar: ""
                 } as User;
 
                 // Return a new observable with the response
