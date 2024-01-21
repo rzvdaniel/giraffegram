@@ -4,8 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GG.Auth;
 
-public class AuthDbContext :
-    IdentityDbContext<User, UserRole, Guid>
+public class AuthDbContext : IdentityDbContext<User, UserRole, Guid>
 {
     public DbSet<ApplicationUser> ApplicationUsers => Set<ApplicationUser>();
 
