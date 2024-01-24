@@ -258,6 +258,7 @@ public class AccountService(
             [Claims.Subject] = await userManager.GetUserIdAsync(user),
             [Claims.Email] = await userManager.GetEmailAsync(user)??string.Empty,
             [Claims.EmailVerified] = await userManager.IsEmailConfirmedAsync(user),
+            [Claims.Name] = user.Name??string.Empty,
             [Claims.Role] = await userManager.GetRolesAsync(user)
         };
 
