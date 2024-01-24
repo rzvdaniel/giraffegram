@@ -87,11 +87,8 @@ export class AuthService
                 this.expiresIn = response.expires_in;
 
                 // Store the user on the user service
-                this._userService.user =
-                {
-                    email: "rzvdaniel@gmail.com",
-                } as User;
-
+                this._userService.get().subscribe();
+                
                 // Return a new observable with the response
                 return of(response);
             })
