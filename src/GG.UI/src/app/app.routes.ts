@@ -92,7 +92,12 @@ export const appRoutes: Route[] = [
 
             // Dashboards
             {path: 'dashboards', children: [
-                {path: 'analytics', loadChildren: () => import('app/modules/admin/dashboards/analytics/analytics.routes')},
+                {path: 'analytics', loadChildren: () => import('app/modules/admin/dashboards/analytics/analytics.routes')}
+            ]},
+
+            // Emails
+            {path: 'emails', children: [
+                {path: 'emails', loadChildren: () => import('app/modules/admin/emails/emails.routes')},
             ]},
 
             // 404 & Catch all

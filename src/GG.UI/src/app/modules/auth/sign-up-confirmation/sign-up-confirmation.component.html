@@ -7,9 +7,17 @@
             </div>
 
             <!-- Title -->
-            <div class="mt-8 text-4xl font-extrabold tracking-tight leading-tight">Sign up confirmation</div>
+            <div class="mt-8 text-4xl font-extrabold tracking-tight leading-tight">Account created successfully!</div>
             <div class="mt-4">
-                Thank you for creating an account with us! You can navigate to sign in page now.
+                <!-- Redirect countdown -->
+                <ng-container *ngIf="countdown > 0">
+                    Redirecting to login in {{countdown | i18nPlural: countdownMapping }}
+                </ng-container>
+
+                <!-- Redirect message -->
+                <ng-container *ngIf="countdown === 0">
+                    You are now being redirected!
+                </ng-container>         
             </div>
 
             <!-- Form footer -->
