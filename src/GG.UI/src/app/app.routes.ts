@@ -96,9 +96,7 @@ export const appRoutes: Route[] = [
             ]},
 
             // Emails
-            {path: 'emails', children: [
-                {path: 'emails', loadChildren: () => import('app/modules/admin/emails/emails.routes')},
-            ]},
+            {path: 'emails', loadChildren: () => import('app/modules/admin/emails/emails.routes')},
 
             // 404 & Catch all
             {path: '404-not-found', pathMatch: 'full', loadChildren: () => import('app/modules/admin/pages/error/error-404/error-404.routes')},

@@ -9,6 +9,7 @@ export class EmailTemplateService
 {
     private _httpClient = inject(HttpClient);
     private _templates: BehaviorSubject<EmailTemplate[] | null> = new BehaviorSubject(null);
+    private _template: BehaviorSubject<EmailTemplate | null> = new BehaviorSubject(null);
 
     // -----------------------------------------------------------------------------------------------------
     // @ Accessors
@@ -22,6 +23,14 @@ export class EmailTemplateService
         return this._templates.asObservable();
     }
 
+    /**
+     * Getter for email
+     */
+    get template$(): Observable<EmailTemplate>
+    {
+        return this._template.asObservable();
+    }    
+
     // -----------------------------------------------------------------------------------------------------
     // @ Public methods
     // -----------------------------------------------------------------------------------------------------
@@ -32,6 +41,30 @@ export class EmailTemplateService
             tap((templates) =>
             {
                 this._templates.next(templates);
+            }),
+        );
+    }
+
+    /**
+     * Get email by id
+     */
+    getEmailById(id: string): Observable<EmailTemplate>
+    {
+        return this._httpClient.get<EmailTemplate>(`${environment.api}/api/emailtemplate`, {params: {id}}).pipe(
+            map((template) =>
+            {
+                this._template.next(template);
+
+                return template;
+            }),
+            switchMap((template) =>
+            {
+                if ( !template )
+                {
+                    return throwError('Could not found email with id of ' + id + '!');
+                }
+
+                return of(template);
             }),
         );
     }

@@ -14,7 +14,7 @@ export const defaultNavigation: FuseNavigationItem[] = [
         title: 'Emails',
         type : 'basic',
         icon : 'feather:mail',
-        link : '/emails/emails'
+        link : '/emails'
     }
 ];
 export const compactNavigation: FuseNavigationItem[] = [

@@ -1,0 +1,67 @@
+<div class="flex flex-col flex-auto min-w-0">
+
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between p-6 sm:py-8 sm:px-10 border-b bg-card dark:bg-transparent">
+        <div class="flex-1 min-w-0">
+            <!-- Back to courses -->
+            <a
+            class="inline-flex items-center leading-6 text-primary hover:underline"
+            [routerLink]="['..']">
+            <span class="inline-flex items-center">
+                <mat-icon
+                    class="icon-size-5 text-current"
+                    [svgIcon]="'heroicons_solid:arrow-small-left'"></mat-icon>
+                <span class="ml-1.5 font-medium leading-5">Back to emails</span>
+            </span>
+        </a>
+            <!-- Title -->
+            <div class="mt-2">
+                <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight leading-7 sm:leading-10 truncate">
+                    {{email.name}}
+                </h2>
+            </div>
+        </div>
+        <!-- Actions -->
+        <div class="flex shrink-0 items-center mt-6 sm:mt-0 sm:ml-4">
+            <button mat-stroked-button>
+                <mat-icon
+                    class="icon-size-4"
+                    [svgIcon]="'heroicons_mini:pencil-square'"></mat-icon>
+                <span class="ml-2">Edit</span>
+            </button>
+            <button
+                class="ml-3"
+                mat-flat-button
+                [color]="'accent'">
+                <mat-icon
+                    class="icon-size-4"
+                    [svgIcon]="'heroicons_mini:link'"></mat-icon>
+                <span class="ml-2">View</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Main -->
+    <div class="flex-auto p-6 sm:p-10">
+
+        <!-- CONTENT GOES HERE -->
+        <div class="prose prose-sm max-w-5xl mx-auto sm:my-2 lg:mt-4 p-6 sm:p-10 sm:py-12 rounded-2xl shadow overflow-hidden bg-card"
+        [innerHTML]="email.html"></div>
+
+         <!-- Compose form -->
+    <form
+    class="flex flex-col flex-auto p-6 sm:p-8 overflow-y-auto"
+    [formGroup]="composeForm">
+
+         <!-- Body -->
+         <quill-editor
+         class="mt-2"
+         [formControlName]="'body'"
+         [bounds]="'self'"
+         [modules]="quillModules"></quill-editor>
+
+         <quill-view [content]="content" format="text" theme="snow"></quill-view>
+         </form>
+    </div>
+
+</div>
