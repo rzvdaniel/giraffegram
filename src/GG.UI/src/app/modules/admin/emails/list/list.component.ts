@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
 import { DatePipe, SlicePipe } from '@angular/common';
 import { EmailTemplateService, EmailTemplate } from 'app/core/email-template';
@@ -17,11 +17,14 @@ import { MatButtonModule } from '@angular/material/button';
     encapsulation: ViewEncapsulation.None,
     imports        : [MatTableModule, MatIconModule, MatSlideToggleModule, MatButtonModule, DatePipe, SlicePipe],
 })
-export class EmailListComponent implements OnInit
+export class EmailListComponent implements OnInit, OnDestroy
 {
     emailTemplates: EmailTemplate[];
     emailTemplatesTableColumns: string[] = ['name', 'html', 'created', 'updated'];
     searchInputControl: UntypedFormControl = new UntypedFormControl();
+
+    // Private
+    private _unsubscribeAll: Subject<any> = new Subject<any>();
 
     constructor(private _emailTemplateService: EmailTemplateService, private _router: Router)
     {
@@ -30,46 +33,25 @@ export class EmailListComponent implements OnInit
     ngOnInit(): void
     {
         this._emailTemplateService.templates$
+            .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((emailTemplates: EmailTemplate[]) => {
                 this.emailTemplates = emailTemplates;
             });
+    }
 
-        // Subscribe to search input field value changes
-        // this.searchInputControl.valueChanges
-        //     .pipe(
-        //         takeUntil(this._unsubscribeAll),
-        //         debounceTime(300),
-        //         switchMap((query) =>
-        //         {
-        //             this.closeDetails();
-        //             this.isLoading = true;
-        //             return this._inventoryService.getProducts(0, 10, 'name', 'asc', query);
-        //         }),
-        //         map(() =>
-        //         {
-        //             this.isLoading = false;
-        //         }),
-        //     )
-        //     .subscribe();
+    ngOnDestroy(): void
+    {
+        // Unsubscribe from all subscriptions
+        this._unsubscribeAll.next(null);
+        this._unsubscribeAll.complete();
     }
 
     /**
      * Create product
      */
-    createEmailTemplate(): void
+    add(): void
     {
-        // Create the product
-        // this._inventoryService.createProduct().subscribe((newProduct) =>
-        // {
-        //     // Go to new product
-        //     this.selectedProduct = newProduct;
-
-        //     // Fill the form
-        //     this.selectedProductForm.patchValue(newProduct);
-
-        //     // Mark for check
-        //     this._changeDetectorRef.markForCheck();
-        // });
+        this._router.navigateByUrl(`/emails/add`);
     }
 
     viewEmailDetails(row: EmailTemplate): void {

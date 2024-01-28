@@ -41,10 +41,8 @@
     <!-- View mode -->
     <ng-container *ngIf="mode === 'view'">
 
-        <!-- Main -->
         <div class="flex-auto p-6 sm:p-10">
 
-            <!-- CONTENT GOES HERE -->
             <div class="prose prose-sm max-w-6xl mx-auto sm:my-2 lg:mt-4 p-6 sm:p-10 sm:py-12 rounded-2xl shadow overflow-hidden bg-card"
                 [innerHTML]="email.html"></div>
 
@@ -52,11 +50,16 @@
 
     </ng-container>
 
-    <!-- View mode -->
+    <!-- Edit mode -->
     <ng-container *ngIf="mode === 'edit'">
 
         <form class="flex flex-col flex-auto p-6 sm:p-8 overflow-y-auto" [formGroup]="composeForm">
-            <quill-editor class="mt-2" [formControlName]="'html'" ></quill-editor>
+            <mat-form-field>
+                <mat-label>Name</mat-label>
+                <input matInput [formControlName]="'name'">
+            </mat-form-field>
+
+            <quill-editor class="mt-2" [formControlName]="'html'"></quill-editor>
         </form>
 
     </ng-container>

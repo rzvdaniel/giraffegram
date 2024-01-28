@@ -16,7 +16,7 @@ export class EmailTemplateService
     // -----------------------------------------------------------------------------------------------------
 
     /**
-     * Getter for brands
+     * Getter for templates
      */
     get templates$(): Observable<EmailTemplate[]>
     {
@@ -50,7 +50,7 @@ export class EmailTemplateService
      */
     getEmailById(id: string): Observable<EmailTemplate>
     {
-        return this._httpClient.get<EmailTemplate>(`${environment.api}/api/emailtemplate`, {params: {id}}).pipe(
+        return this._httpClient.get<EmailTemplate>(`${environment.api}/api/emailtemplate/${id}`).pipe(
             map((template) =>
             {
                 this._template.next(template);
@@ -69,13 +69,18 @@ export class EmailTemplateService
         );
     }
 
+    add(template: EmailTemplate): Observable<any>
+    {
+        return this._httpClient.post<string>(`${environment.api}/api/emailtemplate`, template).pipe(
+            map((id) =>
+            {
+                return id;
+            })
+        );
+    }
+
     update(template: EmailTemplate): Observable<any>
     {
-        return this._httpClient.put<EmailTemplate>(`${environment.api}/api/emailtemplate/${template.id}`, template).pipe(
-            map((response) =>
-            {
-                this._template.next(response);
-            }),
-        );
+        return this._httpClient.put<EmailTemplate>(`${environment.api}/api/emailtemplate/${template.id}`, template);
     }
 }
