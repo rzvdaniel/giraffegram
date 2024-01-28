@@ -73,7 +73,7 @@ export class EmailListComponent implements OnInit
     }
 
     viewEmailDetails(row: EmailTemplate): void {
-        this._router.navigateByUrl(`/emails/${row.id}`);
+        this._router.navigateByUrl(`/emails/details/${row.id}`);
     }
 
     /**

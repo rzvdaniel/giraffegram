@@ -68,4 +68,14 @@ export class EmailTemplateService
             }),
         );
     }
+
+    update(template: EmailTemplate): Observable<any>
+    {
+        return this._httpClient.put<EmailTemplate>(`${environment.api}/api/emailtemplate/${template.id}`, template).pipe(
+            map((response) =>
+            {
+                this._template.next(response);
+            }),
+        );
+    }
 }

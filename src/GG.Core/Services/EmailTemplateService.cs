@@ -92,7 +92,9 @@ public class EmailTemplateService(ApplicationDbContext dbContext)
 
     public void Update(Guid id, EmailTemplateUpdateDto emailTemplateDto, Guid userId)
     {
-        var emailTemplate = dbContext.EmailTemplates.SingleOrDefault(x => x.Id == id && x.EmailTemplateUsers.Any(x => x.UserId == userId));
+        var emailTemplate = dbContext.EmailTemplates
+            .Include(x => x.EmailTemplateUsers)
+            .SingleOrDefault(x => x.Id == id && x.EmailTemplateUsers.Any(x => x.UserId == userId));
 
         if (emailTemplate == null)
             return;

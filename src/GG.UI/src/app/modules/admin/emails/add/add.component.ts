@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { NgIf } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterLink } from '@angular/router';
@@ -8,17 +7,16 @@ import { QuillEditorComponent } from 'ngx-quill';
 import { FormsModule, ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 
 @Component({
-    selector     : 'email-details',
-    templateUrl  : './details.component.html',
+    selector     : 'email-add',
+    templateUrl  : './add.component.html',
     encapsulation: ViewEncapsulation.None,
     standalone   : true,
-    imports      : [MatIconModule, RouterLink, NgIf, MatButtonModule, QuillEditorComponent, FormsModule, ReactiveFormsModule],
+    imports      : [MatIconModule, RouterLink, MatButtonModule, QuillEditorComponent, FormsModule, ReactiveFormsModule],
 })
-export class EmailDetailsComponent implements OnInit
+export class EmailAddComponent implements OnInit
 {
     email: EmailTemplate;
     composeForm: UntypedFormGroup;
-    mode: 'view' | 'edit';
 
     quillModules: any = {
         toolbar: [
@@ -39,9 +37,6 @@ export class EmailDetailsComponent implements OnInit
      */
     ngOnInit(): void
     {
-        // Make sure to start in 'view' mode
-        this.mode = 'view';
-
         this.composeForm = this._formBuilder.group({
             html   : ['', [Validators.required]],
         });
@@ -52,25 +47,8 @@ export class EmailDetailsComponent implements OnInit
                 this.email = email[0];
 
                 this.composeForm.patchValue(this.email);
-            });   
-    }
+            });
 
-    edit() : void 
-    {
-        this.mode = 'edit';
-    }
-
-    view() : void 
-    {
-        this.mode = 'view';
-    }
-
-    save() : void 
-    {
-        this.email.html = this.composeForm.value.html;
-
-        this._emailTemplateService.update({
-            ...this.email,
-        }).subscribe();
+        
     }
 }

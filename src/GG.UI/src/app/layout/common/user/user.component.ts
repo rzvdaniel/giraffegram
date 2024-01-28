@@ -33,6 +33,7 @@ export class UserComponent implements OnInit, OnDestroy
         private _userService: UserService,
     )
     {
+        this.user = new User();
     }
 
     // -----------------------------------------------------------------------------------------------------

@@ -2,6 +2,7 @@ import { inject } from '@angular/core';
 import { ActivatedRouteSnapshot, Router, RouterStateSnapshot, Routes } from '@angular/router';
 import { EmailListComponent } from 'app/modules/admin/emails/list/list.component';
 import { EmailDetailsComponent } from 'app/modules/admin/emails/details/details.component';
+import { EmailAddComponent } from 'app/modules/admin/emails/add/add.component';
 import { EmailComponent } from 'app/modules/admin/emails/email.component';
 import { EmailTemplateService } from 'app/core/email-template';
 import { catchError, throwError } from 'rxjs';
@@ -52,11 +53,15 @@ export default [
                 },
             },
             {
-                path     : ':id',
+                path     : 'details/:id',
                 component: EmailDetailsComponent,
                 resolve  : {
                     course: emailResolver,
                 },
+            },
+            {
+                path     : 'add',
+                component: EmailAddComponent
             },
         ],
     },
