@@ -21,7 +21,6 @@ public class EmailService(ApiKeyService apiKeyService, ApplicationDbContext dbCo
         {
             Id = emailTemplate.Id,
             Name = emailTemplate.Name,
-            Text = emailTemplate.Text,
             Html = emailTemplate.Html,
             Created = emailTemplate.Created,
             Updated = emailTemplate.Updated
@@ -77,7 +76,7 @@ public class EmailService(ApiKeyService apiKeyService, ApplicationDbContext dbCo
         if (emailTemplate == null)
             return null;
 
-        var emailBody = emailDto.Type == "Html" ? emailTemplate.Html : emailTemplate.Text;
+        var emailBody = emailTemplate.Html;
 
         var parser = new FluidParser();
 

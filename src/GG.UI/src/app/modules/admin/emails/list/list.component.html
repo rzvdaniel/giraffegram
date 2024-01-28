@@ -42,11 +42,6 @@
         <td mat-cell *matCellDef="let template"> {{template.name }} </td>
       </ng-container>
 
-      <ng-container matColumnDef="text">
-        <th mat-header-cell *matHeaderCellDef> Text </th>
-        <td mat-cell *matCellDef="let template"> {{template.text | slice:0:50 }} ... </td>
-      </ng-container>
-
       <ng-container matColumnDef="html">
         <th mat-header-cell *matHeaderCellDef> Html </th>
         <td mat-cell *matCellDef="let template"> {{template.html | slice:0:50 }} ... </td>

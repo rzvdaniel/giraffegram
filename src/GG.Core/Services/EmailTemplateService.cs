@@ -14,7 +14,6 @@ public class EmailTemplateService(ApplicationDbContext dbContext)
             {
                 Id = x.Id,
                 Name = x.Name,
-                Text = x.Text,
                 Html = x.Html,
                 Created = x.Created,
                 Updated = x.Updated
@@ -35,7 +34,6 @@ public class EmailTemplateService(ApplicationDbContext dbContext)
         {
             Id = emailTemplate.Id,
             Name = emailTemplate.Name,
-            Text = emailTemplate.Text,
             Html = emailTemplate.Html,
             Created = emailTemplate.Created,
             Updated = emailTemplate.Updated
@@ -55,7 +53,6 @@ public class EmailTemplateService(ApplicationDbContext dbContext)
         {
             Id = emailTemplate.Id,
             Name = emailTemplate.Name,
-            Text = emailTemplate.Text,
             Html = emailTemplate.Html,
             Created = emailTemplate.Created,
             Updated = emailTemplate.Updated
@@ -70,7 +67,6 @@ public class EmailTemplateService(ApplicationDbContext dbContext)
         {
             Id = Guid.NewGuid(),
             Name = emailAccountDto.Name,
-            Text = emailAccountDto.Text,
             Html = emailAccountDto.Html,
             Created = DateTime.UtcNow
         };
@@ -100,7 +96,6 @@ public class EmailTemplateService(ApplicationDbContext dbContext)
             return;
 
         emailTemplate.Name = emailTemplateDto.Name;
-        emailTemplate.Text = emailTemplateDto.Text;
         emailTemplate.Html = emailTemplateDto.Html;
         emailTemplate.Updated = DateTime.UtcNow;
 

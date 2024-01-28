@@ -14,8 +14,6 @@ public class EmailTemplate
     [MaxLength(256)]
     public required string Name { get; set; }
 
-    public string Text { get; set; }
-
     public string Html { get; set; }
 
     [Required]

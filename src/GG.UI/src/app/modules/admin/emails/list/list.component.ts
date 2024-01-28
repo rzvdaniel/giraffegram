@@ -20,7 +20,7 @@ import { MatButtonModule } from '@angular/material/button';
 export class EmailListComponent implements OnInit
 {
     emailTemplates: EmailTemplate[];
-    emailTemplatesTableColumns: string[] = ['name', 'text', 'html', 'created', 'updated'];
+    emailTemplatesTableColumns: string[] = ['name', 'html', 'created', 'updated'];
     searchInputControl: UntypedFormControl = new UntypedFormControl();
 
     constructor(private _emailTemplateService: EmailTemplateService, private _router: Router)
@@ -82,6 +82,5 @@ export class EmailListComponent implements OnInit
     // closeDetails(): void
     // {
     //     this.selectedProduct = null;
-    // }
-       
+    // }       
 }
