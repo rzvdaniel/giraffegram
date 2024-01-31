@@ -1,31 +1,84 @@
-<div class="flex flex-col items-center justify-center w-full h-full">
-    <div class="w-full max-w-3xl">
-        <div class="max-w-none mx-auto prose prose-sm">
-            <img
-                class="w-20"
-                src="assets/images/logo/logo.png"
-                alt="Logo image">
-            <h1>Landing Module</h1>
-            <p>
-                This can be the landing or the welcome page of your application. If you have an SSR (Server Side Rendering) setup, or if you don't need to have Search engine
-                visibility and optimizations, you can even use this page as your primary landing page.
-            </p>
-            <p>
-                This is a separate "module", it has its own directory and routing setup and also it's completely separated from the actual application. This is also a simple example of
-                a multiple applications setup that uses the same codebase. You can have different entry points and essentially have different applications within the same codebase.
-            </p>
+<div class="flex flex-col flex-auto min-w-1">
+
+    <!-- Header -->
+    <div class="flex flex-col shadow bg-card">
+
+        <div class="flex flex-col flex-0 lg:flex-row max-w-5xl w-full mx-auto px-8 lg:h-18 bg-card">
+
+            <!-- Menu -->
+            <div class="flex items-center mt-8 mb-4 lg:m-0 lg:ml-auto space-x-6">
+                <h1 class="lg:text-2xl md:text-2xl sm:text-2xl font-extrabold">
+                    Giraffegram
+                </h1>
+                <img class="w-10" src="assets/images/logo/logo.png" alt="Logo image">
+
+                <a class="font-medium" [routerLink]="['./']">
+                    Home
+                </a>
+                <a class="text-secondary" [routerLink]="['/dashboards/analytics']">
+                    App
+                </a>
+                <a class="text-secondary" [routerLink]="['./']">
+                    Docs
+                </a>
+                <a class="text-secondary" [routerLink]="['./']">
+                    About
+                </a>
+            </div>
+
         </div>
-        <div>
-            <a
-                class="mt-8"
-                mat-flat-button
-                [color]="'primary'"
-                [routerLink]="'/dashboards/analytics'">
-                <span>Launch the App</span>
-                <mat-icon
-                    class="ml-2 icon-size-5"
-                    [svgIcon]="'heroicons_mini:arrow-long-right'"></mat-icon>
-            </a>
+
+    </div>
+
+    <div class="flex flex-col items-center justify-center w-full h-full p-6 sm:p-10">
+        <div class="w-full max-w-3xl items-center">
+
+            <div class="max-w-none mx-auto prose">
+                <h1 class="font-extrabold">What is Giraffegram</h1>
+                <p>
+                    Giraffegram is a software as a service which allows developers to manage transactional emails, and
+                    send them to their users from any programming language.
+                </p>
+
+                <h1 class="font-extrabold">How it works</h1>
+
+                <ol>
+                    <li>Create an <a [routerLink]="['/sign-up']">Account</a></li>
+                    <li>Login to the
+                        <a [routerLink]="['/dashboards/analytics']">
+                            App
+                        </a>
+                    </li>
+                    <li>Create an <a [routerLink]="['/keys']">
+                            API key
+                        </a>
+                    </li>
+                    <li>Add an <a [routerLink]="['/emails/add']">
+                            Email template
+                        </a>
+                    </li>
+                    <li>Send the email from your project (see
+                        <a [routerLink]="['/docs']">
+                            Docs
+                        </a>)
+                    </li>
+                </ol>
+
+
+
+                <h1 class="font-extrabold">Open source</h1>
+                <p>
+                    Giraffegram is 100% open source. You can host it yourself always under your control, or we can run
+                    it
+                    for you for a full serverless experience.
+                </p>
+            </div>
+            <div>
+                <a class="mt-8" mat-flat-button [color]="'primary'" [routerLink]="'/dashboards/analytics'">
+                    <span>Launch the App</span>
+                    <mat-icon class="ml-2 icon-size-5" [svgIcon]="'heroicons_mini:arrow-long-right'"></mat-icon>
+                </a>
+            </div>
         </div>
     </div>
 </div>
