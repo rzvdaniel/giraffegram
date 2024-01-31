@@ -34,26 +34,3 @@
         <span>Sign out</span>
     </button>
 </mat-menu>
-
-<mat-menu
-    class="user-status-menu"
-    #userStatus="matMenu">
-    <button
-        mat-menu-item
-        (click)="updateUserStatus('away')">
-        <span class="w-4 h-4 mr-3 rounded-full bg-amber-500"></span>
-        <span>Away</span>
-    </button>
-    <button
-        mat-menu-item
-        (click)="updateUserStatus('busy')">
-        <span class="w-4 h-4 mr-3 rounded-full bg-red-500"></span>
-        <span>Busy</span>
-    </button>
-    <button
-        mat-menu-item
-        (click)="updateUserStatus('not-visible')">
-        <span class="w-4 h-4 mr-3 rounded-full bg-gray-400"></span>
-        <span>Invisible</span>
-    </button>
-</mat-menu>
