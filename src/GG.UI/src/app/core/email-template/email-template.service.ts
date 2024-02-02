@@ -61,7 +61,7 @@ export class EmailTemplateService
             {
                 if ( !template )
                 {
-                    return throwError('Could not found email with id of ' + id + '!');
+                    return throwError('Could not find email with id of ' + id + '!');
                 }
 
                 return of(template);

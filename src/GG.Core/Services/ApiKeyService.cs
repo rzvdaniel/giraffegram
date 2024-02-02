@@ -16,8 +16,8 @@ public class ApiKeyService(ApplicationDbContext dbContext)
             {
                 Id = x.Id,
                 Name = x.Name,
-                CreatedAt = x.Created,
-                UpdatedAt = x.Updated
+                Created = x.Created,
+                Updated = x.Updated
             })
             .ToListAsync(cancellationToken);
 
@@ -36,8 +36,8 @@ public class ApiKeyService(ApplicationDbContext dbContext)
         {
             Id = apiKey.Id,
             Name = apiKey.Name,
-            CreatedAt = apiKey.Created,
-            UpdatedAt = apiKey.Updated
+            Created = apiKey.Created,
+            Updated = apiKey.Updated
         };
 
         return apiKeyGetDto;

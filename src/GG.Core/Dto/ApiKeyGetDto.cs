@@ -6,7 +6,7 @@ public class ApiKeyGetDto
 
     public required string Name { get; set; }
 
-    public DateTime CreatedAt { get; set; }
+    public DateTime Created { get; set; }
 
-    public DateTime? UpdatedAt { get; set; }
+    public DateTime? Updated { get; set; }
 }

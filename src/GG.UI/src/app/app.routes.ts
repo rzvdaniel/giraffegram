@@ -98,6 +98,9 @@ export const appRoutes: Route[] = [
             // Emails
             {path: 'emails', loadChildren: () => import('app/modules/admin/emails/emails.routes')},
 
+            // ApiKeys
+            {path: 'apikeys', loadChildren: () => import('app/modules/admin/apikeys/apikey.routes')},
+
             // 404 & Catch all
             {path: '404-not-found', pathMatch: 'full', loadChildren: () => import('app/modules/admin/pages/error/error-404/error-404.routes')},
             {path: '**', redirectTo: '404-not-found'}

@@ -15,6 +15,13 @@ export const defaultNavigation: FuseNavigationItem[] = [
         type : 'basic',
         icon : 'feather:mail',
         link : '/emails'
+    },
+    {
+        id   : 'apikeys',
+        title: 'Api Keys',
+        type : 'basic',
+        icon : 'feather:key',
+        link : '/apikeys'
     }
 ];
 export const compactNavigation: FuseNavigationItem[] = [
