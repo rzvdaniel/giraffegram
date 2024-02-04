@@ -35,15 +35,74 @@
 
             <div class="max-w-none mx-auto prose">
                 <h1 class="font-extrabold">What is Giraffegram</h1>
-                <p>
-                    Giraffegram is a software as a service which allows developers to manage transactional emails, and
-                    send them to their users from any programming language.
+
+                <p>Giraffegram is a platform to <b>manage</b> and <b>send</b> transactional emails.
+                    Install it <b>on premise</b> for a one-time fee, or use our instance for a monthly subscription.
                 </p>
 
                 <h1 class="font-extrabold">How it works</h1>
 
                 <ol>
-                    <li>Create an <a [routerLink]="['/sign-up']">Account</a></li>
+                    <li>
+                        Create email templates to use in your projects
+                    </li>
+                    <li>
+                        Send transactional emails as HTTP requests
+                    </li>
+                </ol>
+
+                <pre><code>curl 
+--location 'https://localhost:7160/api/email/send' \
+--header 'Content-Type: application/json' \
+--header 'X-Api-Key: 9yIQbmgbCdhpNDPcc3wutN2hH7cK==' \
+--data-raw '{{'{'}}
+    "from": {{'{'}}
+        "email": "noreply&#64;yourdomain.com",
+        "name": "Your App Name"
+    {{'}'}},
+    "to": {{'{'}}
+        "email": "tomjones&#64;email.com",
+        "name": "Tom Jones"
+    {{'}'}},
+    "template": "Welcome!",
+    "variables": {{'{'}}
+        "fullname": "Tom J. Jones"
+    {{'}'}},
+    "server": {{'{'}}
+        "host": "youremailserver.com",
+        "port": 465,
+        "useSsl": true
+    {{'}'}},
+    "account": {{'{'}}
+        "userName": "noreply&#64;yourdomain.com",
+        "userPassword": "*********"
+    {{'}'}}
+{{'}'}}
+</code></pre>
+
+                <h1 class="font-extrabold">When would I use it?</h1>
+                <p>When you build an app and need to send emails to your users. Giraffegram can help if you want to:</p>
+                <ul>
+                    <li>
+                        Manage email templates for your projects.
+                    </li>
+                    <li>
+                        Send emails using simple HTTP requests.
+                    </li>
+                    <li>
+                        Own the software, and install it on-premise.
+                    </li>
+                    <li>
+                        Get the code, and change it to fit your needs.
+                    </li>
+                </ul>
+
+                <h1 class="font-extrabold">How do I start?</h1>
+
+                <ol>
+                    <li>Create an
+                        <a [routerLink]="['/sign-up']">Account</a>
+                    </li>
                     <li>Login to the
                         <a [routerLink]="['/dashboards/analytics']">
                             App
@@ -53,25 +112,14 @@
                             API key
                         </a>
                     </li>
-                    <li>Add an <a [routerLink]="['/emails/add']">
+                    <li>Create an <a [routerLink]="['/emails/add']">
                             Email template
                         </a>
                     </li>
-                    <li>Send the email from your project (see
-                        <a [routerLink]="['/docs']">
-                            Docs
-                        </a>)
+                    <li>Send emails (<a [routerLink]="['/docs']">Docs</a>)
                     </li>
                 </ol>
 
-
-
-                <h1 class="font-extrabold">Open source</h1>
-                <p>
-                    Giraffegram is 100% open source. You can host it yourself always under your control, or we can run
-                    it
-                    for you for a full serverless experience.
-                </p>
             </div>
             <div>
                 <a class="mt-8" mat-flat-button [color]="'primary'" [routerLink]="'/dashboards/analytics'">
