@@ -67,7 +67,6 @@ export class ApiKeyService {
             .pipe(
                 map((apiKey) => {
                     this._apiKey.next(apiKey);
-
                     return apiKey;
                 })
             );

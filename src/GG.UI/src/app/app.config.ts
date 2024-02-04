@@ -79,7 +79,6 @@ export const appConfig: ApplicationConfig = {
         // Fuse
         provideAuth(),
         provideIcons(),
-        //provideApp(),
         provideFuse({
             mockApi: {
                 delay   : 0,

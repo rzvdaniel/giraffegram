@@ -47,6 +47,7 @@ export class EmailDetailsComponent implements OnInit, OnDestroy
 
         this.composeForm = this._formBuilder.group({
             name: ['', [Validators.required]],
+            subject: ['', [Validators.required]],
             html   : ['', [Validators.required]],
         });
 
@@ -80,6 +81,7 @@ export class EmailDetailsComponent implements OnInit, OnDestroy
     save() : void 
     {
         this.email.name = this.composeForm.value.name;
+        this.email.subject = this.composeForm.value.subject;
         this.email.html = this.composeForm.value.html;
 
         this._emailTemplateService.update({

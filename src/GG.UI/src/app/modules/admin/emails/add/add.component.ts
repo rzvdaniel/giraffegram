@@ -40,6 +40,7 @@ export class EmailAddComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.composeForm = this._formBuilder.group({
             name: ['', [Validators.required]],
+            subject: ['', [Validators.required]],
             html: ['', [Validators.required]],
         });
     }
@@ -57,6 +58,7 @@ export class EmailAddComponent implements OnInit, OnDestroy {
         }
 
         this.email.name = this.composeForm.value.name;
+        this.email.subject = this.composeForm.value.subject;
         this.email.html = this.composeForm.value.html;
 
         this._emailTemplateService.add({
