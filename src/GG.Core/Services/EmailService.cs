@@ -22,6 +22,7 @@ public class EmailService(ApiKeyService apiKeyService, ApplicationDbContext dbCo
             Id = emailTemplate.Id,
             Name = emailTemplate.Name,
             Html = emailTemplate.Html,
+            Subject = emailTemplate.Subject,
             Created = emailTemplate.Created,
             Updated = emailTemplate.Updated
         };
