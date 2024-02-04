@@ -1,0 +1,64 @@
+<div class="flex flex-col flex-auto min-w-0">
+
+    <!-- Header -->
+    <div
+        class="flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between p-6 sm:py-8 sm:px-10 border-b bg-card dark:bg-transparent">
+        <div class="flex-1 min-w-0">
+
+            <a class="inline-flex items-center leading-6 text-primary hover:underline" [routerLink]="['..']">
+                <span class="inline-flex items-center">
+                    <mat-icon class="icon-size-5 text-current"
+                        [svgIcon]="'heroicons_solid:arrow-small-left'"></mat-icon>
+                    <span class="ml-1.5 font-medium leading-5">Back to Api Keys</span>
+                </span>
+            </a>
+
+            <div class="mt-2">
+                <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight leading-7 sm:leading-10 truncate">
+                    Generate an Api Key
+                </h2>
+            </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="flex shrink-0 items-center mt-6 sm:mt-0 sm:ml-4">
+            <button class="ml-3" mat-flat-button [color]="'accent'" (click)="save()">
+                <mat-icon class="icon-size-4" [svgIcon]="'mat_outline:save'"></mat-icon>
+                <span class="ml-2">Generate</span>
+            </button>
+
+        </div>
+    </div>
+
+    <!-- Main -->
+    <div class="flex-auto p-6 sm:p-10">
+
+        <form class="flex flex-col flex-auto p-6 sm:p-8 overflow-y-auto" [formGroup]="composeForm" #composeNgForm="ngForm">
+            <mat-form-field>
+                <mat-label>Name</mat-label>
+                <input matInput [formControlName]="'name'">
+            </mat-form-field>
+
+            <ng-container *ngIf="showAlert">
+
+                <div class="flex">
+                    <mat-form-field class="flex-auto">
+                        <mat-label>Api Key</mat-label>
+                        <input [formControlName]="'key'" matInput [disabled]="true">
+                        <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:key'"></mat-icon>
+                    </mat-form-field>
+                </div>
+
+                <fuse-alert class="mt-8" [appearance]="'outline'" [showIcon]="false"
+                    [type]="alert.type" [@shake]="alert.type === 'error'">
+                    {{alert.message}}
+                </fuse-alert>
+
+            </ng-container>
+
+
+
+        </form>
+    </div>
+
+</div>
