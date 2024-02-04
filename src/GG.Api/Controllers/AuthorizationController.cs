@@ -8,7 +8,7 @@ using OpenIddict.Server.AspNetCore;
 using System.Security.Claims;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 
-namespace GG.Auth.Controllers;
+namespace GG.Api.Controllers;
 
 public class AuthorizationController(AuthorizationService authorizationService) : AuthControllerBase
 {

@@ -1,18 +1,18 @@
 ﻿using GG.Auth.Dtos;
 using GG.Auth.Entities;
 using GG.Auth.Services;
+using GG.Core.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using OpenIddict.Abstractions;
 using OpenIddict.Server.AspNetCore;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 
-namespace GG.Auth.Controllers;
+namespace GG.Api.Controllers;
 
-public class UserController(AccountService accountService) : AuthControllerBase
+public class UserController(AccountService accountService, EmailService emailService) : AuthControllerBase
 {
     [HttpPost]
     [AllowAnonymous]
