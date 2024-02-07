@@ -6,7 +6,6 @@ public class EmailSendDto
     public required EmailTo To { get; set; }
     public string? Subject { get; set; }
     public required string Template { get; set; }
-    public required string Type { get; set; }
     public Dictionary<string, string> Variables { get; set; } = [];
     public required EmailServer Server { get; set; }
     public required EmailAccount Account { get; set; }

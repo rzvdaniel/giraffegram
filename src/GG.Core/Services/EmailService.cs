@@ -53,8 +53,8 @@ public class EmailService(ApiKeyService apiKeyService, ApplicationDbContext dbCo
         var message = new MimeMessage();
         message.From.Add(new MailboxAddress(emailDto.From.Name, emailDto.From.Email));
         message.To.Add(new MailboxAddress(emailDto.To.Name, emailDto.To.Email));
-        message.Subject = emailDto.Subject;
-        message.Body = new TextPart(emailDto.Type) { Text = body };
+        message.Subject = "Welcome!!!";
+        message.Body = new TextPart("html") { Text = body };
 
         using var client = new SmtpClient();
 

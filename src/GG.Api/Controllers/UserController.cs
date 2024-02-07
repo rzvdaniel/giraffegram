@@ -1,6 +1,7 @@
 ﻿using GG.Auth.Dtos;
 using GG.Auth.Entities;
 using GG.Auth.Services;
+using GG.Core.Dto;
 using GG.Core.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -12,13 +13,13 @@ using static OpenIddict.Abstractions.OpenIddictConstants;
 
 namespace GG.Api.Controllers;
 
-public class UserController(AccountService accountService, EmailService emailService) : AuthControllerBase
+public class UserController(AccountService accountService, AppEmailService appEmailService) : AuthControllerBase
 {
     [HttpPost]
     [AllowAnonymous]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
-    public async Task<IActionResult> Create([FromBody] UserRegisterDto model)
+    public async Task<IActionResult> Create([FromBody] UserRegisterDto model, CancellationToken cancellationToken)
     {
         var existingUser = await accountService.GetUserByEmailOrUserName(model.Email);
 
@@ -27,7 +28,12 @@ public class UserController(AccountService accountService, EmailService emailSer
             return StatusCode(StatusCodes.Status409Conflict);
         }
 
-        var newUser = new User { UserName = model.Email, Email = model.Email };
+        var newUser = new User 
+        { 
+            UserName = model.Email,
+            Name = model.Name,
+            Email = model.Email 
+        };
 
         var result = await accountService.CreateUser(newUser, model.Password);
 
@@ -35,6 +41,9 @@ public class UserController(AccountService accountService, EmailService emailSer
         {
             AddErrors(result);
         }
+ 
+        var newUserDto = new NewUserDto { Email = model.Email, Name = model.Name };
+        await appEmailService.SendRegistrationEmail(newUserDto, cancellationToken);
 
         return Created();
     }

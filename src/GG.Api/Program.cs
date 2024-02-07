@@ -28,6 +28,7 @@ services.AddTransient<SecretKeyEncryptionService>();
 services.AddTransient<AppConfigService>();
 services.AddTransient<ApiKeyService>();
 services.AddTransient<ApiKeyAuthFilter>();
+services.AddTransient<AppEmailService>();
 
 services.AddControllers();
 services.AddHttpContextAccessor();
@@ -37,13 +38,13 @@ services.AddAuth(builder, configuration);
 services.AddDbContext<ApplicationDbContext>(
     options =>
     {
-        _ = configurationService.DatabaseType switch
+        _ = configurationService.AppConfig.DatabaseType switch
         {
             AppConfigService.MsSqlDatabaseType => options.UseSqlServer(msSqlConnection, x => x.MigrationsAssembly("GG.Migrations.MsSql")),
 
             AppConfigService.MySqlDatabaseType => options.UseMySQL(mySqlConnection, x => x.MigrationsAssembly("GG.Migrations.MySql")),
 
-            _ => throw new Exception($"Unsupported database provider: {configurationService.DatabaseType}")
+            _ => throw new Exception($"Unsupported database provider: {configurationService.AppConfig.DatabaseType}")
         };
     });
 
