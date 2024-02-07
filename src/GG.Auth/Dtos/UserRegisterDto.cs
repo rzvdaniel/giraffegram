@@ -5,14 +5,15 @@ namespace GG.Auth.Dtos;
 public class UserRegisterDto
 {
     [Required]
+    [MaxLength(319)]
     [EmailAddress]
     public required string Email { get; set; }
 
-    [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.")]
+    [MaxLength(256)]
     public string? Name { get; set; }
 
     [Required]
-    [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
+    [MaxLength(256)]
     [DataType(DataType.Password)]
     public required string Password { get; set; }
 }

@@ -8,6 +8,8 @@ namespace GG.Core.Services;
 
 public class EmailService(ApiKeyService apiKeyService, ApplicationDbContext dbContext)
 {
+    private const string EmailType = "html";
+
     public async Task<string?> Get(string emailTemplateName, string apiKey, Dictionary<string, string> contextData, CancellationToken cancellationToken)
     {
         var userId = await apiKeyService.GetUserId(apiKey, cancellationToken);
@@ -48,16 +50,21 @@ public class EmailService(ApiKeyService apiKeyService, ApplicationDbContext dbCo
 
     public async Task Send(EmailSendDto emailDto, string apiKey, CancellationToken cancellationToken)
     {
-        var body = await GetEmail(emailDto, apiKey, cancellationToken);
+        var renderedEmail = await GetEmail(emailDto, apiKey, cancellationToken);
+
+        if (renderedEmail == null)
+            return;
 
         var message = new MimeMessage();
         message.From.Add(new MailboxAddress(emailDto.From.Name, emailDto.From.Email));
         message.To.Add(new MailboxAddress(emailDto.To.Name, emailDto.To.Email));
-        message.Subject = "Welcome!!!";
-        message.Body = new TextPart("html") { Text = body };
+        message.Subject = renderedEmail.Subject;
+        message.Body = new TextPart(EmailType) 
+        { 
+            Text = renderedEmail.Html 
+        };
 
         using var client = new SmtpClient();
-
         client.Connect(emailDto.Server.Host, emailDto.Server.Port, emailDto.Server.UseSsl, cancellationToken);
 
         // Note: only needed if the SMTP server requires authentication
@@ -68,7 +75,7 @@ public class EmailService(ApiKeyService apiKeyService, ApplicationDbContext dbCo
         client.Disconnect(true, cancellationToken);
     }
 
-    private async Task<string?> GetEmail(EmailSendDto emailDto, string apiKey, CancellationToken cancellationToken)
+    private async Task<EmailRenderedDto?> GetEmail(EmailSendDto emailDto, string apiKey, CancellationToken cancellationToken)
     {
         var userId = await apiKeyService.GetUserId(apiKey, cancellationToken);
 
@@ -77,13 +84,16 @@ public class EmailService(ApiKeyService apiKeyService, ApplicationDbContext dbCo
         if (emailTemplate == null)
             return null;
 
-        var emailBody = emailTemplate.Html;
-
         var parser = new FluidParser();
 
-        if (!parser.TryParse(emailBody, out var template, out var error))
+        if (!parser.TryParse(emailTemplate.Html, out var htmlTemplate, out var error))
         {
-            throw new Exception("Could not parse email template");
+            throw new Exception("Could not parse email template body");
+        }
+
+        if (!parser.TryParse(emailTemplate.Subject, out var subjectTemplate, out var subjectError))
+        {
+            throw new Exception("Could not parse email template subject");
         }
 
         var context = new TemplateContext();
@@ -93,8 +103,15 @@ public class EmailService(ApiKeyService apiKeyService, ApplicationDbContext dbCo
             context.SetValue(contextEntry.Key, contextEntry.Value);
         }
 
-        var email = template.Render(context);
+        var renderedHtml = htmlTemplate.Render(context);
+        var renderedSubject = subjectTemplate.Render(context);
 
-        return email;
+        var renderedEmail = new EmailRenderedDto
+        {
+            Html = renderedHtml,
+            Subject = renderedSubject
+        };
+
+        return renderedEmail;
     }
 }
