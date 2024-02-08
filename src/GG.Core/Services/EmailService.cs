@@ -65,10 +65,10 @@ public class EmailService(ApiKeyService apiKeyService, ApplicationDbContext dbCo
         };
 
         using var client = new SmtpClient();
-        client.Connect(emailDto.Server.Host, emailDto.Server.Port, emailDto.Server.UseSsl, cancellationToken);
+        client.Connect(emailDto.Configuration.Host, emailDto.Configuration.Port, emailDto.Configuration.UseSsl, cancellationToken);
 
         // Note: only needed if the SMTP server requires authentication
-        client.Authenticate(emailDto.Account.UserName, emailDto.Account.UserPassword, cancellationToken);
+        client.Authenticate(emailDto.Configuration.UserName, emailDto.Configuration.UserPassword, cancellationToken);
 
         client.Send(message);
 
