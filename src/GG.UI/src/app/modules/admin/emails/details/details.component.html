@@ -39,37 +39,42 @@
     </div>
 
     <!-- View mode -->
-    <ng-container *ngIf="mode === 'view'">
+    <div [hidden]="mode === 'edit'">
 
+        <ng-container>
 
-        <div class="flex-auto p-6 sm:p-10">
-            <div class="prose prose-sm max-w-6xl mx-auto sm:my-2 lg:mt-4 p-6 sm:p-10 sm:py-12 rounded-2xl shadow overflow-hidden bg-card"
-            [innerHTML]="email.subject"></div>
+            <div class="flex-auto p-6 sm:p-10">
+                <div class="prose prose-sm max-w-6xl mx-auto sm:my-2 lg:mt-4 p-6 sm:p-10 sm:py-12 rounded-2xl shadow overflow-hidden bg-card"
+                    [innerHTML]="email.subject"></div>
 
-            <div class="prose prose-sm max-w-6xl mx-auto sm:my-2 lg:mt-4 p-6 sm:p-10 sm:py-12 rounded-2xl shadow overflow-hidden bg-card"
-                [innerHTML]="email.html"></div>
+                <div class="prose prose-sm max-w-6xl mx-auto sm:my-2 lg:mt-4 p-6 sm:p-10 sm:py-12 rounded-2xl shadow overflow-hidden bg-card"
+                    [innerHTML]="email.html"></div>
 
-        </div>
+            </div>
 
-    </ng-container>
+        </ng-container>
+    </div>
 
     <!-- Edit mode -->
-    <ng-container *ngIf="mode === 'edit'">
+    <div [hidden]="mode === 'view'">
+        <ng-container>
 
-        <form class="flex flex-col flex-auto p-6 sm:p-8 overflow-y-auto" [formGroup]="composeForm">
-            <mat-form-field>
-                <mat-label>Name</mat-label>
-                <input matInput [formControlName]="'name'">
-            </mat-form-field>
+            <form class="flex flex-col flex-auto p-6 sm:p-8 overflow-y-auto" [formGroup]="composeForm">
+                <mat-form-field>
+                    <mat-label>Name</mat-label>
+                    <input matInput [formControlName]="'name'">
+                </mat-form-field>
 
-            <mat-form-field>
-                <mat-label>Subject</mat-label>
-                <input matInput [formControlName]="'subject'">
-            </mat-form-field>
+                <mat-form-field>
+                    <mat-label>Subject</mat-label>
+                    <input matInput [formControlName]="'subject'">
+                </mat-form-field>
 
-            <quill-editor class="mt-2" [formControlName]="'html'"></quill-editor>
-        </form>
+                <div #htmlEditor class="min-h-0 shadow"></div>
 
-    </ng-container>
+            </form>
+
+        </ng-container>
+    </div>
 
 </div>

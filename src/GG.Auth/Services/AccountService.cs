@@ -1,5 +1,7 @@
 ﻿using GG.Auth.Entities;
 using GG.Auth.Models;
+using GG.Core.Dto;
+using GG.Core.Services;
 using Microsoft.AspNetCore.Identity;
 using OpenIddict.Abstractions;
 using static OpenIddict.Abstractions.OpenIddictConstants;
@@ -9,21 +11,24 @@ namespace GG.Auth.Services;
 public class AccountService(
     UserManager<User> userManager, 
     RoleManager<UserRole> roleManager,
+    AppEmailService appEmailService,
     IOpenIddictApplicationManager applicationManager)
 {
-    public async Task<IdentityResult> CreateUser(User user, string password)
+    public async Task<IdentityResult> CreateUser(UserRegisterDto userRegisterDto, CancellationToken cancellationToken)
     {
-        if (userManager.Users.Any(u => u.UserName == user.UserName))
+        if (userManager.Users.Any(u => u.Email == userRegisterDto.Email))
         {
-            throw new Exception($"User with user name {user.UserName} already registered");
+            throw new Exception($"User with email address {userRegisterDto.Email} already registered");
         }
 
-        if (userManager.Users.Any(u => u.Email == user.Email))
+        var newUser = new User
         {
-            throw new Exception($"User with email address {user.Email} already registered");
-        }
+            UserName = userRegisterDto.Email,
+            Name = userRegisterDto.Name,
+            Email = userRegisterDto.Email
+        };
 
-        var result = await userManager.CreateAsync(user, password);
+        var result = await userManager.CreateAsync(newUser, userRegisterDto.Password);
 
         if (!result.Succeeded)
         {
@@ -31,6 +36,8 @@ public class AccountService(
                 "User Creation Failed - Identity Exception. Errors were: \n\r\n\r",
                 (current, error) => current + " - " + error.Description + "\n\r"); 
         }
+
+        await appEmailService.SendRegistrationEmail(userRegisterDto, cancellationToken);
 
         return result;
     }
@@ -158,6 +165,16 @@ public class AccountService(
         }
 
         throw new Exception();
+    }
+
+    public async Task SendResetPasswordEmail(ForgotPassword forgotPasswordModel, CancellationToken cancellationToken)
+    {
+        var user = await userManager.FindByEmailAsync(forgotPasswordModel.Email) ??
+            throw new InvalidOperationException("The user email cannot be found in the database.");
+
+        var token = await userManager.GeneratePasswordResetTokenAsync(user);
+
+        await appEmailService.SendResetPasswordEmail(forgotPasswordModel.Email, token, cancellationToken);
     }
 
     public async Task ResetPassword(Guid userId, string token, string password)

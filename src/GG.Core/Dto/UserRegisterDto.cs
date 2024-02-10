@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace GG.Auth.Dtos;
+namespace GG.Core.Dto;
 
 public class UserRegisterDto
 {
