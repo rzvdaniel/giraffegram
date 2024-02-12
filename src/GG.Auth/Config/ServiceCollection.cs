@@ -25,14 +25,14 @@ public static class ServiceCollection
         services.AddDbContext<AuthDbContext>(
         options =>
         {
-            _ = configurationService.DatabaseType switch
+            _ = configurationService.AuthConfig.DatabaseType switch
             {
                 // TODO! Pass migration assemblies as parameters
                 AuthConfigService.MsSqlDatabaseType => options.UseSqlServer(msSqlConnection, x => x.MigrationsAssembly("GG.Migrations.MsSql")),
 
                 AuthConfigService.MySqlDatabaseType => options.UseMySQL(mySqlConnection, x => x.MigrationsAssembly("GG.Migrations.MySql")),
 
-                _ => throw new Exception($"Unsupported database provider: {configurationService.DatabaseType}")
+                _ => throw new Exception($"Unsupported database provider: {configurationService.AuthConfig.DatabaseType}")
             };
 
             // Register the entity sets needed by OpenIddict.

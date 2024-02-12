@@ -36,8 +36,10 @@ public class AppEmailService(ApiKeyService apiKeyService, AppConfigService confi
         await emailService.Send(email, configService.AppConfig.ApiKey, cancellationToken);
     }
 
-    public async Task SendResetPasswordEmail(string emailAddress, string resetPasswordToken, CancellationToken cancellationToken)
+    public async Task SendResetPasswordEmail(UserForgotPasswordDto userForgotPasswordDto, CancellationToken cancellationToken)
     {
+        var resetPasswordUrl = $"{configService.AppConfig.WebsiteUrl}/api/user/reset-password?email={userForgotPasswordDto.Email}&token={userForgotPasswordDto.Token}";
+
         var email = new EmailSendDto
         {
             Template = "ResetPassword",
@@ -48,11 +50,12 @@ public class AppEmailService(ApiKeyService apiKeyService, AppConfigService confi
             },
             To = new EmailAddress
             {
-                Email = emailAddress,
+                Email = userForgotPasswordDto.Email,
             },
             Variables = new Dictionary<string, string>()
             {
-                { "Token", resetPasswordToken }
+                { "Name", userForgotPasswordDto.Name },
+                { "ResetPasswordUrl", resetPasswordUrl }
             },
             Configuration = new EmailConfiguration
             {

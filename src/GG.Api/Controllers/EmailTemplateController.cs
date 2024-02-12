@@ -15,7 +15,7 @@ public class EmailTemplateController(EmailTemplateService emailTemplateService) 
 
         if (emailTemplateExists)
         {
-            return StatusCode(StatusCodes.Status409Conflict);
+            return Conflict();
         }
 
         var id = await emailTemplateService.Create(emailTemplateAddDto, GetUserId(), cancellationToken);

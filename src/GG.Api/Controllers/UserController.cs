@@ -3,7 +3,6 @@ using GG.Auth.Services;
 using GG.Core.Dto;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using OpenIddict.Abstractions;
 using OpenIddict.Server.AspNetCore;
@@ -11,29 +10,28 @@ using static OpenIddict.Abstractions.OpenIddictConstants;
 
 namespace GG.Api.Controllers;
 
-public class UserController(AccountService accountService) : AuthControllerBase
+public class UserController(AccountService accountService) : AppControllerBase
 {
     [HttpPost]
     [AllowAnonymous]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
+    [ProducesResponseType(typeof(IEnumerable<string>), StatusCodes.Status400BadRequest)]
+    [ProducesDefaultResponseType]
     public async Task<IActionResult> Create([FromBody] UserRegisterDto userRegisterDto, CancellationToken cancellationToken)
     {
         var existingUser = await accountService.GetUserByEmailOrUserName(userRegisterDto.Email);
 
         if (existingUser != null)
         {
-            return StatusCode(StatusCodes.Status409Conflict);
+            return Conflict();
         }
 
         var result = await accountService.CreateUser(userRegisterDto, cancellationToken);
 
-        if (!result.Succeeded)
-        {
-            AddErrors(result);
-        }
- 
-        return Created();
+        return result.Succeeded ? 
+            Created() : 
+            BadRequest(result.Errors.Select(x => x.Description));       
     }
 
     [HttpGet("userinfo"), HttpPost("userinfo"), Produces("application/json")]
@@ -68,14 +66,27 @@ public class UserController(AccountService accountService) : AuthControllerBase
     {
         await accountService.SendResetPasswordEmail(forgotPassword, cancellationToken);
 
-        return Ok();
+        return Ok(new { message = "Please check your email for password reset instructions" });
     }
 
-    private void AddErrors(IdentityResult result)
+    [HttpPost("reset-password")]
+    [AllowAnonymous]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesDefaultResponseType]
+    public async Task<IActionResult> ResetPassword(ResetPassword resetPassword, CancellationToken cancellationToken)
     {
-        foreach (var error in result.Errors)
+        var user = await accountService.GetUserByEmailOrUserName(resetPassword.Email);
+
+        if (user == null)
         {
-            ModelState.AddModelError(error.Code, error.Description);
+            return BadRequest();
         }
+
+        var result = await accountService.ResetPassword(user, resetPassword.Token, resetPassword.Password, cancellationToken);
+
+        return result.Succeeded ? 
+            Ok(new { message = "Password reset successfully" }) : 
+            BadRequest(result.Errors.Select(x => x.Description));
     }
 }

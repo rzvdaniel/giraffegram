@@ -15,7 +15,7 @@ public class ApiKeyController(ApiKeyService apiKeyService) : AppControllerBase
 
         if (apiKeyExists)
         {
-            return StatusCode(StatusCodes.Status409Conflict);
+            return Conflict();
         }
 
         var newApiKey = await apiKeyService.Create(apiKey, GetUserId(), cancellationToken);

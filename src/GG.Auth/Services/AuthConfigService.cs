@@ -6,13 +6,11 @@ namespace GG.Auth.Services;
 public class AuthConfigService
 {
     private readonly IConfiguration configuration;
-    private readonly AuthConfig authConfig = new();
+    public AuthConfig AuthConfig { get; private set; } = new();
     private readonly UserPasswordConfig userPasswordConfig = new();
 
     public const string MsSqlDatabaseType = "MsSql";
     public const string MySqlDatabaseType = "MySql";
-
-    public string DatabaseType => authConfig.DatabaseType??"MySql";
 
     public bool RequireDigit => userPasswordConfig.RequireDigit;
     public bool RequireLowercase => userPasswordConfig.RequireLowercase;
@@ -23,17 +21,17 @@ public class AuthConfigService
     public AuthConfigService(IConfiguration configuration)
     {
         this.configuration = configuration;
-        this.configuration.GetSection(nameof(AuthConfig)).Bind(authConfig);
+        this.configuration.GetSection(nameof(AuthConfig)).Bind(AuthConfig);
         this.configuration.GetSection(nameof(UserPasswordConfig)).Bind(userPasswordConfig);
     }
 
     public bool IsDatabaseTypeMsSql()
     {
-        return DatabaseType == MsSqlDatabaseType;
+        return AuthConfig.DatabaseType == MsSqlDatabaseType;
     }
 
     public bool IsDatabaseTypeMySql()
     {
-        return DatabaseType == MySqlDatabaseType;
+        return AuthConfig.DatabaseType == MySqlDatabaseType;
     }
 }

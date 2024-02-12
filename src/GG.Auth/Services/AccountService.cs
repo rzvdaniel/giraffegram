@@ -4,6 +4,7 @@ using GG.Core.Dto;
 using GG.Core.Services;
 using Microsoft.AspNetCore.Identity;
 using OpenIddict.Abstractions;
+using System.Security.Policy;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 
 namespace GG.Auth.Services;
@@ -156,42 +157,30 @@ public class AccountService(
         return result;
     }
 
-    public async Task<string> GetResetPasswordToken(Guid userId)
-    {
-        var user = await GetUserById(userId);
-        if (user != null)
-        {
-            return await userManager.GeneratePasswordResetTokenAsync(user);
-        }
-
-        throw new Exception();
-    }
-
     public async Task SendResetPasswordEmail(ForgotPassword forgotPasswordModel, CancellationToken cancellationToken)
     {
-        var user = await userManager.FindByEmailAsync(forgotPasswordModel.Email) ??
-            throw new InvalidOperationException("The user email cannot be found in the database.");
+        var user = await userManager.FindByEmailAsync(forgotPasswordModel.Email);
+
+        if (user == null) 
+            return;
 
         var token = await userManager.GeneratePasswordResetTokenAsync(user);
 
-        await appEmailService.SendResetPasswordEmail(forgotPasswordModel.Email, token, cancellationToken);
+        var forgotPasswordDto = new UserForgotPasswordDto
+        { 
+            Email = forgotPasswordModel.Email, 
+            Name = user.Name,
+            Token = token
+        };
+
+        await appEmailService.SendResetPasswordEmail(forgotPasswordDto, cancellationToken);
     }
 
-    public async Task ResetPassword(Guid userId, string token, string password)
+    public async Task<IdentityResult> ResetPassword(User user, string token, string password, CancellationToken cancellationToken)
     {
-        var user = await GetUserById(userId);
+        var result = await userManager.ResetPasswordAsync(user, token, password);
 
-        if (user != null)
-        {
-            var result = await userManager.ResetPasswordAsync(user, token, password);
-
-            if (!result.Succeeded)
-            {
-                throw new Exception($"Error in resetting password");
-            }
-        }
-
-        throw new Exception($"User with userId {userId} not found!");
+        return result;
     }
 
     public async Task<IEnumerable<string>> GetRoles(Guid userId)

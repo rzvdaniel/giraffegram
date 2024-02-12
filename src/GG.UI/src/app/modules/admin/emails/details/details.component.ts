@@ -96,7 +96,7 @@ export class EmailDetailsComponent implements OnInit, OnDestroy {
     save(): void {
         this.email.name = this.composeForm.value.name;
         this.email.subject = this.composeForm.value.subject;
-        this.email.html = this.editorView.state.doc.toString()
+        this.email.html = this.editorView.state.doc.toString();
 
         this._emailTemplateService.update({
             ...this.email,
