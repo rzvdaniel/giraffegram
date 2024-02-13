@@ -1,17 +1,23 @@
 ﻿using GG.Core.Dto;
+using Org.BouncyCastle.Security;
 
 namespace GG.Core.Services;
 
-public class AppEmailService(ApiKeyService apiKeyService, AppConfigService configService, EmailService emailService)
+public class AppEmailService(AppConfigService configService, EmailService emailService)
 {
     public async Task SendRegistrationEmail(UserRegisterDto user, CancellationToken cancellationToken)
     {
+        if (string.IsNullOrEmpty(configService.AppConfig.ApiKey))
+        {
+            throw new InvalidParameterException("Api key is not defined in configuration");
+        }
+
         var email = new EmailSendDto
         {
             Template = "Welcome",
             From = new EmailAddress 
             { 
-                Email = configService.EmailConfig.EmailNoReply, 
+                Email = configService.EmailConfig.Email, 
                 Name = "Giraffegram" 
             },
             To = new EmailAddress
@@ -38,6 +44,11 @@ public class AppEmailService(ApiKeyService apiKeyService, AppConfigService confi
 
     public async Task SendResetPasswordEmail(UserForgotPasswordDto userForgotPasswordDto, CancellationToken cancellationToken)
     {
+        if (string.IsNullOrEmpty(configService.AppConfig.ApiKey))
+        {
+            throw new InvalidParameterException("Api key is not defined in configuration");
+        }
+
         var resetPasswordUrl = $"{configService.AppConfig.WebsiteUrl}/api/user/reset-password?email={userForgotPasswordDto.Email}&token={userForgotPasswordDto.Token}";
 
         var email = new EmailSendDto
@@ -45,7 +56,7 @@ public class AppEmailService(ApiKeyService apiKeyService, AppConfigService confi
             Template = "ResetPassword",
             From = new EmailAddress
             {
-                Email = configService.EmailConfig.EmailNoReply,
+                Email = configService.EmailConfig.Email,
                 Name = "Giraffegram"
             },
             To = new EmailAddress
@@ -54,7 +65,7 @@ public class AppEmailService(ApiKeyService apiKeyService, AppConfigService confi
             },
             Variables = new Dictionary<string, string>()
             {
-                { "Name", userForgotPasswordDto.Name },
+                { "Name", userForgotPasswordDto.Name??string.Empty },
                 { "ResetPasswordUrl", resetPasswordUrl }
             },
             Configuration = new EmailConfiguration

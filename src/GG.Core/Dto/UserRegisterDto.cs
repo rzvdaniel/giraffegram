@@ -4,15 +4,13 @@ namespace GG.Core.Dto;
 
 public class UserRegisterDto
 {
-    [Required]
     [MaxLength(319)]
     [EmailAddress]
     public required string Email { get; set; }
 
     [MaxLength(256)]
-    public string? Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 
-    [Required]
     [MaxLength(256)]
     [DataType(DataType.Password)]
     public required string Password { get; set; }

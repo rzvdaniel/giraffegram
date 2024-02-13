@@ -5,7 +5,7 @@ namespace GG.Core.Dto;
 public class UserForgotPasswordDto
 {
     [MaxLength(256)]
-    public required string Name { get; set; }
+    public string? Name { get; set; }
 
     [MaxLength(319)]
     [EmailAddress]
