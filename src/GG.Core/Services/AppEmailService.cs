@@ -1,5 +1,6 @@
 ﻿using GG.Core.Dto;
 using Org.BouncyCastle.Security;
+using System.Web;
 
 namespace GG.Core.Services;
 
@@ -17,7 +18,7 @@ public class AppEmailService(AppConfigService configService, EmailService emailS
             Template = "Welcome",
             From = new EmailAddress 
             { 
-                Email = configService.EmailConfig.Email, 
+                Email = configService.EmailConfig.Email!, 
                 Name = "Giraffegram" 
             },
             To = new EmailAddress
@@ -31,9 +32,9 @@ public class AppEmailService(AppConfigService configService, EmailService emailS
             },
             Configuration = new EmailConfiguration
             {
-                UserName = configService.EmailConfig.UserName,
-                UserPassword = configService.EmailConfig.UserPassword,
-                Host = configService.EmailConfig.ServerHost,
+                UserName = configService.EmailConfig.UserName!,
+                UserPassword = configService.EmailConfig.UserPassword!,
+                Host = configService.EmailConfig.ServerHost!,
                 Port = configService.EmailConfig.ServerPort,
                 UseSsl = configService.EmailConfig.ServerUseSsl
             }
@@ -49,14 +50,14 @@ public class AppEmailService(AppConfigService configService, EmailService emailS
             throw new InvalidParameterException("Api key is not defined in configuration");
         }
 
-        var resetPasswordUrl = $"{configService.AppConfig.WebsiteUrl}/api/user/reset-password?email={userForgotPasswordDto.Email}&token={userForgotPasswordDto.Token}";
+        var resetPasswordUrl = $"{configService.AppConfig.WebsiteUrl}/reset-password?email={userForgotPasswordDto.Email}&token={HttpUtility.UrlEncode(userForgotPasswordDto.Token)}";
 
         var email = new EmailSendDto
         {
             Template = "ResetPassword",
             From = new EmailAddress
             {
-                Email = configService.EmailConfig.Email,
+                Email = configService.EmailConfig.Email!,
                 Name = "Giraffegram"
             },
             To = new EmailAddress
@@ -70,9 +71,9 @@ public class AppEmailService(AppConfigService configService, EmailService emailS
             },
             Configuration = new EmailConfiguration
             {
-                UserName = configService.EmailConfig.UserName,
-                UserPassword = configService.EmailConfig.UserPassword,
-                Host = configService.EmailConfig.ServerHost,
+                UserName = configService.EmailConfig.UserName!,
+                UserPassword = configService.EmailConfig.UserPassword!,
+                Host = configService.EmailConfig.ServerHost!,
                 Port = configService.EmailConfig.ServerPort,
                 UseSsl = configService.EmailConfig.ServerUseSsl
             }

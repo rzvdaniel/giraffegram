@@ -6,7 +6,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { RouterLink } from '@angular/router';
+import { RouterLink, ActivatedRoute } from '@angular/router';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseAlertComponent, FuseAlertType } from '@fuse/components/alert';
 import { FuseValidators } from '@fuse/validators';
@@ -14,32 +14,33 @@ import { AuthService } from 'app/core/auth/auth.service';
 import { finalize } from 'rxjs';
 
 @Component({
-    selector     : 'auth-reset-password',
-    templateUrl  : './reset-password.component.html',
+    selector: 'auth-reset-password',
+    templateUrl: './reset-password.component.html',
     encapsulation: ViewEncapsulation.None,
-    animations   : fuseAnimations,
-    standalone   : true,
-    imports      : [NgIf, FuseAlertComponent, FormsModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatIconModule, MatProgressSpinnerModule, RouterLink],
+    animations: fuseAnimations,
+    standalone: true,
+    imports: [NgIf, FuseAlertComponent, FormsModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatIconModule, MatProgressSpinnerModule, RouterLink],
 })
-export class AuthResetPasswordComponent implements OnInit
-{
+export class AuthResetPasswordComponent implements OnInit {
     @ViewChild('resetPasswordNgForm') resetPasswordNgForm: NgForm;
 
     alert: { type: FuseAlertType; message: string } = {
-        type   : 'success',
+        type: 'success',
         message: '',
     };
     resetPasswordForm: UntypedFormGroup;
     showAlert: boolean = false;
-
+    email: string;
+    token: string;
+    
     /**
      * Constructor
      */
     constructor(
         private _authService: AuthService,
         private _formBuilder: UntypedFormBuilder,
-    )
-    {
+        private route: ActivatedRoute
+    ) {
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -49,17 +50,20 @@ export class AuthResetPasswordComponent implements OnInit
     /**
      * On init
      */
-    ngOnInit(): void
-    {
+    ngOnInit(): void {
+        this.route.queryParams
+            .subscribe(params => {
+                this.email = params.email;
+                this.token = params.token;
+            });
+
         // Create the form
         this.resetPasswordForm = this._formBuilder.group({
-                password       : ['', Validators.required],
-                passwordConfirm: ['', Validators.required],
-            },
-            {
-                validators: FuseValidators.mustMatch('password', 'passwordConfirm'),
-            },
-        );
+            password: ['', Validators.required],
+            passwordConfirm: ['', Validators.required]},
+        {
+            validators: FuseValidators.mustMatch('password', 'passwordConfirm'),
+        });
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -69,11 +73,9 @@ export class AuthResetPasswordComponent implements OnInit
     /**
      * Reset password
      */
-    resetPassword(): void
-    {
+    resetPassword(): void {
         // Return if the form is invalid
-        if ( this.resetPasswordForm.invalid )
-        {
+        if (this.resetPasswordForm.invalid) {
             return;
         }
 
@@ -84,10 +86,9 @@ export class AuthResetPasswordComponent implements OnInit
         this.showAlert = false;
 
         // Send the request to the server
-        this._authService.resetPassword(this.resetPasswordForm.get('password').value)
+        this._authService.resetPassword(this.email, this.resetPasswordForm.get('password').value, this.token)
             .pipe(
-                finalize(() =>
-                {
+                finalize(() => {
                     // Re-enable the form
                     this.resetPasswordForm.enable();
 
@@ -99,19 +100,17 @@ export class AuthResetPasswordComponent implements OnInit
                 }),
             )
             .subscribe(
-                (response) =>
-                {
+                (response) => {
                     // Set the alert
                     this.alert = {
-                        type   : 'success',
+                        type: 'success',
                         message: 'Your password has been reset.',
                     };
                 },
-                (response) =>
-                {
+                (response) => {
                     // Set the alert
                     this.alert = {
-                        type   : 'error',
+                        type: 'error',
                         message: 'Something went wrong, please try again.',
                     };
                 },
