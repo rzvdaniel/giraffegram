@@ -9,11 +9,8 @@ import { LayoutComponent } from 'app/layout/layout.component';
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 export const appRoutes: Route[] = [
 
-    // Redirect empty path to '/dashboards/project'
-    {path: '', pathMatch : 'full', redirectTo: 'home'},
+    {path: '', pathMatch : 'full', redirectTo: '/dashboards/analytics'},
 
-    // Redirect signed-in user to the '/dashboards/project'
-    //
     // After the user signs in, the sign-in page will redirect the user to the 'signed-in-redirect'
     // path. Below is another redirection for that path to redirect the user to the desired
     // location. This is a small convenience to keep all main routes together here on this file.
@@ -50,18 +47,6 @@ export const appRoutes: Route[] = [
         children: [
             {path: 'sign-out', loadChildren: () => import('app/modules/auth/sign-out/sign-out.routes')},
             {path: 'unlock-session', loadChildren: () => import('app/modules/auth/unlock-session/unlock-session.routes')}
-        ]
-    },
-
-     // Landing routes
-     {
-        path: '',
-        component: LayoutComponent,
-        data: {
-            layout: 'empty'
-        },
-        children: [
-            {path: 'home', loadChildren: () => import('app/modules/landing/home/home.routes')},
         ]
     },
 

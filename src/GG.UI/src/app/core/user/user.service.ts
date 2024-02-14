@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { User } from 'app/core/user/user.types';
 import { map, Observable, ReplaySubject, tap , catchError, throwError} from 'rxjs';
-import { environment } from 'environment/environment';
+import { environment } from 'environments/environment';
 
 @Injectable({providedIn: 'root'})
 export class UserService

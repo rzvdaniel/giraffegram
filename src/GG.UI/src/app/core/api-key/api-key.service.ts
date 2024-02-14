@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { ApiKey as ApiKey } from 'app/core/api-key/api-key.types';
 import { BehaviorSubject, map, Observable, of, switchMap, tap, catchError, throwError } from 'rxjs';
-import { environment } from 'environment/environment';
+import { environment } from 'environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class ApiKeyService {

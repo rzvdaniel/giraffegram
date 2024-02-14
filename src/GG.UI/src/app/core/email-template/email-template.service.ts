@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { EmailTemplate } from 'app/core/email-template/email-template.types';
 import { BehaviorSubject, map, Observable, of, switchMap, tap, throwError } from 'rxjs';
-import { environment } from 'environment/environment';
+import { environment } from 'environments/environment';
 
 @Injectable({providedIn: 'root'})
 export class EmailTemplateService

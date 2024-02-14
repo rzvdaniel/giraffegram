@@ -14,7 +14,7 @@ var mySqlConnection = configurationManager.GetConnectionString("MySqlConnection"
 
 var configuration = new ConfigurationBuilder()
     .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-.Build();
+    .Build();
 
 var configurationService = new AppConfigService(configuration);
 
@@ -68,11 +68,13 @@ app.UseCors(x => x
     .AllowAnyHeader());
 
 app.UseHttpsRedirection();
-
 app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseDefaultFiles();
+app.UseStaticFiles();
 
 app.MapControllers();
 

@@ -11,7 +11,7 @@ import { FuseAlertComponent, FuseAlertType } from '@fuse/components/alert';
 import { AuthService } from 'app/core/auth/auth.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, Observable, of, switchMap, throwError, tap } from 'rxjs';
-import { environment } from 'environment/environment';
+import { environment } from 'environments/environment';
 
 @Component({
     selector     : 'coming-soon-classic',
