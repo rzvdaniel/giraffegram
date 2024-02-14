@@ -1,3 +1,4 @@
+using GG.Api;
 using GG.Auth.Config;
 using GG.Auth.Services;
 using GG.Core;
@@ -33,6 +34,9 @@ services.AddTransient<AppEmailService>();
 services.AddControllers();
 services.AddHttpContextAccessor();
 
+services.AddExceptionHandler<GlobalExceptionHandler>();
+services.AddProblemDetails();
+
 services.AddAuth(builder, configuration);
 
 services.AddDbContext<ApplicationDbContext>(
@@ -67,6 +71,7 @@ app.UseCors(x => x
     .AllowAnyMethod()
     .AllowAnyHeader());
 
+app.UseExceptionHandler();
 app.UseHttpsRedirection();
 app.UseRouting();
 
