@@ -1,8 +1,10 @@
 ﻿using GG.Auth.Models;
 using GG.Auth.Services;
 using GG.Core.Dto;
+using GG.Core.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using OpenIddict.Abstractions;
 using OpenIddict.Server.AspNetCore;
@@ -10,7 +12,7 @@ using static OpenIddict.Abstractions.OpenIddictConstants;
 
 namespace GG.Api.Controllers;
 
-public class UserController(AccountService accountService) : AppControllerBase
+public class UserController(AccountService accountService, AppConfigService appConfigService) : AppControllerBase
 {
     [HttpPost]
     [AllowAnonymous]
@@ -20,6 +22,9 @@ public class UserController(AccountService accountService) : AppControllerBase
     [ProducesDefaultResponseType]
     public async Task<IActionResult> Create([FromBody] UserRegisterDto userRegisterDto, CancellationToken cancellationToken)
     {
+        if (!appConfigService.AppConfig.AllowUserRegistration)
+            return NotFound();
+
         var existingUser = await accountService.GetUserByEmailOrUserName(userRegisterDto.Email);
 
         if (existingUser != null)

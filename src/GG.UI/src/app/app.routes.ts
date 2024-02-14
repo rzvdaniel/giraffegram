@@ -2,6 +2,7 @@ import { Route } from '@angular/router';
 import { initialDataResolver } from 'app/app.resolvers';
 import { AuthGuard } from 'app/core/auth/guards/auth.guard';
 import { NoAuthGuard } from 'app/core/auth/guards/noAuth.guard';
+import { ConfigGuard } from 'app/core/config/guards/config.guard';
 import { LayoutComponent } from 'app/layout/layout.component';
 
 // @formatter:off
@@ -30,8 +31,8 @@ export const appRoutes: Route[] = [
             {path: 'forgot-password', loadChildren: () => import('app/modules/auth/forgot-password/forgot-password.routes')},
             {path: 'reset-password', loadChildren: () => import('app/modules/auth/reset-password/reset-password.routes')},
             {path: 'sign-in', loadChildren: () => import('app/modules/auth/sign-in/sign-in.routes')},
-            {path: 'sign-up', loadChildren: () => import('app/modules/auth/sign-up/sign-up.routes')},
-            {path: 'sign-up-confirmation', loadChildren: () => import('app/modules/auth/sign-up-confirmation/sign-up-confirmation.routes')}
+            {path: 'sign-up', loadChildren: () => import('app/modules/auth/sign-up/sign-up.routes'), canActivate: [ConfigGuard]},
+            {path: 'sign-up-confirmation', loadChildren: () => import('app/modules/auth/sign-up-confirmation/sign-up-confirmation.routes'), canActivate: [ConfigGuard]}
         ]
     },
     
@@ -92,7 +93,6 @@ export const appRoutes: Route[] = [
         ]
     },
 
-    // 404 & Catch all
     {path: '404-not-found', pathMatch: 'full', loadChildren: () => import('app/modules/admin/pages/error/error-404/error-404.routes')},
     {path: '**', pathMatch : 'full', redirectTo: '404-not-found'}
 ];

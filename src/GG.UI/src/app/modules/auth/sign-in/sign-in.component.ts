@@ -11,6 +11,8 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseAlertComponent, FuseAlertType } from '@fuse/components/alert';
 import { AuthService } from 'app/core/auth/auth.service';
+import { ConfigService } from 'app/core/config/config.service';
+import { of, switchMap } from 'rxjs';
 
 @Component({
     selector     : 'auth-sign-in',
@@ -30,6 +32,7 @@ export class AuthSignInComponent implements OnInit
     };
     signInForm: UntypedFormGroup;
     showAlert: boolean = false;
+    allowUserRegistration: boolean;
 
     /**
      * Constructor
@@ -37,6 +40,7 @@ export class AuthSignInComponent implements OnInit
     constructor(
         private _activatedRoute: ActivatedRoute,
         private _authService: AuthService,
+        private _configService: ConfigService,
         private _formBuilder: UntypedFormBuilder,
         private _router: Router,
     )
@@ -57,6 +61,11 @@ export class AuthSignInComponent implements OnInit
             email     : ['', [Validators.required, Validators.email]],
             password  : ['', Validators.required],
             rememberMe: [''],
+        });
+
+        this._configService.allowUserRegistration() .subscribe((value) =>
+        {
+            this.allowUserRegistration = value;
         });
     }
 
