@@ -6,3 +6,11 @@ export class ApiKey
     created: Date;
     updated: Date;
 }
+
+export class ApiKeyDetails
+{
+    id: string;
+    name: string;
+    created: Date;
+    updated: Date;
+}

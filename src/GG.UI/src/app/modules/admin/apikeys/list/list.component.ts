@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
 import { DatePipe, SlicePipe } from '@angular/common';
-import { ApiKeyService, ApiKey } from 'app/core/api-key';
+import { ApiKeyService, ApiKeyDetails } from 'app/core/api-key';
 import { MatTableModule } from '@angular/material/table';
 import { FormsModule, ReactiveFormsModule, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { debounceTime, map, merge, Observable, Subject, switchMap, takeUntil } from 'rxjs';
@@ -19,7 +19,7 @@ import { MatButtonModule } from '@angular/material/button';
 })
 export class ApiKeyListComponent implements OnInit, OnDestroy
 {
-    apiKeys: ApiKey[];
+    apiKeys: ApiKeyDetails[];
     apiKeyTableColumns: string[] = ['name', 'key', 'created', 'updated'];
     searchInputControl: UntypedFormControl = new UntypedFormControl();
 
@@ -34,7 +34,7 @@ export class ApiKeyListComponent implements OnInit, OnDestroy
     {
         this._apiKeyService.apiKeys$
             .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((apiKeys: ApiKey[]) => {
+            .subscribe((apiKeys: ApiKeyDetails[]) => {
                 this.apiKeys = apiKeys;
             });
     }
@@ -54,11 +54,7 @@ export class ApiKeyListComponent implements OnInit, OnDestroy
         this._router.navigateByUrl(`/apikeys/add`);
     }
 
-    /**
-     * Close the details
-     */
-    // closeDetails(): void
-    // {
-    //     this.selectedProduct = null;
-    // }       
+    viewApiKeyDetails(row: ApiKeyDetails): void {
+        this._router.navigateByUrl(`/apikeys/details/${row.id}`);
+    }  
 }

@@ -9,54 +9,27 @@
                 <span class="inline-flex items-center">
                     <mat-icon class="icon-size-5 text-current"
                         [svgIcon]="'heroicons_solid:arrow-small-left'"></mat-icon>
-                    <span class="ml-1.5 font-medium leading-5">Back to emails</span>
+                    <span class="ml-1.5 font-medium leading-5">Back to api keys</span>
                 </span>
             </a>
             <!-- Title -->
             <div class="mt-2">
                 <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight leading-7 sm:leading-10 truncate">
-                    {{email.name}}
+                    {{apiKey.name}}
                 </h2>
             </div>
         </div>
         <!-- Actions -->
         <div class="flex shrink-0 items-center mt-6 sm:mt-0 sm:ml-4">
-            <button mat-stroked-button *ngIf="mode === 'view'" (click)="edit()">
-                <mat-icon class="icon-size-4" [svgIcon]="'heroicons_mini:pencil-square'"></mat-icon>
-                <span class="ml-2">Edit</span>
-            </button>
-
-            <button class="ml-3" mat-flat-button [color]="'accent'" *ngIf="mode === 'edit'" (click)="save()">
+            <button class="ml-3" mat-flat-button [color]="'accent'" (click)="save()">
                 <mat-icon class="icon-size-4" [svgIcon]="'mat_outline:save'"></mat-icon>
                 <span class="ml-2">Save</span>
-            </button>
-
-            <button class="ml-3" mat-stroked-button *ngIf="mode === 'edit'" (click)="view()">
-                <mat-icon class="icon-size-4" [svgIcon]="'heroicons_mini:link'"></mat-icon>
-                <span class="ml-2">View</span>
             </button>
         </div>
     </div>
 
-    <!-- View mode -->
-    <div [hidden]="mode === 'edit'">
-
-        <ng-container>
-
-            <div class="flex-auto p-6 sm:p-10">
-                <div class="prose prose-sm max-w-6xl mx-auto p-6 sm:p-10 rounded-2xl shadow overflow-hidden bg-card"
-                    [innerHTML]="email.subject"></div>
-
-                <div class="prose prose-sm max-w-6xl mx-auto p-6 mt-2 sm:p-10 rounded-2xl shadow overflow-hidden bg-card"
-                    [innerHTML]="email.html"></div>
-
-            </div>
-
-        </ng-container>
-    </div>
-
     <!-- Edit mode -->
-    <div [hidden]="mode === 'view'">
+    <div>
         <ng-container>
 
             <form class="flex flex-col flex-auto p-6 sm:p-8 overflow-y-auto" [formGroup]="composeForm">
@@ -66,12 +39,14 @@
                 </mat-form-field>
 
                 <mat-form-field>
-                    <mat-label>Subject</mat-label>
-                    <input matInput [formControlName]="'subject'">
+                    <mat-label>Key</mat-label>
+                    <input matInput disabled value="********">
+                    
                 </mat-form-field>
-
-                <div #htmlEditor class="min-h-0 shadow"></div>
-
+                <fuse-alert [appearance]="'outline'" [showIcon]="false"
+                [type]="'info'">
+                We can not display the key second time, if you do not remember it, create a new one
+            </fuse-alert>
             </form>
 
         </ng-container>

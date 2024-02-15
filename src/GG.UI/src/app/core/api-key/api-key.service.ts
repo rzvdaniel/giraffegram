@@ -1,14 +1,14 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { ApiKey as ApiKey } from 'app/core/api-key/api-key.types';
+import { ApiKey, ApiKeyDetails } from 'app/core/api-key/api-key.types';
 import { BehaviorSubject, map, Observable, of, switchMap, tap, catchError, throwError } from 'rxjs';
 import { environment } from 'environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class ApiKeyService {
     private _httpClient = inject(HttpClient);
-    private _apiKeys: BehaviorSubject<ApiKey[] | null> = new BehaviorSubject(null);
-    private _apiKey: BehaviorSubject<ApiKey | null> = new BehaviorSubject(null);
+    private _apiKeys: BehaviorSubject<ApiKeyDetails[] | null> = new BehaviorSubject(null);
+    private _apiKey: BehaviorSubject<ApiKeyDetails | null> = new BehaviorSubject(null);
 
     // -----------------------------------------------------------------------------------------------------
     // @ Accessors
@@ -17,14 +17,14 @@ export class ApiKeyService {
     /**
      * Getter for templates
      */
-    get apiKeys$(): Observable<ApiKey[]> {
+    get apiKeys$(): Observable<ApiKeyDetails[]> {
         return this._apiKeys.asObservable();
     }
 
     /**
      * Getter for email
      */
-    get apiKey$(): Observable<ApiKey> {
+    get apiKey$(): Observable<ApiKeyDetails> {
         return this._apiKey.asObservable();
     }
 
@@ -32,8 +32,8 @@ export class ApiKeyService {
     // @ Public methods
     // -----------------------------------------------------------------------------------------------------
 
-    get(): Observable<ApiKey[]> {
-        return this._httpClient.get<ApiKey[]>(`${environment.api}/api/apikey`).pipe(
+    get(): Observable<ApiKeyDetails[]> {
+        return this._httpClient.get<ApiKeyDetails[]>(`${environment.api}/api/apikey`).pipe(
             tap((apiKeys) => {
                 this._apiKeys.next(apiKeys);
             }),
@@ -43,8 +43,8 @@ export class ApiKeyService {
     /**
      * Get email by id
      */
-    getApiKeyById(id: string): Observable<ApiKey> {
-        return this._httpClient.get<ApiKey>(`${environment.api}/api/apikey/${id}`).pipe(
+    getApiKeyById(id: string): Observable<ApiKeyDetails> {
+        return this._httpClient.get<ApiKeyDetails>(`${environment.api}/api/apikey/${id}`).pipe(
             map((apiKey) => {
                 this._apiKey.next(apiKey);
 
@@ -72,7 +72,7 @@ export class ApiKeyService {
             );
     }
 
-    update(apiKey: ApiKey): Observable<any> {
-        return this._httpClient.put<ApiKey>(`${environment.api}/api/apikey/${apiKey.id}`, apiKey);
+    update(apiKey: ApiKeyDetails): Observable<any> {
+        return this._httpClient.put<ApiKeyDetails>(`${environment.api}/api/apikey/${apiKey.id}`, apiKey);
     }
 }

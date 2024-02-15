@@ -56,13 +56,5 @@ export class EmailListComponent implements OnInit, OnDestroy
 
     viewEmailDetails(row: EmailTemplate): void {
         this._router.navigateByUrl(`/emails/details/${row.id}`);
-    }
-
-    /**
-     * Close the details
-     */
-    // closeDetails(): void
-    // {
-    //     this.selectedProduct = null;
-    // }       
+    }      
 }

@@ -41,7 +41,7 @@
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="apiKeyTableColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: apiKeyTableColumns;"></tr>
+      <tr mat-row *matRowDef="let row; columns: apiKeyTableColumns;" (click)="viewApiKeyDetails(row)"></tr>
     </table>
 
   </div>

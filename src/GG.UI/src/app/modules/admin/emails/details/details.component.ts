@@ -3,6 +3,7 @@ import { NgIf } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { FuseCardComponent } from '@fuse/components/card';
 import { RouterLink } from '@angular/router';
 import { EmailTemplateService, EmailTemplate } from 'app/core/email-template';
 import { FormsModule, ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
@@ -19,7 +20,7 @@ import { html } from '@codemirror/lang-html';
     styleUrls    : ['./details.component.scss'],
     encapsulation: ViewEncapsulation.None,
     standalone: true,
-    imports: [MatIconModule, MatButtonModule, MatInputModule, RouterLink, NgIf, FormsModule, ReactiveFormsModule],
+    imports: [MatIconModule, MatButtonModule, MatInputModule, FuseCardComponent, RouterLink, NgIf, FormsModule, ReactiveFormsModule],
 })
 export class EmailDetailsComponent implements OnInit, OnDestroy {
     email: EmailTemplate;
