@@ -14,3 +14,9 @@ export class ApiKeyDetails
     created: Date;
     updated: Date;
 }
+
+export class ApiKeyUpdate
+{
+    id: string;
+    name: string;
+}

@@ -56,7 +56,7 @@ export class ApiKeyDetailsComponent implements OnInit, OnDestroy {
         this.apiKey.name = this.composeForm.value.name;
 
         this._apiKeyService.update({
-            ...this.apiKey,
+            id: this.apiKey.id, name: this.apiKey.name
         }).subscribe();
     }
 }

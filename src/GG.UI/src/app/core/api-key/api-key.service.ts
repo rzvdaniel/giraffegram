@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { ApiKey, ApiKeyDetails } from 'app/core/api-key/api-key.types';
+import { ApiKey, ApiKeyDetails, ApiKeyUpdate } from 'app/core/api-key/api-key.types';
 import { BehaviorSubject, map, Observable, of, switchMap, tap, catchError, throwError } from 'rxjs';
 import { environment } from 'environments/environment';
 
@@ -72,7 +72,7 @@ export class ApiKeyService {
             );
     }
 
-    update(apiKey: ApiKeyDetails): Observable<any> {
-        return this._httpClient.put<ApiKeyDetails>(`${environment.api}/api/apikey/${apiKey.id}`, apiKey);
+    update(apiKey: ApiKeyUpdate): Observable<any> {
+        return this._httpClient.put<ApiKeyUpdate>(`${environment.api}/api/apikey/${apiKey.id}`, apiKey);
     }
 }

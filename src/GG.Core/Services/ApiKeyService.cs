@@ -58,7 +58,7 @@ public class ApiKeyService(ApplicationDbContext dbContext)
         return apiKeyUser.UserId;
     }
 
-    public async Task<ApiKeyCreateDto> Create(ApiKeyAddDto emailAccountDto, Guid userId, CancellationToken cancellationToken)
+    public async Task<ApiKeyCreatedDto> Create(ApiKeyAddDto emailAccountDto, Guid userId, CancellationToken cancellationToken)
     {
         var key = CreateSecureRandomString();
         var hashedKey = CreateSHA512Hash(key);
@@ -83,7 +83,7 @@ public class ApiKeyService(ApplicationDbContext dbContext)
 
         await dbContext.SaveChangesAsync(cancellationToken);
 
-        var apiKeyCreateDto = new ApiKeyCreateDto
+        var apiKeyCreateDto = new ApiKeyCreatedDto
         {
             Id = apiKey.Id,
             Name = apiKey.Name,
@@ -92,6 +92,21 @@ public class ApiKeyService(ApplicationDbContext dbContext)
         };
 
         return apiKeyCreateDto;
+    }
+
+    public async ValueTask Update(Guid id, ApiKeyUpdateDto apiKeyUpdateDto, Guid userId, CancellationToken cancellationToken)
+    {
+        var apiKey = dbContext.ApiKeys
+            .Include(x => x.ApiKeyUsers)
+            .SingleOrDefault(x => x.Id == id && x.ApiKeyUsers.Any(x => x.UserId == userId));
+
+        if (apiKey == null)
+            return;
+
+        apiKey.Name = apiKeyUpdateDto.Name;
+        apiKey.Updated = DateTime.UtcNow;
+
+        await dbContext.SaveChangesAsync(cancellationToken);
     }
 
     public void Delete(Guid id, Guid userId)

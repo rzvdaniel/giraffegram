@@ -47,6 +47,15 @@ public class ApiKeyController(ApiKeyService apiKeyService) : AppControllerBase
         return Ok(apiKeyDto);
     }
 
+    [HttpPut("{id}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<ActionResult> Update(Guid id, ApiKeyUpdateDto apiKey, CancellationToken cancellationToken)
+    {
+        await apiKeyService.Update(id, apiKey, GetUserId(), cancellationToken);
+
+        return NoContent();
+    }
+
     [HttpDelete("{id}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public IActionResult Delete(Guid id)

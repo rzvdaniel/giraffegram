@@ -1,6 +1,6 @@
 ﻿namespace GG.Core.Dto;
 
-public class ApiKeyCreateDto
+public class ApiKeyCreatedDto
 {
     public Guid Id { get; set; }
 
