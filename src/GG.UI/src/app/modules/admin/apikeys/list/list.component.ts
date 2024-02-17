@@ -10,6 +10,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatButtonModule } from '@angular/material/button';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { FuseAlertComponent, FuseAlertType } from '@fuse/components/alert';
+import { fuseAnimations } from '@fuse/animations';
 
 @Component({
     selector: 'apikey-list',
@@ -17,6 +18,7 @@ import { FuseAlertComponent, FuseAlertType } from '@fuse/components/alert';
     templateUrl: './list.component.html',
     styleUrls: ['./list.component.scss'],
     encapsulation: ViewEncapsulation.None,
+    animations   : fuseAnimations,
     imports: [MatTableModule, MatIconModule, MatSlideToggleModule, MatButtonModule, DatePipe, SlicePipe, FuseAlertComponent, NgIf],
 })
 export class ApiKeyListComponent implements OnInit, OnDestroy {
@@ -93,8 +95,19 @@ export class ApiKeyListComponent implements OnInit, OnDestroy {
                         this.showAlert = true;
                         this.alert = {
                             type: 'success',
-                            message: 'Something went wrong when deleting api key.',
+                            message: 'Api key deleted successfully.',
                         };
+                        // Mark for check
+                        this._changeDetectorRef.markForCheck();
+
+                        // Hide it after 3 seconds
+                        setTimeout(() =>
+                        {
+                            this.showAlert = false;
+
+                            // Mark for check
+                            this._changeDetectorRef.markForCheck();
+                        }, 3000);
                     },
                     error:() =>
                     {
@@ -103,6 +116,17 @@ export class ApiKeyListComponent implements OnInit, OnDestroy {
                             type: 'error',
                             message: 'Something went wrong when deleting api key.',
                         };
+                        // Mark for check
+                        this._changeDetectorRef.markForCheck();
+
+                        // Hide it after 3 seconds
+                        setTimeout(() =>
+                        {
+                            this.showAlert = false;
+
+                            // Mark for check
+                            this._changeDetectorRef.markForCheck();
+                        }, 3000);
                     }
                 });
             }
