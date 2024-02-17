@@ -15,7 +15,12 @@
   <!-- Main -->
   <div class="flex-auto p-6 sm:p-10">
 
-    <table mat-table [dataSource]="apiKeys" class="mat-elevation-z8">
+      <fuse-alert class="mt-8 mb-8" *ngIf="showAlert" [appearance]="'outline'" [showIcon]="false"
+          [type]="alert.type" [@shake]="alert.type === 'error'">
+          {{alert.message}}
+      </fuse-alert>
+
+    <table mat-table [dataSource]="apiKeysDataSource" class="mat-elevation-z8">
 
       <!--- Note that these columns can be defined in any order.
                   The actual rendered columns are set as a property on the row definition" -->
@@ -38,6 +43,16 @@
       <ng-container matColumnDef="updated">
         <th mat-header-cell *matHeaderCellDef> Updated </th>
         <td mat-cell *matCellDef="let key"> {{key.updated | date: 'mediumDate'}} </td>
+      </ng-container>
+
+
+      <ng-container matColumnDef="action">
+        <th mat-header-cell *matHeaderCellDef width="10%">Action</th>
+        <td mat-cell *matCellDef="let key" (click)="$event.stopPropagation()">
+          <button mat-icon-button (click)="deleteApiKey(key)">
+            <mat-icon [svgIcon]="'heroicons_outline:trash'"></mat-icon>
+          </button>
+        </td>
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="apiKeyTableColumns"></tr>

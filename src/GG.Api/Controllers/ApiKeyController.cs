@@ -58,9 +58,9 @@ public class ApiKeyController(ApiKeyService apiKeyService) : AppControllerBase
 
     [HttpDelete("{id}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    public IActionResult Delete(Guid id)
+    public async Task<ActionResult> Delete(Guid id, CancellationToken cancellationToken)
     {
-        apiKeyService.Delete(id, GetUserId());
+        await apiKeyService.Delete(id, GetUserId(), cancellationToken);
 
         return NoContent();
     }

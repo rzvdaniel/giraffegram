@@ -1,11 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { ApiKey, ApiKeyDetails, ApiKeyUpdate } from 'app/core/api-key/api-key.types';
-import { BehaviorSubject, map, Observable, of, switchMap, tap, catchError, throwError } from 'rxjs';
+import { BehaviorSubject, filter, map, Observable, of, switchMap, take, tap, throwError, catchError } from 'rxjs';
 import { environment } from 'environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class ApiKeyService {
+
     private _httpClient = inject(HttpClient);
     private _apiKeys: BehaviorSubject<ApiKeyDetails[] | null> = new BehaviorSubject(null);
     private _apiKey: BehaviorSubject<ApiKeyDetails | null> = new BehaviorSubject(null);
@@ -74,5 +75,22 @@ export class ApiKeyService {
 
     update(apiKey: ApiKeyUpdate): Observable<any> {
         return this._httpClient.put<ApiKeyUpdate>(`${environment.api}/api/apikey/${apiKey.id}`, apiKey);
+    }
+
+    delete(id: string): Observable<any> {
+        return this.apiKeys$
+            .pipe(
+                take(1),
+                switchMap(apiKeys => this._httpClient.delete(`${environment.api}/api/apikey/${id}`)
+                    .pipe(
+                        tap(() => {
+                            const index = apiKeys.findIndex(item => item.id === id);
+
+                            apiKeys.splice(index, 1);
+
+                            this._apiKeys.next(apiKeys);
+                        })
+                    ))
+            )
     }
 }

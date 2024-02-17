@@ -109,7 +109,7 @@ public class ApiKeyService(ApplicationDbContext dbContext)
         await dbContext.SaveChangesAsync(cancellationToken);
     }
 
-    public void Delete(Guid id, Guid userId)
+    public async ValueTask Delete(Guid id, Guid userId, CancellationToken cancellationToken)
     {
         var apiKey = dbContext.ApiKeys.SingleOrDefault(x => x.Id == id && x.ApiKeyUsers.Any(x => x.UserId == userId));
 
@@ -118,7 +118,7 @@ public class ApiKeyService(ApplicationDbContext dbContext)
 
         dbContext.ApiKeys.Remove(apiKey);
 
-        dbContext.SaveChanges();
+        await dbContext.SaveChangesAsync(cancellationToken);
     }
 
     public async Task<bool> Exists(string name, Guid userId, CancellationToken cancellationToken)
