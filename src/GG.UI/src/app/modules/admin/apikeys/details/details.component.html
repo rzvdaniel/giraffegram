@@ -41,11 +41,11 @@
                 <mat-form-field>
                     <mat-label>Key</mat-label>
                     <input matInput disabled value="********">
-                    
+                    <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:key'"></mat-icon>
                 </mat-form-field>
                 <fuse-alert [appearance]="'outline'" [showIcon]="false"
                 [type]="'info'">
-                We can not display the key second time, if you do not remember it, create a new one
+                We do not display the key second time. If you do not remember it, please create a new one.
             </fuse-alert>
             </form>
 

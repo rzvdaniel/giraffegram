@@ -15,15 +15,10 @@
   <!-- Main -->
   <div class="flex-auto p-6 sm:p-10">
 
-    <fuse-alert class="mb-4" *ngIf="showAlert" [appearance]="'outline'" [showIcon]="false"
-        [type]="alert.type" [@shake]="alert.type === 'error'">
-        {{alert.message}}
-    </fuse-alert>
-
     <table mat-table [dataSource]="apiKeysDataSource" class="mat-elevation-z8">
 
       <!--- Note that these columns can be defined in any order.
-                  The actual rendered columns are set as a property on the row definition" -->
+      The actual rendered columns are set as a property on the row definition" -->
 
       <ng-container matColumnDef="name">
         <th mat-header-cell *matHeaderCellDef width="15%"> Name </th>

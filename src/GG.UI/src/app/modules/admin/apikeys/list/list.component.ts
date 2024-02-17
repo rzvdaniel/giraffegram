@@ -3,14 +3,14 @@ import { Router } from '@angular/router';
 import { DatePipe, SlicePipe, NgIf } from '@angular/common';
 import { ApiKeyService, ApiKeyDetails } from 'app/core/api-key';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { FormsModule, ReactiveFormsModule, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
-import { debounceTime, map, merge, Observable, Subject, switchMap, takeUntil, catchError, throwError } from 'rxjs';
+import { UntypedFormControl } from '@angular/forms';
+import { Subject, takeUntil } from 'rxjs';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatButtonModule } from '@angular/material/button';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { FuseAlertComponent, FuseAlertType } from '@fuse/components/alert';
-import { fuseAnimations } from '@fuse/animations';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
     selector: 'apikey-list',
@@ -18,7 +18,6 @@ import { fuseAnimations } from '@fuse/animations';
     templateUrl: './list.component.html',
     styleUrls: ['./list.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    animations   : fuseAnimations,
     imports: [MatTableModule, MatIconModule, MatSlideToggleModule, MatButtonModule, DatePipe, SlicePipe, FuseAlertComponent, NgIf],
 })
 export class ApiKeyListComponent implements OnInit, OnDestroy {
@@ -28,17 +27,11 @@ export class ApiKeyListComponent implements OnInit, OnDestroy {
 
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
-    showAlert: boolean = false;
-
-    alert: { type: FuseAlertType; message: string } = {
-        type: 'success',
-        message: 'asd',
-    };
-
     constructor(
         private _apiKeyService: ApiKeyService,
         private _changeDetectorRef: ChangeDetectorRef,
         private _fuseConfirmationService: FuseConfirmationService,
+        private _snackBar: MatSnackBar,
         private _router: Router) {
     }
 
@@ -69,9 +62,6 @@ export class ApiKeyListComponent implements OnInit, OnDestroy {
 
     deleteApiKey(apiKey: ApiKeyDetails) {
 
-        // Hide the alert
-        this.showAlert = false;
-
         // Open the confirmation dialog
         const confirmation = this._fuseConfirmationService.open({
             title: 'Delete api key',
@@ -89,46 +79,19 @@ export class ApiKeyListComponent implements OnInit, OnDestroy {
                 const id = apiKey.id;
 
                 this._apiKeyService.delete(id).subscribe(
-                {
-                    complete: () =>
                     {
-                        this.showAlert = true;
-                        this.alert = {
-                            type: 'success',
-                            message: 'Api key deleted successfully.',
-                        };
-                        // Mark for check
-                        this._changeDetectorRef.markForCheck();
-
-                        // Hide it after 3 seconds
-                        setTimeout(() =>
-                        {
-                            this.showAlert = false;
-
-                            // Mark for check
-                            this._changeDetectorRef.markForCheck();
-                        }, 3000);
-                    },
-                    error:() =>
-                    {
-                        this.showAlert = true;
-                        this.alert = {
-                            type: 'error',
-                            message: 'Something went wrong when deleting api key.',
-                        };
-                        // Mark for check
-                        this._changeDetectorRef.markForCheck();
-
-                        // Hide it after 3 seconds
-                        setTimeout(() =>
-                        {
-                            this.showAlert = false;
-
-                            // Mark for check
-                            this._changeDetectorRef.markForCheck();
-                        }, 3000);
-                    }
-                });
+                        complete: () => {
+                            this._snackBar.open("Api key deleted successfully!", "Close", {
+                                duration: 5000
+                            });
+                        },
+                        error: () => {
+                            this._snackBar.open("Something went wrong when deleting api key!", "Close", {
+                                duration: 5000,
+                                panelClass: ["red-snackbar"]
+                            });
+                        }
+                    });
             }
         });
     }

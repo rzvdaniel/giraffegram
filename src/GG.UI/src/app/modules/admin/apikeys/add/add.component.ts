@@ -3,6 +3,7 @@ import { NgIf } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import {MatTooltipModule} from '@angular/material/tooltip';
 import { RouterLink } from '@angular/router';
 import { ApiKey, ApiKeyService } from 'app/core/api-key';
 import { FormsModule, NgForm, ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
@@ -10,6 +11,7 @@ import { Router } from '@angular/router';
 import { FuseAlertComponent, FuseAlertType } from '@fuse/components/alert';
 import { fuseAnimations } from '@fuse/animations';
 import { of, Observable, Subject, tap, catchError, takeUntil } from 'rxjs';
+import { ClipboardModule } from 'ngx-clipboard';
 
 @Component({
     selector: 'apikey-add',
@@ -17,7 +19,7 @@ import { of, Observable, Subject, tap, catchError, takeUntil } from 'rxjs';
     encapsulation: ViewEncapsulation.None,
     animations: fuseAnimations,
     standalone: true,
-    imports: [MatIconModule, RouterLink, MatButtonModule, MatInputModule, FormsModule, ReactiveFormsModule, NgIf, FuseAlertComponent],
+    imports: [MatIconModule, RouterLink, MatButtonModule, MatInputModule, MatTooltipModule, FormsModule, ReactiveFormsModule, NgIf, FuseAlertComponent, ClipboardModule],
 })
 export class ApiKeyAddComponent implements OnInit, OnDestroy {
     apiKey: ApiKey;
