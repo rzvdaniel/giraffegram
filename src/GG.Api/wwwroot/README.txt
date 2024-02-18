@@ -1,0 +1,1 @@
+This folder hosts Giraffegram portal website

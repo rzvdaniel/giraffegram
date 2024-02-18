@@ -36,8 +36,4 @@
     <ProjectReference Include="..\GG.MsSql.Migrations\GG.Migrations.MsSql.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="wwwroot\" />
-  </ItemGroup>
-
 </Project>

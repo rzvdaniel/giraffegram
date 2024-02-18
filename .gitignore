@@ -35,9 +35,6 @@ packages/
 #Ignore git-related files
 *.orig
 
-wwwroot
-wwwroot/
-
 #npm
 node_modules/
 
