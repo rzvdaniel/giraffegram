@@ -1,6 +1,6 @@
 export const environment = {
     production: true,
-    api: 'https://api.giraffegram.com',
+    api: 'https://portal.giraffegram.com',
     commingSoonApi: 'https://comingsoonapi.giraffegram.com',
     allowUserRegistration: false
 };
