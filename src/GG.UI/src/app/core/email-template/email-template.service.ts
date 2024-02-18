@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { EmailTemplate } from 'app/core/email-template/email-template.types';
-import { BehaviorSubject, map, Observable, of, switchMap, tap, throwError } from 'rxjs';
+import { BehaviorSubject, map, Observable, of, switchMap, tap, take, throwError } from 'rxjs';
 import { environment } from 'environments/environment';
 
 @Injectable({providedIn: 'root'})
@@ -82,5 +82,19 @@ export class EmailTemplateService
     update(template: EmailTemplate): Observable<any>
     {
         return this._httpClient.put<EmailTemplate>(`${environment.api}/api/emailtemplate/${template.id}`, template);
+    }
+
+    delete(id: string): Observable<any> {
+        return this.templates$.pipe(
+            take(1),
+            switchMap(templates => this._httpClient.delete(`${environment.api}/api/emailtemplate/${id}`)
+                .pipe(
+                    tap(() => {
+                        const index = templates.findIndex(item => item.id === id);
+                        templates.splice(index, 1);
+                        this._templates.next(templates);
+                    })
+                ))
+            )
     }
 }

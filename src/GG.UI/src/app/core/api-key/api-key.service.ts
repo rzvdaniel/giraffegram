@@ -64,13 +64,12 @@ export class ApiKeyService {
     add(apiKey: ApiKey): Observable<any> {
         this._apiKey.next(new ApiKey());
 
-        return this._httpClient.post<ApiKey>(`${environment.api}/api/apikey`, apiKey)
-            .pipe(
-                map((apiKey) => {
-                    this._apiKey.next(apiKey);
-                    return apiKey;
-                })
-            );
+        return this._httpClient.post<ApiKey>(`${environment.api}/api/apikey`, apiKey).pipe(
+            map((apiKey) => {
+                this._apiKey.next(apiKey);
+                return apiKey;
+            })
+        );
     }
 
     update(apiKey: ApiKeyUpdate): Observable<any> {
@@ -78,19 +77,16 @@ export class ApiKeyService {
     }
 
     delete(id: string): Observable<any> {
-        return this.apiKeys$
-            .pipe(
-                take(1),
-                switchMap(apiKeys => this._httpClient.delete(`${environment.api}/api/apikey/${id}`)
-                    .pipe(
-                        tap(() => {
-                            const index = apiKeys.findIndex(item => item.id === id);
-
-                            apiKeys.splice(index, 1);
-
-                            this._apiKeys.next(apiKeys);
-                        })
-                    ))
+        return this.apiKeys$.pipe(
+            take(1),
+            switchMap(apiKeys => this._httpClient.delete(`${environment.api}/api/apikey/${id}`)
+                .pipe(
+                    tap(() => {
+                        const index = apiKeys.findIndex(item => item.id === id);
+                        apiKeys.splice(index, 1);
+                        this._apiKeys.next(apiKeys);
+                    })
+                ))
             )
     }
 }

@@ -2,12 +2,15 @@ import { Component, OnInit, OnDestroy, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
 import { DatePipe, SlicePipe } from '@angular/common';
 import { EmailTemplateService, EmailTemplate } from 'app/core/email-template';
-import { MatTableModule } from '@angular/material/table';
+import { FuseConfirmationService } from '@fuse/services/confirmation';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { FormsModule, ReactiveFormsModule, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { debounceTime, map, merge, Observable, Subject, switchMap, takeUntil } from 'rxjs';
+
 import { MatIconModule } from '@angular/material/icon';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatButtonModule } from '@angular/material/button';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
     selector     : 'email-list',
@@ -19,14 +22,18 @@ import { MatButtonModule } from '@angular/material/button';
 })
 export class EmailListComponent implements OnInit, OnDestroy
 {
-    emailTemplates: EmailTemplate[];
-    emailTemplatesTableColumns: string[] = ['name', 'html', 'created', 'updated'];
+    emailTemplatesTableColumns: string[] = ['name', 'html', 'created', 'updated', 'action'];
     searchInputControl: UntypedFormControl = new UntypedFormControl();
+    emailTemplatesDataSource: MatTableDataSource<any> = new MatTableDataSource();
 
     // Private
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
-    constructor(private _emailTemplateService: EmailTemplateService, private _router: Router)
+    constructor(
+        private _emailTemplateService: EmailTemplateService,
+        private _fuseConfirmationService: FuseConfirmationService,
+        private _snackBar: MatSnackBar,
+        private _router: Router)
     {
     }
 
@@ -35,7 +42,7 @@ export class EmailListComponent implements OnInit, OnDestroy
         this._emailTemplateService.templates$
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((emailTemplates: EmailTemplate[]) => {
-                this.emailTemplates = emailTemplates;
+                this.emailTemplatesDataSource.data = emailTemplates;
             });
     }
 
@@ -56,5 +63,41 @@ export class EmailListComponent implements OnInit, OnDestroy
 
     viewEmailDetails(row: EmailTemplate): void {
         this._router.navigateByUrl(`/emails/details/${row.id}`);
-    }      
+    }
+    
+    deleteEmailTemplate(emailTemplate: EmailTemplate) {
+
+        // Open the confirmation dialog
+        const confirmation = this._fuseConfirmationService.open({
+            title: 'Delete email template',
+            message: 'Are you sure you want to delete this email template? This action cannot be undone!',
+            actions: {
+                confirm: {
+                    label: 'Delete',
+                },
+            },
+        });
+
+        // Subscribe to the confirmation dialog closed action
+        confirmation.afterClosed().subscribe((result) => {
+            if (result === 'confirmed') {
+                const id = emailTemplate.id;
+
+                this._emailTemplateService.delete(id).subscribe(
+                    {
+                        complete: () => {
+                            this._snackBar.open("Email template deleted successfully!", "Close", {
+                                duration: 5000
+                            });
+                        },
+                        error: () => {
+                            this._snackBar.open("Something went wrong when deleting email template!", "Close", {
+                                duration: 5000,
+                                panelClass: ["red-snackbar"]
+                            });
+                        }
+                    });
+            }
+        });
+    }
 }
