@@ -26,21 +26,18 @@ public class ApiKeyService(ApplicationDbContext dbContext)
 
     public async Task<ApiKeyGetDto?> Get(Guid id, Guid userId, CancellationToken cancellationToken)
     {
-        var apiKey = await dbContext.ApiKeys.SingleOrDefaultAsync(x => x.Id == id &&
+        var apiKey = await dbContext.ApiKeys.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id &&
             x.ApiKeyUsers.Any(x => x.UserId == userId), cancellationToken);
 
-        if (apiKey == null)
-            return null;
-
-        var apiKeyGetDto = new ApiKeyGetDto
-        {
-            Id = apiKey.Id,
-            Name = apiKey.Name,
-            Created = apiKey.Created,
-            Updated = apiKey.Updated
-        };
-
-        return apiKeyGetDto;
+        return apiKey is not null ?
+            new ApiKeyGetDto
+            {
+                Id = apiKey.Id,
+                Name = apiKey.Name,
+                Created = apiKey.Created,
+                Updated = apiKey.Updated
+            } : 
+            null;
     }
 
     public async Task<Guid> GetUserId(string key, CancellationToken cancellationToken)
@@ -94,31 +91,28 @@ public class ApiKeyService(ApplicationDbContext dbContext)
         return apiKeyCreateDto;
     }
 
-    public async ValueTask Update(Guid id, ApiKeyUpdateDto apiKeyUpdateDto, Guid userId, CancellationToken cancellationToken)
+    public async Task<bool> Update(Guid id, ApiKeyUpdateDto apiKeyUpdateDto, Guid userId, CancellationToken cancellationToken)
     {
-        var apiKey = dbContext.ApiKeys
+        var affected = await dbContext.ApiKeys
             .Include(x => x.ApiKeyUsers)
-            .SingleOrDefault(x => x.Id == id && x.ApiKeyUsers.Any(x => x.UserId == userId));
+            .Where(x => x.Id == id && x.ApiKeyUsers.Any(x => x.UserId == userId))
+            .ExecuteUpdateAsync(setters => setters
+                .SetProperty(m => m.Name, apiKeyUpdateDto.Name)
+                .SetProperty(m => m.Updated, DateTime.UtcNow),
+                cancellationToken: cancellationToken);
 
-        if (apiKey == null)
-            return;
-
-        apiKey.Name = apiKeyUpdateDto.Name;
-        apiKey.Updated = DateTime.UtcNow;
-
-        await dbContext.SaveChangesAsync(cancellationToken);
+        return affected == 1;
     }
 
-    public async ValueTask Delete(Guid id, Guid userId, CancellationToken cancellationToken)
+    public async Task<bool> Delete(Guid id, Guid userId, CancellationToken cancellationToken)
     {
-        var apiKey = dbContext.ApiKeys.SingleOrDefault(x => x.Id == id && x.ApiKeyUsers.Any(x => x.UserId == userId));
-
-        if (apiKey == null)
-            return;
-
-        dbContext.ApiKeys.Remove(apiKey);
-
         await dbContext.SaveChangesAsync(cancellationToken);
+
+        var affected = await dbContext.ApiKeys
+            .Where(x => x.Id == id && x.ApiKeyUsers.Any(x => x.UserId == userId))
+            .ExecuteDeleteAsync(cancellationToken: cancellationToken);
+
+        return affected == 1;
     }
 
     public async Task<bool> Exists(string name, Guid userId, CancellationToken cancellationToken)
@@ -155,7 +149,7 @@ public class ApiKeyService(ApplicationDbContext dbContext)
     /// </summary>
     /// <param name="value">The string to operate on</param>
     /// <returns>A SHA512 Base64 encoded string</returns>
-    private string CreateSHA512Hash(string value)
+    private static string CreateSHA512Hash(string value)
     {
         using var sha = SHA512.Create();
 

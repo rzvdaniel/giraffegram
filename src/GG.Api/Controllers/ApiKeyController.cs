@@ -37,31 +37,26 @@ public class ApiKeyController(ApiKeyService apiKeyService) : AppControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<ApiKeyGetDto>> Get(Guid id, CancellationToken cancellationToken)
     {
-        var apiKeyDto = await apiKeyService.Get(id, GetUserId(), cancellationToken);
+        var apiKey = await apiKeyService.Get(id, GetUserId(), cancellationToken);
 
-        if (apiKeyDto is null)
-        {
-            return NotFound();
-        }
-
-        return Ok(apiKeyDto);
+        return apiKey is not null ? Ok(apiKey) : NotFound();
     }
 
     [HttpPut("{id}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<ActionResult> Update(Guid id, ApiKeyUpdateDto apiKey, CancellationToken cancellationToken)
     {
-        await apiKeyService.Update(id, apiKey, GetUserId(), cancellationToken);
+        var result = await apiKeyService.Update(id, apiKey, GetUserId(), cancellationToken);
 
-        return NoContent();
+        return result ? Ok() : NotFound();
     }
 
     [HttpDelete("{id}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<ActionResult> Delete(Guid id, CancellationToken cancellationToken)
     {
-        await apiKeyService.Delete(id, GetUserId(), cancellationToken);
+        var result = await apiKeyService.Delete(id, GetUserId(), cancellationToken);
 
-        return NoContent();
+        return result ? Ok() : NotFound();
     }
 }

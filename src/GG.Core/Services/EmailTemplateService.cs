@@ -39,7 +39,8 @@ public class EmailTemplateService(ApplicationDbContext dbContext)
                 Html = emailTemplate.Html,
                 Created = emailTemplate.Created,
                 Updated = emailTemplate.Updated
-            } : null;
+            } : 
+            null;
     }
 
     public async Task<Guid> Create(EmailTemplateAddDto emailAccountDto, Guid userId, CancellationToken cancellationToken)
