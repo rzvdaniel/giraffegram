@@ -99,7 +99,7 @@ jobs:
       artifact: 'GiraffegramApi'
       publishLocation: 'pipeline'
 
-- job: GiraffegramWeb
+- job: GiraffegramPortal
 
   pool:
     vmImage: 'windows-latest'
@@ -112,16 +112,17 @@ jobs:
       workingDir: '$(Build.SourcesDirectory)\src\GG.UI'
 
   - task: Npm@1
-    displayName: Build Giraffegram Web
+    displayName: Build Giraffegram Portal
     inputs:
       command: 'custom'
       workingDir: '$(Build.SourcesDirectory)\src\GG.UI'
       customCommand: 'run build'
+
   - task: PublishPipelineArtifact@1
-    displayName: Publish Giraffegram Web artifact
+    displayName: Publish Giraffegram portal artifact
     inputs:
       targetPath: '$(Build.SourcesDirectory)\src\GG.UI\dist\fuse'
-      artifact: 'GiraffegramWeb'
+      artifact: 'GiraffegramPortal'
       publishLocation: 'pipeline'
       
   
