@@ -117,10 +117,11 @@ jobs:
       command: 'custom'
       workingDir: '$(Build.SourcesDirectory)\src\GG.UI'
       customCommand: 'run build'
+
   - task: PublishPipelineArtifact@1
     displayName: Publish Giraffegram portal artifact
     inputs:
-      targetPath: $(build.artifactStagingDirectory)'
+      targetPath: '$(Build.SourcesDirectory)\src\GG.UI\dist\fuse'
       artifact: 'GiraffegramPortal'
       publishLocation: 'pipeline'
       
