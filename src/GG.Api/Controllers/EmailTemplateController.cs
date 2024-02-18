@@ -1,6 +1,8 @@
 using GG.Core.Dto;
+using GG.Core.Entities;
 using GG.Core.Services;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading;
 
 namespace GG.Api.Controllers;
 
@@ -20,7 +22,7 @@ public class EmailTemplateController(EmailTemplateService emailTemplateService) 
 
         var id = await emailTemplateService.Create(emailTemplateAddDto, GetUserId(), cancellationToken);
 
-        return CreatedAtAction(nameof(Get), new { id }, id);
+        return CreatedAtAction(nameof(Get), new { id }, emailTemplateAddDto);
     }
 
     [HttpGet]
@@ -37,31 +39,26 @@ public class EmailTemplateController(EmailTemplateService emailTemplateService) 
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<EmailTemplateGetDto>> Get(Guid id, CancellationToken cancellationToken)
     {
-        var emailTemplateDto = await emailTemplateService.Get(id, GetUserId(), cancellationToken);
+        var emailTemplate = await emailTemplateService.Get(id, GetUserId(), cancellationToken);
 
-        if (emailTemplateDto is null)
-        {
-            return NotFound();
-        }
-
-        return Ok(emailTemplateDto);
+        return emailTemplate is not null ? Ok(emailTemplate) : NotFound();
     }
 
     [HttpPut("{id}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    public IActionResult Update(Guid id, EmailTemplateUpdateDto emailTemplate)
+    public async Task<ActionResult> Update(Guid id, EmailTemplateUpdateDto emailTemplate, CancellationToken cancellationToken)
     {
-        emailTemplateService.Update(id, emailTemplate, GetUserId());
+        var result = await emailTemplateService.Update(id, emailTemplate, GetUserId(), cancellationToken);
 
-        return NoContent();
+        return result ? Ok() : NotFound();
     }
 
     [HttpDelete("{id}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    public IActionResult Delete(Guid id)
+    public async Task<ActionResult> Delete(Guid id, CancellationToken cancellationToken)
     {
-        emailTemplateService.Delete(id, GetUserId());
+        var result = await emailTemplateService.Delete(id, GetUserId(), cancellationToken);
 
-        return NoContent();
+        return result ? Ok() : NotFound();
     }
 }

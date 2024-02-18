@@ -26,42 +26,20 @@ public class EmailTemplateService(ApplicationDbContext dbContext)
 
     public async Task<EmailTemplateGetDto?> Get(Guid id, Guid userId, CancellationToken cancellationToken)
     {
-        var emailTemplate = await dbContext.EmailTemplates.SingleOrDefaultAsync(x => x.Id == id && x.EmailTemplateUsers.Any(x => x.UserId == userId), cancellationToken);
+        var emailTemplate = await dbContext.EmailTemplates
+            .AsNoTracking()
+            .FirstOrDefaultAsync(x => x.Id == id && x.EmailTemplateUsers.Any(x => x.UserId == userId), cancellationToken);
 
-        if (emailTemplate == null) 
-            return null; 
-
-        var emailTemplateGetDto = new EmailTemplateGetDto
-        {
-            Id = emailTemplate.Id,
-            Name = emailTemplate.Name,
-            Subject = emailTemplate.Subject,
-            Html = emailTemplate.Html,
-            Created = emailTemplate.Created,
-            Updated = emailTemplate.Updated
-        };
-
-        return emailTemplateGetDto;
-    }
-
-    public async Task<EmailTemplateGetDto?> Get(string emailTemplateName, Guid userId, CancellationToken cancellationToken)
-    {
-        var emailTemplate = await dbContext.EmailTemplates.SingleOrDefaultAsync(x => x.Name == emailTemplateName && x.EmailTemplateUsers.Any(x => x.UserId == userId), cancellationToken);
-
-        if (emailTemplate == null)
-            return null;
-
-        var emailTemplateGetDto = new EmailTemplateGetDto
-        {
-            Id = emailTemplate.Id,
-            Name = emailTemplate.Name,
-            Subject = emailTemplate.Subject,
-            Html = emailTemplate.Html,
-            Created = emailTemplate.Created,
-            Updated = emailTemplate.Updated
-        };
-
-        return emailTemplateGetDto;
+        return emailTemplate is not null ? 
+            new EmailTemplateGetDto
+            {
+                Id = emailTemplate.Id,
+                Name = emailTemplate.Name,
+                Subject = emailTemplate.Subject,
+                Html = emailTemplate.Html,
+                Created = emailTemplate.Created,
+                Updated = emailTemplate.Updated
+            } : null;
     }
 
     public async Task<Guid> Create(EmailTemplateAddDto emailAccountDto, Guid userId, CancellationToken cancellationToken)
@@ -90,33 +68,28 @@ public class EmailTemplateService(ApplicationDbContext dbContext)
         return emailTemplate.Id;
     }
 
-    public void Update(Guid id, EmailTemplateUpdateDto emailTemplateDto, Guid userId)
+    public async Task<bool> Update(Guid id, EmailTemplateUpdateDto emailTemplateDto, Guid userId, CancellationToken cancellationToken)
     {
-        var emailTemplate = dbContext.EmailTemplates
+        var affected = await dbContext.EmailTemplates
             .Include(x => x.EmailTemplateUsers)
-            .SingleOrDefault(x => x.Id == id && x.EmailTemplateUsers.Any(x => x.UserId == userId));
+            .Where(x => x.Id == id && x.EmailTemplateUsers.Any(x => x.UserId == userId))
+            .ExecuteUpdateAsync(setters => setters
+                .SetProperty(m => m.Name, emailTemplateDto.Name)
+                .SetProperty(m => m.Html, emailTemplateDto.Html)
+                .SetProperty(m => m.Subject, emailTemplateDto.Subject)
+                .SetProperty(m => m.Updated, DateTime.UtcNow), 
+                cancellationToken: cancellationToken);
 
-        if (emailTemplate == null)
-            return;
-
-        emailTemplate.Name = emailTemplateDto.Name;
-        emailTemplate.Html = emailTemplateDto.Html;
-        emailTemplate.Subject = emailTemplateDto.Subject;
-        emailTemplate.Updated = DateTime.UtcNow;
-
-        dbContext.SaveChanges();
+        return affected == 1;
     }
 
-    public void Delete(Guid id, Guid userId)
+    public async Task<bool> Delete(Guid id, Guid userId, CancellationToken cancellationToken)
     {
-        var emailTemplate = dbContext.EmailTemplates.SingleOrDefault(x => x.Id == id && x.EmailTemplateUsers.Any(x => x.UserId == userId));
+        var affected = await dbContext.EmailTemplates
+            .Where(x => x.Id == id && x.EmailTemplateUsers.Any(x => x.UserId == userId))
+            .ExecuteDeleteAsync(cancellationToken: cancellationToken);
 
-        if (emailTemplate == null)
-            return;
-
-        dbContext.EmailTemplates.Remove(emailTemplate);
-
-        dbContext.SaveChanges();
+        return affected == 1;
     }
 
     public async Task<bool> Exists(string name, Guid userId, CancellationToken cancellationToken)
