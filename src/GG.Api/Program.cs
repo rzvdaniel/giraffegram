@@ -34,7 +34,7 @@ services.AddTransient<AppEmailService>();
 services.AddControllers();
 services.AddHttpContextAccessor();
 
-services.AddExceptionHandler<GlobalExceptionHandler>();
+//services.AddExceptionHandler<GlobalExceptionHandler>();
 services.AddProblemDetails();
 
 services.AddAuth(builder, configuration);
