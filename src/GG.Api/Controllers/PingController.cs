@@ -3,12 +3,14 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GG.Api.Controllers;
 
-public class PingController : AppControllerBase
+public class PingController(ILogger<GlobalExceptionHandler> logger) : AppControllerBase
 {
-    [HttpPost]
+    [HttpGet]
     [AllowAnonymous]
     public ActionResult Get()
     {
+        logger.LogInformation("Pong");
+
         return Ok("Pong");
     }
 }
