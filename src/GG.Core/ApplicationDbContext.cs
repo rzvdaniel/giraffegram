@@ -11,6 +11,7 @@ public class ApplicationDbContext : DbContext
     public DbSet<EmailTemplateUser> EmailTemplateUsers => Set<EmailTemplateUser>();
     public DbSet<ApiKey> ApiKeys => Set<ApiKey>();
     public DbSet<ApiKeyUser> ApiKeyUsers => Set<ApiKeyUser>();
+    public DbSet<Log> Logs => Set<Log>();
 
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base(options)
