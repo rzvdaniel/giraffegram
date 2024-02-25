@@ -1,14 +1,23 @@
 import { HttpClient } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, Inject } from '@angular/core';
 import { User } from 'app/core/user/user.types';
 import { map, Observable, ReplaySubject, tap , catchError, throwError} from 'rxjs';
-import { environment } from 'environments/environment';
+import { RUNTIME_CONFIG, RuntimeConfig } from 'app/runtime.config'
 
 @Injectable({providedIn: 'root'})
 export class UserService
 {
+    private _config: RuntimeConfig;
     private _httpClient = inject(HttpClient);
     private _user: ReplaySubject<User> = new ReplaySubject<User>(1);
+
+    /**
+     * Constructor
+     */
+    constructor(@Inject(RUNTIME_CONFIG) config: RuntimeConfig)
+    {
+        this._config = config;
+    }
 
     // -----------------------------------------------------------------------------------------------------
     // @ Accessors
@@ -39,7 +48,7 @@ export class UserService
      */
     get(): Observable<User>
     {
-        return this._httpClient.post<User>(`${environment.api}/api/user/userinfo`, null).pipe(
+        return this._httpClient.post<User>(`${this._config.api}/api/user/userinfo`, null).pipe(
             tap((user) =>
             {
                 this._user.next(user);

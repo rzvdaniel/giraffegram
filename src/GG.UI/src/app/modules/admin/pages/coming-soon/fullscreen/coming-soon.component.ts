@@ -1,5 +1,5 @@
 import { NgIf } from '@angular/common';
-import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewEncapsulation, Inject } from '@angular/core';
 import { FormsModule, NgForm, ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -8,10 +8,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseAlertComponent, FuseAlertType } from '@fuse/components/alert';
-import { AuthService } from 'app/core/auth/auth.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { catchError, Observable, of, switchMap, throwError, tap } from 'rxjs';
-import { environment } from 'environments/environment';
+import { catchError, Observable, of, tap } from 'rxjs';
+import { RUNTIME_CONFIG, RuntimeConfig } from 'app/runtime.config'
 
 @Component({
     selector     : 'coming-soon-classic',
@@ -40,9 +39,9 @@ export class ComingSoonFullscreenComponent implements OnInit
      * Constructor
      */
     constructor(
-        private _authService: AuthService,
         private _formBuilder: UntypedFormBuilder,
         private http: HttpClient,
+        @Inject(RUNTIME_CONFIG) private _config: RuntimeConfig
     )
     {
     }
@@ -69,7 +68,7 @@ export class ComingSoonFullscreenComponent implements OnInit
     public registerEmail(): Observable<string> {
         let email = this.comingSoonForm.get('email').value;
         let emailJson = JSON.stringify({'email': email});
-        return this.http.post<string>(`${environment.commingSoonApi}/EmailSubscription`, emailJson, this.httpOptions).pipe(
+        return this.http.post<string>(`${this._config.commingSoonApi}/EmailSubscription`, emailJson, this.httpOptions).pipe(
             tap((email: string) => {
                 this.alert = {
                     type   : 'success',

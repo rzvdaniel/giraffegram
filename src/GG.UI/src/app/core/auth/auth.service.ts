@@ -1,16 +1,25 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
+import { inject, Inject, Injectable } from '@angular/core';
 import { AuthUtils } from 'app/core/auth/auth.utils';
 import { UserService } from 'app/core/user/user.service';
-import { catchError, Observable, of, switchMap, throwError } from 'rxjs';
-import { environment } from 'environments/environment';
+import { Observable, of, switchMap } from 'rxjs';
+import { RUNTIME_CONFIG, RuntimeConfig } from 'app/runtime.config'
 
 @Injectable({providedIn: 'root'})
 export class AuthService
 {
+    private config: RuntimeConfig;
     private _httpClient = inject(HttpClient);
     private _userService = inject(UserService);
 
+    /**
+     * Constructor
+     */
+    constructor(@Inject(RUNTIME_CONFIG) config: RuntimeConfig)
+    {
+        this.config = config;
+    }
+    
     // -----------------------------------------------------------------------------------------------------
     // @ Accessors
     // -----------------------------------------------------------------------------------------------------
@@ -52,7 +61,7 @@ export class AuthService
      */
     forgotPassword(email: string): Observable<any>
     {
-        return this._httpClient.post(`${environment.api}/api/user/forgot-password`, { email });
+        return this._httpClient.post(`${this.config.api}/api/user/forgot-password`, { email });
     }
 
     /**
@@ -62,7 +71,7 @@ export class AuthService
      */
     resetPassword(email: string, password: string, token: string): Observable<any>
     {
-        return this._httpClient.post(`${environment.api}/api/user/reset-password`, {email: email, password: password, token: token});
+        return this._httpClient.post(`${this.config.api}/api/user/reset-password`, {email: email, password: password, token: token});
     }
 
     /**
@@ -72,7 +81,7 @@ export class AuthService
      */
     signIn(credentials: { email: string; password: string }): Observable<any>
     {
-        return this._httpClient.post(`${environment.api}/api/authorization/token`, 
+        return this._httpClient.post(`${this.config.api}/api/authorization/token`, 
             new HttpParams()
                 .set('username', credentials.email)
                 .set('password', credentials.password)
@@ -114,7 +123,7 @@ export class AuthService
      */
     signUp(user: { name: string; email: string; password: string; }): Observable<any>
     {
-        return this._httpClient.post(`${environment.api}/api/user`, user);
+        return this._httpClient.post(`${this.config.api}/api/user`, user);
     }
 
     /** 
