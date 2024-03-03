@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GG.Core.Entities;
@@ -25,10 +24,4 @@ public class Log
     public string? EventType { get; set; }
 
     public string? UserName { get; set; }
-
-    [NotMapped]
-    public Dictionary<string, object>? PropertiesDictionary
-    {
-        get { return JsonConvert.DeserializeObject<Dictionary<string, object>>(Properties); }
-    }
 }

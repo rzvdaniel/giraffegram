@@ -11,7 +11,7 @@ public class UserNameEnricher : ILogEventEnricher
 
     public void Enrich(Serilog.Events.LogEvent logEvent, ILogEventPropertyFactory factory)
     {
-        if (!(_httpContextAccessor.HttpContext?.User.Identity.IsAuthenticated ?? false))
+        if (!(_httpContextAccessor.HttpContext?.User.Identity!.IsAuthenticated ?? false))
         {
             return;
         }

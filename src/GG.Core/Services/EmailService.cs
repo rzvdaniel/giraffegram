@@ -55,13 +55,28 @@ public class EmailService(ApiKeyService apiKeyService, ApplicationDbContext dbCo
         if (renderedEmail == null)
             return;
 
+        Send(emailDto, renderedEmail, cancellationToken);
+    }
+
+    public async Task Send(EmailSendDto emailDto, Guid userId, CancellationToken cancellationToken)
+    {
+        var renderedEmail = await GetEmail(emailDto, userId, cancellationToken);
+
+        if (renderedEmail == null)
+            return;
+
+        Send(emailDto, renderedEmail, cancellationToken);
+    }
+
+    private void Send(EmailSendDto emailDto, EmailRenderedDto renderedEmail, CancellationToken cancellationToken)
+    {
         var message = new MimeMessage();
         message.From.Add(new MailboxAddress(emailDto.From.Name, emailDto.From.Email));
         message.To.Add(new MailboxAddress(emailDto.To.Name, emailDto.To.Email));
         message.Subject = renderedEmail.Subject;
-        message.Body = new TextPart(EmailType) 
-        { 
-            Text = renderedEmail.Html 
+        message.Body = new TextPart(EmailType)
+        {
+            Text = renderedEmail.Html
         };
 
         using var client = new SmtpClient();
@@ -79,6 +94,13 @@ public class EmailService(ApiKeyService apiKeyService, ApplicationDbContext dbCo
     {
         var userId = await apiKeyService.GetUserId(apiKey, cancellationToken);
 
+        var renderedEmail = await GetEmail(emailDto, userId, cancellationToken);
+
+        return renderedEmail;
+    }
+
+    private async Task<EmailRenderedDto?> GetEmail(EmailSendDto emailDto, Guid userId, CancellationToken cancellationToken)
+    {
         var emailTemplate = await dbContext.EmailTemplates.SingleOrDefaultAsync(x => x.Name == emailDto.Template && x.EmailTemplateUsers.Any(x => x.UserId == userId), cancellationToken);
 
         if (emailTemplate == null)

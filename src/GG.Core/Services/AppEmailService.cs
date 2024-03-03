@@ -1,34 +1,27 @@
 ﻿using GG.Core.Dto;
-using Org.BouncyCastle.Security;
 using System.Web;
 
 namespace GG.Core.Services;
 
 public class AppEmailService(AppConfigService configService, EmailService emailService)
 {
-    public async Task SendRegistrationEmail(UserRegisterDto user, CancellationToken cancellationToken)
+    public async Task SendRegistrationEmail(UserRegisterDto userRegistration, Guid userId, CancellationToken cancellationToken)
     {
-        if (string.IsNullOrEmpty(configService.AppConfig.ApiKey))
-        {
-            throw new InvalidParameterException("Api key is not defined in configuration");
-        }
-
         var email = new EmailSendDto
         {
-            Template = "Welcome",
+            Template = AppEmailTemplates.RegisterUser,
             From = new EmailAddress 
             { 
-                Email = configService.EmailConfig.Email!, 
-                Name = "Giraffegram" 
+                Email = configService.EmailConfig.Email!
             },
             To = new EmailAddress
             { 
-                Email = user.Email, 
-                Name = user.Name 
+                Email = userRegistration.Email, 
+                Name = userRegistration.Name 
             },
             Variables = new Dictionary<string, string>() 
             { 
-                { "FullName", user.Name } 
+                { "FullName", userRegistration.Name } 
             },
             Configuration = new EmailConfiguration
             {
@@ -40,33 +33,27 @@ public class AppEmailService(AppConfigService configService, EmailService emailS
             }
         };
 
-        await emailService.Send(email, configService.AppConfig.ApiKey, cancellationToken);
+        await emailService.Send(email, userId, cancellationToken);
     }
 
-    public async Task SendResetPasswordEmail(UserForgotPasswordDto userForgotPasswordDto, CancellationToken cancellationToken)
+    public async Task SendResetPasswordEmail(UserForgotPasswordDto userForgotPassword, Guid userId, CancellationToken cancellationToken)
     {
-        if (string.IsNullOrEmpty(configService.AppConfig.ApiKey))
-        {
-            throw new InvalidParameterException("Api key is not defined in configuration");
-        }
-
-        var resetPasswordUrl = $"{configService.AppConfig.WebsiteUrl}/reset-password?email={userForgotPasswordDto.Email}&token={HttpUtility.UrlEncode(userForgotPasswordDto.Token)}";
+        var resetPasswordUrl = $"{configService.AppConfig.WebsiteUrl}/reset-password?email={userForgotPassword.Email}&token={HttpUtility.UrlEncode(userForgotPassword.Token)}";
 
         var email = new EmailSendDto
         {
-            Template = "ResetPassword",
+            Template = AppEmailTemplates.ResetPassword,
             From = new EmailAddress
             {
-                Email = configService.EmailConfig.Email!,
-                Name = "Giraffegram"
+                Email = configService.EmailConfig.Email!
             },
             To = new EmailAddress
             {
-                Email = userForgotPasswordDto.Email,
+                Email = userForgotPassword.Email,
             },
             Variables = new Dictionary<string, string>()
             {
-                { "Name", userForgotPasswordDto.Name??string.Empty },
+                { "Name", userForgotPassword.Name??string.Empty },
                 { "ResetPasswordUrl", resetPasswordUrl }
             },
             Configuration = new EmailConfiguration
@@ -79,6 +66,6 @@ public class AppEmailService(AppConfigService configService, EmailService emailS
             }
         };
 
-        await emailService.Send(email, configService.AppConfig.ApiKey, cancellationToken);
+        await emailService.Send(email, userId, cancellationToken);
     }
 }

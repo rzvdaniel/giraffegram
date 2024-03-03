@@ -33,6 +33,7 @@ services.AddTransient<EmailTemplateService>();
 services.AddTransient<SecretKeyEncryptionService>();
 services.AddTransient<AppConfigService>();
 services.AddTransient<ApiKeyService>();
+services.AddTransient<SetupService>();
 services.AddTransient<ApiKeyAuthFilter>();
 services.AddTransient<AppEmailService>();
 services.AddTransient<UserNameEnricher>();
@@ -65,7 +66,7 @@ builder.Host.UseSerilog((context, services, config) =>
     .ReadFrom.Configuration(configuration)
     .Destructure.JsonNetTypes()
     .Enrich.With<EventTypeEnricher>()
-    .Enrich.With(services.GetService<UserNameEnricher>())
+    .Enrich.With(services.GetService<UserNameEnricher>()!)
     .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
     .WriteTo.Conditional(evt => configurationService.IsDatabaseTypeMsSql(),
         wt => wt.MSSqlServer(

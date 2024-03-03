@@ -4,7 +4,6 @@ using GG.Core.Dto;
 using GG.Core.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using OpenIddict.Abstractions;
 using OpenIddict.Server.AspNetCore;
@@ -12,7 +11,7 @@ using static OpenIddict.Abstractions.OpenIddictConstants;
 
 namespace GG.Api.Controllers;
 
-public class UserController(AccountService accountService, AppConfigService appConfigService) : AppControllerBase
+public class UserController(AccountService accountService, AppEmailService appEmailService, AppConfigService appConfigService) : AppControllerBase
 {
     [HttpPost]
     [AllowAnonymous]
@@ -23,7 +22,9 @@ public class UserController(AccountService accountService, AppConfigService appC
     public async Task<IActionResult> Create([FromBody] UserRegisterDto userRegisterDto, CancellationToken cancellationToken)
     {
         if (!appConfigService.AppConfig.AllowUserRegistration)
+        {
             return NotFound();
+        }
 
         var existingUser = await accountService.GetUserByEmailOrUserName(userRegisterDto.Email);
 
@@ -34,9 +35,21 @@ public class UserController(AccountService accountService, AppConfigService appC
 
         var result = await accountService.CreateUser(userRegisterDto, cancellationToken);
 
-        return result.Succeeded ? 
-            Created() : 
-            BadRequest(result.Errors.Select(x => x.Description));       
+        if (!result.Succeeded)
+        {
+            return BadRequest();
+        }
+
+        var user = await accountService.GetUserByEmailOrUserName(userRegisterDto.Email);
+
+        if (user == null)
+        {
+            return BadRequest();
+        }
+
+        await appEmailService.SendRegistrationEmail(userRegisterDto, user.Id, cancellationToken);
+
+        return Created();
     }
 
     [HttpGet("userinfo"), HttpPost("userinfo"), Produces("application/json")]
@@ -67,9 +80,32 @@ public class UserController(AccountService accountService, AppConfigService appC
 
     [HttpPost("forgot-password")]
     [AllowAnonymous]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> ForgotPassword(ForgotPassword forgotPassword, CancellationToken cancellationToken)
     {
-        await accountService.SendResetPasswordEmail(forgotPassword, cancellationToken);
+        var passwordResetToken = await accountService.GetPasswordResetToken(forgotPassword, cancellationToken);
+
+        if (passwordResetToken == null)
+        {
+            return BadRequest();
+        }
+
+        var user = await accountService.GetUserByEmailOrUserName(forgotPassword.Email);
+
+        if (user == null)
+        {
+            return BadRequest();
+        }
+
+        var passwordResetDto = new UserForgotPasswordDto
+        {
+            Email = user.Email!,
+            Name = user.Name,
+            Token = passwordResetToken
+        };
+
+        await appEmailService.SendResetPasswordEmail(passwordResetDto, user.Id, cancellationToken);
 
         return Ok(new { message = "Please check your email for password reset instructions" });
     }

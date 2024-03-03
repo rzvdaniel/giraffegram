@@ -22,4 +22,28 @@
     <ProjectReference Include="..\GG.Core\GG.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Update="Resources\ResetPasswordEmail.Designer.cs">
+      <DependentUpon>ResetPasswordEmail.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="Resources\RegisterUserEmail.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>RegisterUserEmail.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\ResetPasswordEmail.resx">
+      <LastGenOutput>ResetPasswordEmail.Designer.cs</LastGenOutput>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\RegisterUserEmail.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>RegisterUserEmail.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
 </Project>

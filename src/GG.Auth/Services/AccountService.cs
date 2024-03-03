@@ -1,10 +1,9 @@
 ﻿using GG.Auth.Entities;
+using GG.Auth.Enums;
 using GG.Auth.Models;
 using GG.Core.Dto;
-using GG.Core.Services;
 using Microsoft.AspNetCore.Identity;
 using OpenIddict.Abstractions;
-using System.Security.Policy;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 
 namespace GG.Auth.Services;
@@ -12,7 +11,6 @@ namespace GG.Auth.Services;
 public class AccountService(
     UserManager<User> userManager, 
     RoleManager<UserRole> roleManager,
-    AppEmailService appEmailService,
     IOpenIddictApplicationManager applicationManager)
 {
     public async Task<IdentityResult> CreateUser(UserRegisterDto userRegisterDto, CancellationToken cancellationToken)
@@ -30,15 +28,6 @@ public class AccountService(
         };
 
         var result = await userManager.CreateAsync(newUser, userRegisterDto.Password);
-
-        if (!result.Succeeded)
-        {
-            result.Errors.Aggregate(
-                "User Creation Failed - Identity Exception. Errors were: \n\r\n\r",
-                (current, error) => current + " - " + error.Description + "\n\r"); 
-        }
-
-        await appEmailService.SendRegistrationEmail(userRegisterDto, cancellationToken);
 
         return result;
     }
@@ -97,8 +86,21 @@ public class AccountService(
     public async Task<User?> GetUserById(Guid userId)
     {
         var result = await userManager.FindByIdAsync(userId.ToString());
-
         return result;
+    }
+
+    public async Task<bool> AdminExists()
+    {
+        var users = await userManager.GetUsersInRoleAsync(UserRoles.Administrator);
+
+        return users.Any();
+    }
+
+    public async Task<User?> GetAdmin()
+    {
+        var users = await userManager.GetUsersInRoleAsync(UserRoles.Administrator);
+
+        return users.SingleOrDefault();
     }
 
     public async Task<User?> GetUserById(string userId)
@@ -157,23 +159,14 @@ public class AccountService(
         return result;
     }
 
-    public async Task SendResetPasswordEmail(ForgotPassword forgotPasswordModel, CancellationToken cancellationToken)
+    public async Task<string> GetPasswordResetToken(ForgotPassword forgotPasswordModel, CancellationToken cancellationToken)
     {
-        var user = await userManager.FindByEmailAsync(forgotPasswordModel.Email);
-
-        if (user == null) 
-            return;
+        var user = await GetUserByEmailOrUserName(forgotPasswordModel.Email) ?? 
+            throw new Exception("User not found");
 
         var token = await userManager.GeneratePasswordResetTokenAsync(user);
 
-        var forgotPasswordDto = new UserForgotPasswordDto
-        { 
-            Email = forgotPasswordModel.Email, 
-            Name = user.Name,
-            Token = token
-        };
-
-        await appEmailService.SendResetPasswordEmail(forgotPasswordDto, cancellationToken);
+        return token;
     }
 
     public async Task<IdentityResult> ResetPassword(User user, string token, string password, CancellationToken cancellationToken)
@@ -183,15 +176,15 @@ public class AccountService(
         return result;
     }
 
-    public async Task<IEnumerable<string>> GetRoles(Guid userId)
+    public async Task<IEnumerable<string>> GetUserRoles(Guid userId)
     {
         var user = await GetUserById(userId) ??
              throw new Exception("Error in retrieving user roles!");
 
         return await userManager.GetRolesAsync(user);
     }
-
-    public async Task AddRole(Guid userId, string roleName)
+    
+    public async Task AddUserToRole(Guid userId, string roleName)
     {
         var user = await GetUserById(userId) ??
             throw new Exception("Error in adding user role!");
@@ -199,11 +192,11 @@ public class AccountService(
         var result = await userManager.AddToRoleAsync(user, roleName);
         if (!result.Succeeded)
         {
-            throw new Exception("Error in Adding Role!");
+            throw new Exception("Error in adding user role!");
         }
     }
 
-    public async Task AddRole(Guid userId, Guid roleId)
+    public async Task AddUserToRole(Guid userId, Guid roleId)
     {
         var role = await roleManager.FindByIdAsync(roleId.ToString())
             ?? throw new ArgumentException("Invalid argument", nameof(roleId));
@@ -222,7 +215,7 @@ public class AccountService(
         }
     }
 
-    public async Task RemoveRole(Guid userId, string roleName)
+    public async Task RemoveUserRole(Guid userId, string roleName)
     {
         var user = await GetUserById(userId) ??
             throw new Exception("Error in removing user role!");
@@ -234,7 +227,7 @@ public class AccountService(
         }
     }
 
-    public async Task RemoveRole(Guid userId, Guid roleId)
+    public async Task RemoveUserRole(Guid userId, Guid roleId)
     {
         var role = await roleManager.FindByIdAsync(roleId.ToString())
             ?? throw new ArgumentException("Invalid argument", nameof(roleId));
