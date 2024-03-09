@@ -4,7 +4,7 @@ using GG.Auth.Enums;
 using GG.Auth.Models;
 using GG.Auth.Resources;
 using GG.Auth.Services;
-using GG.Core.Dto;
+using GG.Core.Models;
 using GG.Core.Services;
 
 namespace GG.Api;
@@ -22,7 +22,7 @@ public class SetupService(AccountService accountService,
 
         await AddAppEmailTemplates(cancellationToken);
 
-        var userDetails = new UserDetailsDto { Email = userRegistration.Email, Name = userRegistration.Name };
+        var userDetails = new UserDetails { Email = userRegistration.Email, Name = userRegistration.Name };
         await appEmailService.SendRegistrationEmail(userDetails, cancellationToken);
     }
 
@@ -61,7 +61,7 @@ public class SetupService(AccountService accountService,
 
     private async Task AddRegisterUserEmailTemplate(CancellationToken cancellationToken)
     {
-        var registerUserEmail = new EmailTemplateAddDto
+        var registerUserEmail = new EmailTemplateAdd
         {
             Name = RegisterUserEmail.Name,
             Subject = RegisterUserEmail.Subject,
@@ -73,7 +73,7 @@ public class SetupService(AccountService accountService,
 
     private async Task AddResetPasswordEmailTemplate(CancellationToken cancellationToken)
     {
-        var resetPasswordEmail = new EmailTemplateAddDto
+        var resetPasswordEmail = new EmailTemplateAdd
         {
             Name = ResetPasswordEmail.Name,
             Subject = ResetPasswordEmail.Subject,

@@ -1,6 +1,6 @@
-﻿namespace GG.Core.Dto;
+﻿namespace GG.Core.Models;
 
-public class EmailSendDto
+public class EmailSend
 {
     public required string Template { get; set; }
     public required EmailAddress From { get; set; }

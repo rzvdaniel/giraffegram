@@ -1,10 +1,14 @@
-﻿namespace GG.Core.Dto;
+﻿namespace GG.Core.Models;
 
-public class ApiKeyGetDto
+public class EmailTemplateGet
 {
     public Guid Id { get; set; }
 
     public required string Name { get; set; }
+
+    public string? Subject { get; set; }
+
+    public string? Html { get; set; }
 
     public DateTime Created { get; set; }
 

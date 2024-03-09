@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace GG.Core.Dto;
+namespace GG.Core.Models;
 
-public class UserDetailsDto
+public class UserDetails
 {
     [MaxLength(319)]
     [EmailAddress]

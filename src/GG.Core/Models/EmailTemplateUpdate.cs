@@ -1,6 +1,6 @@
-﻿namespace GG.Core.Dto;
+﻿namespace GG.Core.Models;
 
-public class EmailTemplateUpdateDto
+public class EmailTemplateUpdate
 {
     public required string Name { get; set; }
     public string? Subject { get; set; }

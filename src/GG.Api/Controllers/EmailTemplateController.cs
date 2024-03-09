@@ -1,4 +1,4 @@
-using GG.Core.Dto;
+using GG.Core.Models;
 using GG.Core.Entities;
 using GG.Core.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -11,7 +11,7 @@ public class EmailTemplateController(EmailTemplateService emailTemplateService) 
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
-    public async Task<ActionResult> Create(EmailTemplateAddDto emailTemplateAddDto, CancellationToken cancellationToken)
+    public async Task<ActionResult> Create(EmailTemplateAdd emailTemplateAddDto, CancellationToken cancellationToken)
     {
         var emailTemplateExists = await emailTemplateService.Exists(emailTemplateAddDto.Name, GetUserId(), cancellationToken);
 
@@ -27,7 +27,7 @@ public class EmailTemplateController(EmailTemplateService emailTemplateService) 
 
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<ActionResult<IEnumerable<EmailTemplateGetDto>>> Get(CancellationToken cancellationToken)
+    public async Task<ActionResult<IEnumerable<EmailTemplateGet>>> Get(CancellationToken cancellationToken)
     {
         var emailTemplates = await emailTemplateService.List(GetUserId(), cancellationToken);
 
@@ -37,7 +37,7 @@ public class EmailTemplateController(EmailTemplateService emailTemplateService) 
     [HttpGet("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<EmailTemplateGetDto>> Get(Guid id, CancellationToken cancellationToken)
+    public async Task<ActionResult<EmailTemplateGet>> Get(Guid id, CancellationToken cancellationToken)
     {
         var emailTemplate = await emailTemplateService.Get(id, GetUserId(), cancellationToken);
 
@@ -46,7 +46,7 @@ public class EmailTemplateController(EmailTemplateService emailTemplateService) 
 
     [HttpPut("{id}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    public async Task<ActionResult> Update(Guid id, EmailTemplateUpdateDto emailTemplate, CancellationToken cancellationToken)
+    public async Task<ActionResult> Update(Guid id, EmailTemplateUpdate emailTemplate, CancellationToken cancellationToken)
     {
         var result = await emailTemplateService.Update(id, emailTemplate, GetUserId(), cancellationToken);
 

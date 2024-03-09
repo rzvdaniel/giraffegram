@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace GG.Core.Dto;
+namespace GG.Core.Models;
 
-public class UserForgotPasswordDto
+public class UserForgotPassword
 {
     [MaxLength(256)]
     public string? Name { get; set; }

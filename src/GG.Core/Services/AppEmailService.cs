@@ -1,14 +1,14 @@
 ﻿using Fluid;
-using GG.Core.Dto;
+using GG.Core.Models;
 using System.Web;
 
 namespace GG.Core.Services;
 
 public class AppEmailService(AppConfigService configService, EmailService emailService, AppEmailTemplateService emailAppTemplateService)
 {
-    public async Task SendRegistrationEmail(UserDetailsDto userRegistration, CancellationToken cancellationToken)
+    public async Task SendRegistrationEmail(UserDetails userRegistration, CancellationToken cancellationToken)
     {
-        var email = new EmailSendDto
+        var email = new EmailSend
         {
             Template = AppEmailTemplates.RegisterUser,
             From = new EmailAddress 
@@ -37,11 +37,11 @@ public class AppEmailService(AppConfigService configService, EmailService emailS
         await SendEmail(email, cancellationToken);
     }
 
-    public async Task SendResetPasswordEmail(UserForgotPasswordDto userForgotPassword, CancellationToken cancellationToken)
+    public async Task SendResetPasswordEmail(UserForgotPassword userForgotPassword, CancellationToken cancellationToken)
     {
         var resetPasswordUrl = $"{configService.AppConfig.WebsiteUrl}/reset-password?email={userForgotPassword.Email}&token={HttpUtility.UrlEncode(userForgotPassword.Token)}";
 
-        var email = new EmailSendDto
+        var email = new EmailSend
         {
             Template = AppEmailTemplates.ResetPassword,
             From = new EmailAddress
@@ -70,7 +70,7 @@ public class AppEmailService(AppConfigService configService, EmailService emailS
         await SendEmail(email, cancellationToken);
     }
 
-    private async Task SendEmail(EmailSendDto emailDto, CancellationToken cancellationToken)
+    private async Task SendEmail(EmailSend emailDto, CancellationToken cancellationToken)
     {
         var renderedEmail = await GetAppEmail(emailDto, cancellationToken);
 
@@ -80,7 +80,7 @@ public class AppEmailService(AppConfigService configService, EmailService emailS
         emailService.Send(emailDto, renderedEmail, cancellationToken);
     }
 
-    private async Task<EmailRenderedDto?> GetAppEmail(EmailSendDto emailDto, CancellationToken cancellationToken)
+    private async Task<EmailRendered?> GetAppEmail(EmailSend emailDto, CancellationToken cancellationToken)
     {
         var emailTemplate = await emailAppTemplateService.Get(emailDto.Template, cancellationToken);
 
@@ -109,7 +109,7 @@ public class AppEmailService(AppConfigService configService, EmailService emailS
         var renderedHtml = htmlTemplate.Render(context);
         var renderedSubject = subjectTemplate.Render(context);
 
-        var renderedEmail = new EmailRenderedDto
+        var renderedEmail = new EmailRendered
         {
             Html = renderedHtml,
             Subject = renderedSubject

@@ -1,6 +1,6 @@
-﻿namespace GG.Core.Dto;
+﻿namespace GG.Core.Models;
 
-public class EmailRenderedDto
+public class EmailRendered
 {
     public string? Subject { get; set; }
 

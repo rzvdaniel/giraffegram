@@ -1,5 +1,5 @@
 ﻿using Fluid;
-using GG.Core.Dto;
+using GG.Core.Models;
 using MailKit.Net.Smtp;
 using Microsoft.EntityFrameworkCore;
 using MimeKit;
@@ -19,7 +19,7 @@ public class EmailService(ApiKeyService apiKeyService, ApplicationDbContext dbCo
         if (emailTemplate == null)
             return null;
 
-        var emailTemplateGetDto = new EmailTemplateGetDto
+        var emailTemplateGetDto = new EmailTemplateGet
         {
             Id = emailTemplate.Id,
             Name = emailTemplate.Name,
@@ -48,7 +48,7 @@ public class EmailService(ApiKeyService apiKeyService, ApplicationDbContext dbCo
         return emailHtml;
     }
 
-    public async Task Send(EmailSendDto emailDto, string apiKey, CancellationToken cancellationToken)
+    public async Task Send(EmailSend emailDto, string apiKey, CancellationToken cancellationToken)
     {
         var renderedEmail = await GetEmail(emailDto, apiKey, cancellationToken);
 
@@ -58,7 +58,7 @@ public class EmailService(ApiKeyService apiKeyService, ApplicationDbContext dbCo
         Send(emailDto, renderedEmail, cancellationToken);
     }
 
-    public void Send(EmailSendDto emailDto, EmailRenderedDto renderedEmail, CancellationToken cancellationToken)
+    public void Send(EmailSend emailDto, EmailRendered renderedEmail, CancellationToken cancellationToken)
     {
         var message = new MimeMessage();
         message.From.Add(new MailboxAddress(emailDto.From.Name, emailDto.From.Email));
@@ -80,7 +80,7 @@ public class EmailService(ApiKeyService apiKeyService, ApplicationDbContext dbCo
         client.Disconnect(true, cancellationToken);
     }
 
-    private async Task<EmailRenderedDto?> GetEmail(EmailSendDto emailDto, string apiKey, CancellationToken cancellationToken)
+    private async Task<EmailRendered?> GetEmail(EmailSend emailDto, string apiKey, CancellationToken cancellationToken)
     {
         var userId = await apiKeyService.GetUserId(apiKey, cancellationToken);
 
@@ -89,7 +89,7 @@ public class EmailService(ApiKeyService apiKeyService, ApplicationDbContext dbCo
         return renderedEmail;
     }
 
-    private async Task<EmailRenderedDto?> GetAppEmail(EmailSendDto emailDto, Guid userId, CancellationToken cancellationToken)
+    private async Task<EmailRendered?> GetAppEmail(EmailSend emailDto, Guid userId, CancellationToken cancellationToken)
     {
         var emailTemplate = await dbContext.EmailTemplates.SingleOrDefaultAsync(x => x.Name == emailDto.Template && x.EmailTemplateUsers.Any(x => x.UserId == userId), cancellationToken);
 
@@ -118,7 +118,7 @@ public class EmailService(ApiKeyService apiKeyService, ApplicationDbContext dbCo
         var renderedHtml = htmlTemplate.Render(context);
         var renderedSubject = subjectTemplate.Render(context);
 
-        var renderedEmail = new EmailRenderedDto
+        var renderedEmail = new EmailRendered
         {
             Html = renderedHtml,
             Subject = renderedSubject

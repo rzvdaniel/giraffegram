@@ -1,7 +1,7 @@
 ﻿using GG.Auth.Enums;
 using GG.Auth.Models;
 using GG.Auth.Services;
-using GG.Core.Dto;
+using GG.Core.Models;
 using GG.Core.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -50,7 +50,7 @@ public class UserController(AccountService accountService, AppEmailService appEm
 
         await accountService.AddUserToRole(user.Id, UserRoles.User);
 
-        var userDetails = new UserDetailsDto { Email = userRegisterDto.Email, Name = userRegisterDto.Name };
+        var userDetails = new UserDetails { Email = userRegisterDto.Email, Name = userRegisterDto.Name };
         await appEmailService.SendRegistrationEmail(userDetails, cancellationToken);
 
         return Created();
@@ -102,7 +102,7 @@ public class UserController(AccountService accountService, AppEmailService appEm
             return BadRequest();
         }
 
-        var passwordResetDto = new UserForgotPasswordDto
+        var passwordResetDto = new UserForgotPassword
         {
             Email = user.Email!,
             Name = user.Name,

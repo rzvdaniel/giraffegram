@@ -1,6 +1,6 @@
-﻿namespace GG.Core.Dto;
+﻿namespace GG.Core.Models;
 
-public class EmailTemplateCreatedDto
+public class EmailTemplateCreated
 {
     public Guid Id { get; set; }
 
