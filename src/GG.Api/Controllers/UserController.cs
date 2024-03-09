@@ -20,7 +20,7 @@ public class UserController(AccountService accountService, AppEmailService appEm
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     [ProducesResponseType(typeof(IEnumerable<string>), StatusCodes.Status400BadRequest)]
     [ProducesDefaultResponseType]
-    public async Task<IActionResult> Create([FromBody] UserRegisterDto userRegisterDto, CancellationToken cancellationToken)
+    public async Task<IActionResult> Create([FromBody] UserRegistration userRegisterDto, CancellationToken cancellationToken)
     {
         if (!appConfigService.AppConfig.AllowUserRegistration)
         {
@@ -50,7 +50,8 @@ public class UserController(AccountService accountService, AppEmailService appEm
 
         await accountService.AddUserToRole(user.Id, UserRoles.User);
 
-        await appEmailService.SendRegistrationEmail(userRegisterDto, cancellationToken);
+        var userDetails = new UserDetailsDto { Email = userRegisterDto.Email, Name = userRegisterDto.Name };
+        await appEmailService.SendRegistrationEmail(userDetails, cancellationToken);
 
         return Created();
     }

@@ -1,18 +1,20 @@
 ﻿using GG.Auth;
 using GG.Auth.Entities;
 using GG.Auth.Enums;
+using GG.Auth.Models;
 using GG.Auth.Resources;
 using GG.Auth.Services;
 using GG.Core.Dto;
+using GG.Core.Services;
 
-namespace GG.Core.Services;
+namespace GG.Api;
 
 public class SetupService(AccountService accountService, 
     AppEmailService appEmailService, 
     AppEmailTemplateService appEmailTemplateService,
     AuthDbContext dbContext)
 {
-    public async Task Setup(UserRegisterDto userRegistration, CancellationToken cancellationToken)
+    public async Task Setup(UserRegistration userRegistration, CancellationToken cancellationToken)
     {
        await AddRoles(cancellationToken);
 
@@ -20,10 +22,11 @@ public class SetupService(AccountService accountService,
 
         await AddAppEmailTemplates(cancellationToken);
 
-        await appEmailService.SendRegistrationEmail(userRegistration, cancellationToken);
+        var userDetails = new UserDetailsDto { Email = userRegistration.Email, Name = userRegistration.Name };
+        await appEmailService.SendRegistrationEmail(userDetails, cancellationToken);
     }
 
-    private async Task AddAdministrator(UserRegisterDto adminDetails, CancellationToken cancellationToken)
+    private async Task AddAdministrator(UserRegistration adminDetails, CancellationToken cancellationToken)
     {
         var result = await accountService.CreateUser(adminDetails, cancellationToken);
 

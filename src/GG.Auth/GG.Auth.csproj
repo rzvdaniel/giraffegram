@@ -19,10 +19,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\GG.Core\GG.Core.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Compile Update="Resources\ResetPasswordEmail.Designer.cs">
       <DependentUpon>ResetPasswordEmail.resx</DependentUpon>
       <DesignTime>True</DesignTime>

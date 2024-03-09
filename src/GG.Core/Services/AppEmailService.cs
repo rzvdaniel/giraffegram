@@ -6,7 +6,7 @@ namespace GG.Core.Services;
 
 public class AppEmailService(AppConfigService configService, EmailService emailService, AppEmailTemplateService emailAppTemplateService)
 {
-    public async Task SendRegistrationEmail(UserRegisterDto userRegistration, CancellationToken cancellationToken)
+    public async Task SendRegistrationEmail(UserDetailsDto userRegistration, CancellationToken cancellationToken)
     {
         var email = new EmailSendDto
         {

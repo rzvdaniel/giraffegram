@@ -1,7 +1,6 @@
 ﻿using GG.Auth.Entities;
 using GG.Auth.Enums;
 using GG.Auth.Models;
-using GG.Core.Dto;
 using Microsoft.AspNetCore.Identity;
 using OpenIddict.Abstractions;
 using static OpenIddict.Abstractions.OpenIddictConstants;
@@ -13,7 +12,7 @@ public class AccountService(
     RoleManager<UserRole> roleManager,
     IOpenIddictApplicationManager applicationManager)
 {
-    public async Task<IdentityResult> CreateUser(UserRegisterDto userRegisterDto, CancellationToken cancellationToken)
+    public async Task<IdentityResult> CreateUser(UserRegistration userRegisterDto, CancellationToken cancellationToken)
     {
         if (userManager.Users.Any(u => u.Email == userRegisterDto.Email))
         {
