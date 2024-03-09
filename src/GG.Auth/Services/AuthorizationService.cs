@@ -46,7 +46,7 @@ public class AuthorizationService(
         identity.SetClaim(Claims.Subject, await userManager.GetUserIdAsync(user))
                 .SetClaim(Claims.Email, await userManager.GetEmailAsync(user))
                 .SetClaim(Claims.Name, await userManager.GetUserNameAsync(user))
-                .SetClaims(Claims.Role, (await userManager.GetRolesAsync(user)).ToImmutableArray());
+                .SetClaims(Claims.Role, [.. (await userManager.GetRolesAsync(user))]);
 
         return identity;
     }

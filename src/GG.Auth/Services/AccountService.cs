@@ -82,17 +82,18 @@ public class AccountService(
         }
     }
 
-    public async Task<User?> GetUserById(Guid userId)
-    {
-        var result = await userManager.FindByIdAsync(userId.ToString());
-        return result;
-    }
-
     public async Task<bool> AdminExists()
     {
         var users = await userManager.GetUsersInRoleAsync(UserRoles.Administrator);
 
         return users.Any();
+    }
+
+    public async Task<User?> GetUserById(Guid userId)
+    {
+        var result = await GetUserById(userId.ToString());
+
+        return result;
     }
 
     public async Task<User?> GetUserById(string userId)
