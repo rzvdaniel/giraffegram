@@ -1,11 +1,12 @@
-﻿using GG.Core.Dto;
+﻿using Fluid;
+using GG.Core.Dto;
 using System.Web;
 
 namespace GG.Core.Services;
 
-public class AppEmailService(AppConfigService configService, EmailService emailService)
+public class AppEmailService(AppConfigService configService, EmailService emailService, AppEmailTemplateService emailAppTemplateService)
 {
-    public async Task SendRegistrationEmail(UserRegisterDto userRegistration, Guid userId, CancellationToken cancellationToken)
+    public async Task SendRegistrationEmail(UserRegisterDto userRegistration, CancellationToken cancellationToken)
     {
         var email = new EmailSendDto
         {
@@ -33,10 +34,10 @@ public class AppEmailService(AppConfigService configService, EmailService emailS
             }
         };
 
-        await emailService.Send(email, userId, cancellationToken);
+        await SendEmail(email, cancellationToken);
     }
 
-    public async Task SendResetPasswordEmail(UserForgotPasswordDto userForgotPassword, Guid userId, CancellationToken cancellationToken)
+    public async Task SendResetPasswordEmail(UserForgotPasswordDto userForgotPassword, CancellationToken cancellationToken)
     {
         var resetPasswordUrl = $"{configService.AppConfig.WebsiteUrl}/reset-password?email={userForgotPassword.Email}&token={HttpUtility.UrlEncode(userForgotPassword.Token)}";
 
@@ -66,6 +67,54 @@ public class AppEmailService(AppConfigService configService, EmailService emailS
             }
         };
 
-        await emailService.Send(email, userId, cancellationToken);
+        await SendEmail(email, cancellationToken);
+    }
+
+    private async Task SendEmail(EmailSendDto emailDto, CancellationToken cancellationToken)
+    {
+        var renderedEmail = await GetAppEmail(emailDto, cancellationToken);
+
+        if (renderedEmail == null)
+            return;
+
+        emailService.Send(emailDto, renderedEmail, cancellationToken);
+    }
+
+    private async Task<EmailRenderedDto?> GetAppEmail(EmailSendDto emailDto, CancellationToken cancellationToken)
+    {
+        var emailTemplate = await emailAppTemplateService.Get(emailDto.Template, cancellationToken);
+
+        if (emailTemplate == null)
+            return null;
+
+        var parser = new FluidParser();
+
+        if (!parser.TryParse(emailTemplate.Html, out var htmlTemplate, out var error))
+        {
+            throw new Exception("Could not parse email template body");
+        }
+
+        if (!parser.TryParse(emailTemplate.Subject, out var subjectTemplate, out var subjectError))
+        {
+            throw new Exception("Could not parse email template subject");
+        }
+
+        var context = new TemplateContext();
+
+        foreach (var contextEntry in emailDto.Variables)
+        {
+            context.SetValue(contextEntry.Key, contextEntry.Value);
+        }
+
+        var renderedHtml = htmlTemplate.Render(context);
+        var renderedSubject = subjectTemplate.Render(context);
+
+        var renderedEmail = new EmailRenderedDto
+        {
+            Html = renderedHtml,
+            Subject = renderedSubject
+        };
+
+        return renderedEmail;
     }
 }

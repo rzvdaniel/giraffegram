@@ -10,6 +10,7 @@ using Quartz;
 using Serilog;
 using Serilog.Events;
 using Serilog.Formatting.Compact;
+using Serilog.Sinks.MariaDB.Extensions;
 using Serilog.Sinks.MSSqlServer;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -28,6 +29,8 @@ var services = builder.Services;
 
 services.AddTransient<AccountService>();
 services.AddTransient<AuthorizationService>();
+services.AddTransient<AppEmailService>();
+services.AddTransient<AppEmailTemplateService>();
 services.AddTransient<EmailService>();
 services.AddTransient<EmailTemplateService>();
 services.AddTransient<SecretKeyEncryptionService>();
@@ -79,6 +82,10 @@ builder.Host.UseSerilog((context, services, config) =>
             // Below configuration is overritten by configuration from appsettings.json
             logEventFormatter: new CompactJsonFormatter(),
             sinkOptions: new MSSqlServerSinkOptions { TableName = "Logs" }))
+    .WriteTo.Conditional(evt => configurationService.IsDatabaseTypeMySql(),
+        wt => wt.MariaDB(
+            connectionString: configurationManager.GetConnectionString("MySqlConnection"),
+            tableName: "Logs"))
 );
 
 services.AddSwaggerGen();

@@ -96,13 +96,6 @@ public class AccountService(
         return users.Any();
     }
 
-    public async Task<User?> GetAdmin()
-    {
-        var users = await userManager.GetUsersInRoleAsync(UserRoles.Administrator);
-
-        return users.SingleOrDefault();
-    }
-
     public async Task<User?> GetUserById(string userId)
     {
         var result = await userManager.FindByIdAsync(userId);

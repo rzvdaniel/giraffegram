@@ -7,6 +7,7 @@ public class ApplicationDbContext : DbContext
 {
     public DbSet<EmailAccount> EmailAccounts => Set<EmailAccount>();
     public DbSet<EmailAccountUser> EmailAccountUsers => Set<EmailAccountUser>();
+    public DbSet<AppEmailTemplate> AppEmailTemplates => Set<AppEmailTemplate>();
     public DbSet<EmailTemplate> EmailTemplates => Set<EmailTemplate>();
     public DbSet<EmailTemplateUser> EmailTemplateUsers => Set<EmailTemplateUser>();
     public DbSet<ApiKey> ApiKeys => Set<ApiKey>();

@@ -20,7 +20,7 @@ public class SetupService(AccountService accountService,
 
         await AddAdminEmails(admin.Id, cancellationToken);
 
-        await appEmailService.SendRegistrationEmail(userRegistration, admin.Id, cancellationToken);
+        await appEmailService.SendRegistrationEmail(userRegistration, cancellationToken);
     }
 
     private async Task<User> AddAdministrator(UserRegisterDto adminDetails, CancellationToken cancellationToken)
@@ -40,7 +40,7 @@ public class SetupService(AccountService accountService,
 
     public async Task AddRoles(CancellationToken cancellationToken)
     {
-        var roles = new string[] { UserRoles.Administrator };
+        var roles = new string[] { UserRoles.Administrator, UserRoles.User };
 
         foreach (string role in roles)
         {

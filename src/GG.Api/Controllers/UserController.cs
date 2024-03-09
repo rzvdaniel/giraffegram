@@ -1,4 +1,5 @@
-﻿using GG.Auth.Models;
+﻿using GG.Auth.Enums;
+using GG.Auth.Models;
 using GG.Auth.Services;
 using GG.Core.Dto;
 using GG.Core.Services;
@@ -47,7 +48,9 @@ public class UserController(AccountService accountService, AppEmailService appEm
             return BadRequest();
         }
 
-        await appEmailService.SendRegistrationEmail(userRegisterDto, user.Id, cancellationToken);
+        await accountService.AddUserToRole(user.Id, UserRoles.User);
+
+        await appEmailService.SendRegistrationEmail(userRegisterDto, cancellationToken);
 
         return Created();
     }
@@ -105,7 +108,7 @@ public class UserController(AccountService accountService, AppEmailService appEm
             Token = passwordResetToken
         };
 
-        await appEmailService.SendResetPasswordEmail(passwordResetDto, user.Id, cancellationToken);
+        await appEmailService.SendResetPasswordEmail(passwordResetDto, cancellationToken);
 
         return Ok(new { message = "Please check your email for password reset instructions" });
     }

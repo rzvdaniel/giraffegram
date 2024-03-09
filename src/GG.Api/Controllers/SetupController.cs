@@ -18,7 +18,7 @@ public class SetupController(SetupService setupService) : AppControllerBase
         if (isSetupComplete)
             return NotFound();
 
-       await setupService.Setup(userRegisterDto, cancellationToken);
+        await setupService.Setup(userRegisterDto, cancellationToken);
 
         return Created();
     }
