@@ -9,33 +9,31 @@ namespace GG.Core.Services;
 
 public class SetupService(AccountService accountService, 
     AppEmailService appEmailService, 
-    EmailTemplateService emailTemplateService,
+    AppEmailTemplateService appEmailTemplateService,
     AuthDbContext dbContext)
 {
     public async Task Setup(UserRegisterDto userRegistration, CancellationToken cancellationToken)
     {
        await AddRoles(cancellationToken);
 
-        var admin = await AddAdministrator(userRegistration, cancellationToken);
+        await AddAdministrator(userRegistration, cancellationToken);
 
-        await AddAdminEmails(admin.Id, cancellationToken);
+        await AddAppEmailTemplates(cancellationToken);
 
         await appEmailService.SendRegistrationEmail(userRegistration, cancellationToken);
     }
 
-    private async Task<User> AddAdministrator(UserRegisterDto adminDetails, CancellationToken cancellationToken)
+    private async Task AddAdministrator(UserRegisterDto adminDetails, CancellationToken cancellationToken)
     {
         var result = await accountService.CreateUser(adminDetails, cancellationToken);
 
         if (!result.Succeeded)
             throw new Exception("Could not create administrator");
 
-        var user = await accountService.GetUserByEmailOrUserName(adminDetails.Email) ?? 
+        var admin = await accountService.GetUserByEmailOrUserName(adminDetails.Email) ?? 
             throw new Exception("Could not find administrator");
 
-        await accountService.AddUserToRole(user.Id, UserRoles.Administrator);
-
-        return user;
+        await accountService.AddUserToRole(admin.Id, UserRoles.Administrator);
     }
 
     public async Task AddRoles(CancellationToken cancellationToken)
@@ -58,7 +56,7 @@ public class SetupService(AccountService accountService,
         return await accountService.AdminExists();
     }
 
-    private async Task AddRegisterUserEmail(Guid adminId, CancellationToken cancellationToken)
+    private async Task AddRegisterUserEmailTemplate(CancellationToken cancellationToken)
     {
         var registerUserEmail = new EmailTemplateAddDto
         {
@@ -67,10 +65,10 @@ public class SetupService(AccountService accountService,
             Html = RegisterUserEmail.Body
         };
 
-        await emailTemplateService.Create(registerUserEmail, adminId, cancellationToken);
+        await appEmailTemplateService.Create(registerUserEmail, cancellationToken);
     }
 
-    private async Task AddResetPasswordEmail(Guid adminId, CancellationToken cancellationToken)
+    private async Task AddResetPasswordEmailTemplate(CancellationToken cancellationToken)
     {
         var resetPasswordEmail = new EmailTemplateAddDto
         {
@@ -79,12 +77,12 @@ public class SetupService(AccountService accountService,
             Html = ResetPasswordEmail.Body
         };
 
-        await emailTemplateService.Create(resetPasswordEmail, adminId, cancellationToken);
+        await appEmailTemplateService.Create(resetPasswordEmail, cancellationToken);
     }
 
-    private async Task AddAdminEmails(Guid adminId, CancellationToken cancellationToken)
+    private async Task AddAppEmailTemplates(CancellationToken cancellationToken)
     {
-        await AddRegisterUserEmail(adminId, cancellationToken);
-        await AddResetPasswordEmail(adminId, cancellationToken);
+        await AddRegisterUserEmailTemplate(cancellationToken);
+        await AddResetPasswordEmailTemplate(cancellationToken);
     }
 }
