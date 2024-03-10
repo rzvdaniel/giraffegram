@@ -48,7 +48,7 @@ export class UserService
      */
     get(): Observable<User>
     {
-        return this._httpClient.post<User>(`${this._config.api}/api/user/userinfo`, null).pipe(
+        return this._httpClient.post<User>(`${this._config.api}/api/account/userinfo`, null).pipe(
             tap((user) =>
             {
                 this._user.next(user);

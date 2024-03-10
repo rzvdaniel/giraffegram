@@ -12,7 +12,7 @@ using static OpenIddict.Abstractions.OpenIddictConstants;
 
 namespace GG.Api.Controllers;
 
-public class UserController(AccountService accountService, AppEmailService appEmailService, AppConfigService appConfigService) : AppControllerBase
+public class AccountController(AccountService accountService, AppEmailService appEmailService, AppConfigService appConfigService) : AppControllerBase
 {
     [HttpPost]
     [AllowAnonymous]
@@ -56,9 +56,9 @@ public class UserController(AccountService accountService, AppEmailService appEm
         return Created();
     }
 
-    [HttpGet("userinfo"), HttpPost("userinfo"), Produces("application/json")]
+    [HttpGet("info"), HttpPost("info"), Produces("application/json")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<IActionResult> UserInfo()
+    public async Task<IActionResult> Info()
     {
         var userId = User.GetClaim(Claims.Subject) ?? 
             throw new InvalidOperationException("User information cannot be retrieved from the request.");

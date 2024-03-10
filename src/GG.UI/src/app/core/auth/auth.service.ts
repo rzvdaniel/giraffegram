@@ -61,7 +61,7 @@ export class AuthService
      */
     forgotPassword(email: string): Observable<any>
     {
-        return this._httpClient.post(`${this.config.api}/api/user/forgot-password`, { email });
+        return this._httpClient.post(`${this.config.api}/api/account/forgot-password`, { email });
     }
 
     /**
@@ -71,7 +71,7 @@ export class AuthService
      */
     resetPassword(email: string, password: string, token: string): Observable<any>
     {
-        return this._httpClient.post(`${this.config.api}/api/user/reset-password`, {email: email, password: password, token: token});
+        return this._httpClient.post(`${this.config.api}/api/account/reset-password`, {email: email, password: password, token: token});
     }
 
     /**
@@ -123,7 +123,7 @@ export class AuthService
      */
     signUp(user: { name: string; email: string; password: string; }): Observable<any>
     {
-        return this._httpClient.post(`${this.config.api}/api/user`, user);
+        return this._httpClient.post(`${this.config.api}/api/account`, user);
     }
 
     /** 
