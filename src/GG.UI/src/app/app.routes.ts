@@ -2,6 +2,7 @@ import { Route } from '@angular/router';
 import { initialDataResolver } from 'app/app.resolvers';
 import { AuthGuard } from 'app/core/auth/guards/auth.guard';
 import { NoAuthGuard } from 'app/core/auth/guards/noAuth.guard';
+import { AdminGuard } from 'app/core/auth/guards/admin.guard';
 import { LayoutComponent } from 'app/layout/layout.component';
 
 // @formatter:off
@@ -64,7 +65,7 @@ export const appRoutes: Route[] = [
         ]   
     },
 
-    // Admin routes
+    // User routes
     {
         path: '',
         canActivate: [AuthGuard],
@@ -85,6 +86,25 @@ export const appRoutes: Route[] = [
 
             // ApiKeys
             {path: 'apikeys', loadChildren: () => import('app/modules/admin/apikeys/apikey.routes')},
+
+            // 404 & Catch all
+            {path: '404-not-found', pathMatch: 'full', loadChildren: () => import('app/modules/admin/pages/error/error-404/error-404.routes')},
+            {path: '**', redirectTo: '404-not-found'}
+        ]
+    },
+
+    // User routes
+    {
+        path: '',
+        canActivate: [AuthGuard, AdminGuard],
+        canActivateChild: [AuthGuard, AdminGuard],
+        component: LayoutComponent,
+        resolve: {
+            initialData: initialDataResolver
+        },
+        children: [
+            // Users
+            //{path: 'users', loadChildren: () => import('app/modules/admin/users/users.routes')},
 
             // 404 & Catch all
             {path: '404-not-found', pathMatch: 'full', loadChildren: () => import('app/modules/admin/pages/error/error-404/error-404.routes')},

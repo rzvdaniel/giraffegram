@@ -11,7 +11,7 @@ export const defaultNavigation: FuseNavigationItem[] = [
     },
     {
         id   : 'emails',
-        title: 'Emails',
+        title: 'Email Templates',
         type : 'basic',
         icon : 'feather:mail',
         link : '/emails'
@@ -24,30 +24,12 @@ export const defaultNavigation: FuseNavigationItem[] = [
         link : '/apikeys'
     }
 ];
-export const compactNavigation: FuseNavigationItem[] = [
+export const adminNavigation: FuseNavigationItem[] = [
     {
-        id   : 'example',
-        title: 'Example',
+        id   : 'users',
+        title: 'Users',
         type : 'basic',
-        icon : 'heroicons_outline:chart-pie',
-        link : '/example'
-    }
-];
-export const futuristicNavigation: FuseNavigationItem[] = [
-    {
-        id   : 'example',
-        title: 'Example',
-        type : 'basic',
-        icon : 'heroicons_outline:chart-pie',
-        link : '/example'
-    }
-];
-export const horizontalNavigation: FuseNavigationItem[] = [
-    {
-        id   : 'example',
-        title: 'Example',
-        type : 'basic',
-        icon : 'heroicons_outline:chart-pie',
-        link : '/example'
-    }
+        icon : 'feather:mail',
+        link : '/users'
+    },
 ];
