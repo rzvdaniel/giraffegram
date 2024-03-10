@@ -141,7 +141,7 @@ public class AccountService(
         return false;
     }
 
-    public async Task<IEnumerable<User>> GetUsers(string firstName, string lastName, string email, int pageIndex, int pageSize)
+    public async Task<IEnumerable<User>> GetUsers(string email, int pageIndex, int pageSize)
     {
         await Task.CompletedTask;
         var result = userManager.Users.Where(u =>

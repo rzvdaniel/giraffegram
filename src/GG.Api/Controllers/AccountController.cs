@@ -20,28 +20,28 @@ public class AccountController(AccountService accountService, AppEmailService ap
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     [ProducesResponseType(typeof(IEnumerable<string>), StatusCodes.Status400BadRequest)]
     [ProducesDefaultResponseType]
-    public async Task<IActionResult> Create([FromBody] UserRegistration userRegisterDto, CancellationToken cancellationToken)
+    public async Task<IActionResult> Create([FromBody] UserRegistration userRegistration, CancellationToken cancellationToken)
     {
         if (!appConfigService.AppConfig.AllowUserRegistration)
         {
             return NotFound();
         }
 
-        var existingUser = await accountService.GetUserByEmailOrUserName(userRegisterDto.Email);
+        var existingUser = await accountService.GetUserByEmailOrUserName(userRegistration.Email);
 
         if (existingUser != null)
         {
             return Conflict();
         }
 
-        var result = await accountService.CreateUser(userRegisterDto, cancellationToken);
+        var result = await accountService.CreateUser(userRegistration, cancellationToken);
 
         if (!result.Succeeded)
         {
             return BadRequest();
         }
 
-        var user = await accountService.GetUserByEmailOrUserName(userRegisterDto.Email);
+        var user = await accountService.GetUserByEmailOrUserName(userRegistration.Email);
 
         if (user == null)
         {
@@ -50,7 +50,7 @@ public class AccountController(AccountService accountService, AppEmailService ap
 
         await accountService.AddUserToRole(user.Id, UserRoles.User);
 
-        var userDetails = new UserDetails { Email = userRegisterDto.Email, Name = userRegisterDto.Name };
+        var userDetails = new UserDetails { Email = userRegistration.Email, Name = userRegistration.Name };
         await appEmailService.SendRegistrationEmail(userDetails, cancellationToken);
 
         return Created();
