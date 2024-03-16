@@ -23,6 +23,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GG.Core", "GG.Core\GG.Core.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GG.Migrations.MySql", "GG.MySql.Migrations\GG.Migrations.MySql.csproj", "{228A9ECC-364F-40C2-9FFE-78437F6AC9E9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GG.Portal", "GG.Portal\GG.Portal.csproj", "{4347EC5E-5C9F-4507-9448-BCEC2CA97148}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -61,6 +63,10 @@ Global
 		{228A9ECC-364F-40C2-9FFE-78437F6AC9E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{228A9ECC-364F-40C2-9FFE-78437F6AC9E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{228A9ECC-364F-40C2-9FFE-78437F6AC9E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4347EC5E-5C9F-4507-9448-BCEC2CA97148}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4347EC5E-5C9F-4507-9448-BCEC2CA97148}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4347EC5E-5C9F-4507-9448-BCEC2CA97148}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4347EC5E-5C9F-4507-9448-BCEC2CA97148}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
