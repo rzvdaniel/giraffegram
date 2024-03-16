@@ -1,25 +1,25 @@
-using GG.Portal.Controllers;
+using GG.Portal.Services.Account;
+using GG.Portal.Services.Setup;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace GG.Api.Controllers;
+namespace GG.Portal.Controllers;
 
+public class SetupController(SetupService setupService) : AppControllerBase
+{
+    [HttpPost]
+    [AllowAnonymous]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    public async Task<ActionResult> Create(UserRegistrationCommand userRegisterDto, CancellationToken cancellationToken)
+    {
+        var isSetupComplete = await setupService.IsSetupComplete();
 
-//public class SetupController(SetupService setupService) : AppControllerBase
-//{
-//    [HttpPost]
-//    [AllowAnonymous]
-//    [ProducesResponseType(StatusCodes.Status409Conflict)]
-//    [ProducesResponseType(StatusCodes.Status201Created)]
-//    public async Task<ActionResult> Create(UserRegistration userRegisterDto, CancellationToken cancellationToken)
-//    {
-//        var isSetupComplete = await setupService.IsSetupComplete();
+        if (isSetupComplete)
+            return Conflict();
 
-//        if (isSetupComplete)
-//            return Conflict();
+        await setupService.Setup(userRegisterDto, cancellationToken);
 
-//        await setupService.Setup(userRegisterDto, cancellationToken);
-
-//        return Created();
-//    }
-//}
+        return Created();
+    }
+}

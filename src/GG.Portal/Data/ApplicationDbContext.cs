@@ -12,7 +12,7 @@ namespace GG.Portal.Data
         public DbSet<EmailTemplateUserEntity> EmailTemplateUsers => Set<EmailTemplateUserEntity>();
         public DbSet<ApiKeyEntity> ApiKeys => Set<ApiKeyEntity>();
         public DbSet<ApiKeyUserEntity> ApiKeyUsers => Set<ApiKeyUserEntity>();
-        public DbSet<Log> Logs => Set<Log>();
+        public DbSet<LogEntity> Logs => Set<LogEntity>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
