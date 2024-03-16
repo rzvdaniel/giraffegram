@@ -5,11 +5,11 @@ namespace GG.Portal.Services.EmailTemplate;
 
 public class EmailTemplateService(ApplicationDbContext dbContext)
 {
-    public async Task<IEnumerable<EmailTemplateGet>> List(Guid userId, CancellationToken cancellationToken)
+    public async Task<IEnumerable<EmailTemplateGetCommand>> List(Guid userId, CancellationToken cancellationToken)
     {
         var emailTemplates = await dbContext.EmailTemplates
             .Where(x => x.EmailTemplateUsers.Any(x => x.UserId == userId))
-            .Select(x => new EmailTemplateGet
+            .Select(x => new EmailTemplateGetCommand
             {
                 Id = x.Id,
                 Name = x.Name,
@@ -23,14 +23,14 @@ public class EmailTemplateService(ApplicationDbContext dbContext)
         return emailTemplates;
     }
 
-    public async Task<EmailTemplateGet?> Get(Guid id, Guid userId, CancellationToken cancellationToken)
+    public async Task<EmailTemplateGetCommand?> Get(Guid id, Guid userId, CancellationToken cancellationToken)
     {
         var emailTemplate = await dbContext.EmailTemplates
             .AsNoTracking()
             .FirstOrDefaultAsync(x => x.Id == id && x.EmailTemplateUsers.Any(x => x.UserId == userId), cancellationToken);
 
         return emailTemplate is not null ?
-            new EmailTemplateGet
+            new EmailTemplateGetCommand
             {
                 Id = emailTemplate.Id,
                 Name = emailTemplate.Name,
@@ -42,7 +42,7 @@ public class EmailTemplateService(ApplicationDbContext dbContext)
             null;
     }
 
-    public async Task<Guid> Create(EmailTemplateAdd emailAccountDto, Guid userId, CancellationToken cancellationToken)
+    public async Task<Guid> Create(EmailTemplateCreateCommand emailAccountDto, Guid userId, CancellationToken cancellationToken)
     {
         var emailTemplate = new EmailTemplateEntity
         {
@@ -68,7 +68,7 @@ public class EmailTemplateService(ApplicationDbContext dbContext)
         return emailTemplate.Id;
     }
 
-    public async Task<bool> Update(Guid id, EmailTemplateUpdate emailTemplateDto, Guid userId, CancellationToken cancellationToken)
+    public async Task<bool> Update(Guid id, EmailTemplateUpdateCommand emailTemplateDto, Guid userId, CancellationToken cancellationToken)
     {
         var affected = await dbContext.EmailTemplates
             .Include(x => x.EmailTemplateUsers)

@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace GG.Portal.Services.AppEmail;
+namespace GG.Portal.Services.Account;
 
-public class AppUserDetails
+public class UserRegistrationEmailCommand
 {
     [MaxLength(319)]
     [EmailAddress]
@@ -13,7 +13,7 @@ public class AppUserDetails
 }
 
 
-public class AppUserForgotPassword
+public class UserForgotPasswordCommand
 {
     [MaxLength(256)]
     public string? Name { get; set; }

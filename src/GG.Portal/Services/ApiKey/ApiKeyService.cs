@@ -7,11 +7,11 @@ namespace GG.Portal.Services.ApiKey;
 
 public class ApiKeyService(ApplicationDbContext dbContext)
 {
-    public async Task<IEnumerable<ApiKeyGet>> List(Guid userId, CancellationToken cancellationToken)
+    public async Task<IEnumerable<ApiKeyGetQuery>> List(Guid userId, CancellationToken cancellationToken)
     {
         var apiKeys = await dbContext.ApiKeys
             .Where(x => x.ApiKeyUsers.Any(x => x.UserId == userId))
-            .Select(x => new ApiKeyGet
+            .Select(x => new ApiKeyGetQuery
             {
                 Id = x.Id,
                 Name = x.Name,
@@ -23,13 +23,13 @@ public class ApiKeyService(ApplicationDbContext dbContext)
         return apiKeys;
     }
 
-    public async Task<ApiKeyGet?> Get(Guid id, Guid userId, CancellationToken cancellationToken)
+    public async Task<ApiKeyGetQuery?> Get(Guid id, Guid userId, CancellationToken cancellationToken)
     {
         var apiKey = await dbContext.ApiKeys.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id &&
             x.ApiKeyUsers.Any(x => x.UserId == userId), cancellationToken);
 
         return apiKey is not null ?
-            new ApiKeyGet
+            new ApiKeyGetQuery
             {
                 Id = apiKey.Id,
                 Name = apiKey.Name,
@@ -54,7 +54,7 @@ public class ApiKeyService(ApplicationDbContext dbContext)
         return apiKeyUser.UserId;
     }
 
-    public async Task<ApiKeyCreated> Create(ApiKeyAdd emailAccountDto, Guid userId, CancellationToken cancellationToken)
+    public async Task<ApiKeyCreateResult> Create(ApiKeyCreateCommand emailAccountDto, Guid userId, CancellationToken cancellationToken)
     {
         var key = CreateSecureRandomString();
         var hashedKey = CreateSHA512Hash(key);
@@ -79,7 +79,7 @@ public class ApiKeyService(ApplicationDbContext dbContext)
 
         await dbContext.SaveChangesAsync(cancellationToken);
 
-        var apiKeyCreateDto = new ApiKeyCreated
+        var apiKeyCreateDto = new ApiKeyCreateResult
         {
             Id = apiKey.Id,
             Name = apiKey.Name,
@@ -90,7 +90,7 @@ public class ApiKeyService(ApplicationDbContext dbContext)
         return apiKeyCreateDto;
     }
 
-    public async Task<bool> Update(Guid id, ApiKeyUpdate apiKeyUpdateDto, Guid userId, CancellationToken cancellationToken)
+    public async Task<bool> Update(Guid id, ApiKeyUpdateCommand apiKeyUpdateDto, Guid userId, CancellationToken cancellationToken)
     {
         var affected = await dbContext.ApiKeys
             .Include(x => x.ApiKeyUsers)

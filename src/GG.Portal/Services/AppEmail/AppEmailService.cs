@@ -1,4 +1,5 @@
 ﻿using Fluid;
+using GG.Portal.Services.Account;
 using GG.Portal.Services.AppConfig;
 using GG.Portal.Services.Email;
 using GG.Portal.Services.EmailTemplate;
@@ -8,16 +9,16 @@ namespace GG.Portal.Services.AppEmail;
 
 public class AppEmailService(AppConfigService configService, EmailService emailService, AppEmailTemplateService emailAppTemplateService)
 {
-    public async Task SendRegistrationEmail(AppUserDetails userRegistration, CancellationToken cancellationToken)
+    public async Task SendRegistrationEmail(UserRegistrationEmailCommand userRegistration, CancellationToken cancellationToken)
     {
         var email = new SendEmailCommand
         {
             Template = "RegisterUser",
-            From = new EmailAddress
+            From = new EmailAccount
             {
                 Email = configService.EmailConfig.Email!
             },
-            To = new EmailAddress
+            To = new EmailAccount
             {
                 Email = userRegistration.Email,
                 Name = userRegistration.Name
@@ -39,18 +40,18 @@ public class AppEmailService(AppConfigService configService, EmailService emailS
         await SendEmail(email, cancellationToken);
     }
 
-    public async Task SendResetPasswordEmail(AppUserForgotPassword userForgotPassword, CancellationToken cancellationToken)
+    public async Task SendResetPasswordEmail(UserForgotPasswordCommand userForgotPassword, CancellationToken cancellationToken)
     {
         var resetPasswordUrl = $"{configService.AppConfig.WebsiteUrl}/reset-password?email={userForgotPassword.Email}&token={HttpUtility.UrlEncode(userForgotPassword.Token)}";
 
         var email = new SendEmailCommand
         {
             Template = "ResetPassword",
-            From = new EmailAddress
+            From = new EmailAccount
             {
                 Email = configService.EmailConfig.Email!
             },
-            To = new EmailAddress
+            To = new EmailAccount
             {
                 Email = userForgotPassword.Email,
             },
@@ -82,7 +83,7 @@ public class AppEmailService(AppConfigService configService, EmailService emailS
         emailService.SendRenderedEmail(emailDto, renderedEmail, cancellationToken);
     }
 
-    private async Task<FluidEmailResult?> GetAppEmail(string template, Dictionary<string, string> variables, CancellationToken cancellationToken)
+    private async Task<EmailResult?> GetAppEmail(string template, Dictionary<string, string> variables, CancellationToken cancellationToken)
     {
         var emailTemplate = await emailAppTemplateService.Get(template, cancellationToken);
 
@@ -111,7 +112,7 @@ public class AppEmailService(AppConfigService configService, EmailService emailS
         var renderedHtml = htmlTemplate.Render(context);
         var renderedSubject = subjectTemplate.Render(context);
 
-        var renderedEmail = new FluidEmailResult
+        var renderedEmail = new EmailResult
         {
             Html = renderedHtml,
             Subject = renderedSubject

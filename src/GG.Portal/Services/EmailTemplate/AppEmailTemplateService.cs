@@ -5,10 +5,10 @@ namespace GG.Portal.Services.EmailTemplate;
 
 public class AppEmailTemplateService(ApplicationDbContext dbContext)
 {
-    public async Task<IEnumerable<EmailTemplateGet>> List(CancellationToken cancellationToken)
+    public async Task<IEnumerable<EmailTemplateGetCommand>> List(CancellationToken cancellationToken)
     {
         var emailTemplates = await dbContext.AppEmailTemplates
-            .Select(x => new EmailTemplateGet
+            .Select(x => new EmailTemplateGetCommand
             {
                 Id = x.Id,
                 Name = x.Name,
@@ -22,14 +22,14 @@ public class AppEmailTemplateService(ApplicationDbContext dbContext)
         return emailTemplates;
     }
 
-    public async Task<EmailTemplateGet?> Get(Guid id, CancellationToken cancellationToken)
+    public async Task<EmailTemplateGetCommand?> Get(Guid id, CancellationToken cancellationToken)
     {
         var emailTemplate = await dbContext.AppEmailTemplates
             .AsNoTracking()
             .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
 
         return emailTemplate is not null ?
-            new EmailTemplateGet
+            new EmailTemplateGetCommand
             {
                 Id = emailTemplate.Id,
                 Name = emailTemplate.Name,
@@ -41,14 +41,14 @@ public class AppEmailTemplateService(ApplicationDbContext dbContext)
             null;
     }
 
-    public async Task<EmailTemplateGet?> Get(string name, CancellationToken cancellationToken)
+    public async Task<EmailTemplateGetCommand?> Get(string name, CancellationToken cancellationToken)
     {
         var emailTemplate = await dbContext.AppEmailTemplates
             .AsNoTracking()
             .FirstOrDefaultAsync(x => x.Name == name, cancellationToken);
 
         return emailTemplate is not null ?
-            new EmailTemplateGet
+            new EmailTemplateGetCommand
             {
                 Id = emailTemplate.Id,
                 Name = emailTemplate.Name,
@@ -60,7 +60,7 @@ public class AppEmailTemplateService(ApplicationDbContext dbContext)
             null;
     }
 
-    public async Task<Guid> Create(EmailTemplateAdd emailAccountDto, CancellationToken cancellationToken)
+    public async Task<Guid> Create(EmailTemplateCreateCommand emailAccountDto, CancellationToken cancellationToken)
     {
         var emailTemplate = new AppEmailTemplateEntity
         {
@@ -78,7 +78,7 @@ public class AppEmailTemplateService(ApplicationDbContext dbContext)
         return emailTemplate.Id;
     }
 
-    public async Task<bool> Update(Guid id, EmailTemplateUpdate emailTemplateDto, CancellationToken cancellationToken)
+    public async Task<bool> Update(Guid id, EmailTemplateUpdateCommand emailTemplateDto, CancellationToken cancellationToken)
     {
         var affected = await dbContext.AppEmailTemplates
             .Where(x => x.Id == id)

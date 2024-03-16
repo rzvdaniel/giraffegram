@@ -9,7 +9,7 @@ public class ApiKeyController(ApiKeyService apiKeyService) : AppControllerBase
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
-    public async Task<ActionResult> Create(ApiKeyAdd apiKey, CancellationToken cancellationToken)
+    public async Task<ActionResult> Create(ApiKeyCreateCommand apiKey, CancellationToken cancellationToken)
     {
         var apiKeyExists = await apiKeyService.Exists(apiKey.Name, GetUserId(), cancellationToken);
 
@@ -25,7 +25,7 @@ public class ApiKeyController(ApiKeyService apiKeyService) : AppControllerBase
 
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<ActionResult<IEnumerable<ApiKeyGet>>> Get(CancellationToken cancellationToken)
+    public async Task<ActionResult<IEnumerable<ApiKeyGetQuery>>> Get(CancellationToken cancellationToken)
     {
         var apiKeys = await apiKeyService.List(GetUserId(), cancellationToken);
 
@@ -35,7 +35,7 @@ public class ApiKeyController(ApiKeyService apiKeyService) : AppControllerBase
     [HttpGet("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<ApiKeyGet>> Get(Guid id, CancellationToken cancellationToken)
+    public async Task<ActionResult<ApiKeyGetQuery>> Get(Guid id, CancellationToken cancellationToken)
     {
         var apiKey = await apiKeyService.Get(id, GetUserId(), cancellationToken);
 
@@ -44,7 +44,7 @@ public class ApiKeyController(ApiKeyService apiKeyService) : AppControllerBase
 
     [HttpPut("{id}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    public async Task<ActionResult> Update(Guid id, ApiKeyUpdate apiKey, CancellationToken cancellationToken)
+    public async Task<ActionResult> Update(Guid id, ApiKeyUpdateCommand apiKey, CancellationToken cancellationToken)
     {
         var result = await apiKeyService.Update(id, apiKey, GetUserId(), cancellationToken);
 

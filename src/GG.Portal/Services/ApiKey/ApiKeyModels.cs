@@ -1,11 +1,11 @@
 ﻿namespace GG.Portal.Services.ApiKey;
 
-public class ApiKeyAdd
+public class ApiKeyCreateCommand
 {
     public required string Name { get; set; }
 }
 
-public class ApiKeyCreated
+public class ApiKeyCreateResult
 {
     public Guid Id { get; set; }
 
@@ -16,7 +16,7 @@ public class ApiKeyCreated
     public DateTime CreatedAt { get; set; }
 }
 
-public class ApiKeyGet
+public class ApiKeyGetQuery
 {
     public Guid Id { get; set; }
 
@@ -27,7 +27,7 @@ public class ApiKeyGet
     public DateTime? Updated { get; set; }
 }
 
-public class ApiKeyUpdate
+public class ApiKeyUpdateCommand
 {
     public Guid Id { get; set; }
 

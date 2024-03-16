@@ -3,13 +3,13 @@
 public class SendEmailCommand
 {
     public required string Template { get; set; }
-    public required EmailAddress From { get; set; }
-    public required EmailAddress To { get; set; }
+    public required EmailAccount From { get; set; }
+    public required EmailAccount To { get; set; }
     public Dictionary<string, string> Variables { get; set; } = [];
     public required EmailConfiguration Configuration { get; set; }
 }
 
-public class EmailAddress
+public class EmailAccount
 {
     public required string Email { get; set; }
     public string? Name { get; set; }
@@ -24,7 +24,7 @@ public class EmailConfiguration
     public bool UseSsl { get; set; }
 }
 
-public class FluidEmailResult
+public class EmailResult
 {
     public string? Subject { get; set; }
     public string? Html { get; set; }
