@@ -1,4 +1,4 @@
-using GG.Portal.Models;
+using GG.Portal.Components.Models;
 using Microsoft.JSInterop;
 
 namespace GG.Portal.Components

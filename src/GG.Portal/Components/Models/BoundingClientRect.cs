@@ -1,4 +1,4 @@
-﻿namespace GG.Portal.Models
+﻿namespace GG.Portal.Components.Models
 {
     public class BoundingClientRect
     {
