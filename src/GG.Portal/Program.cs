@@ -1,6 +1,16 @@
 using GG.Portal.Components;
 using GG.Portal.Components.Account;
 using GG.Portal.Data;
+using GG.Portal.Filters;
+using GG.Portal.Logging;
+using GG.Portal.Services.Account;
+using GG.Portal.Services.ApiKey;
+using GG.Portal.Services.AppConfig;
+using GG.Portal.Services.AppEmail;
+using GG.Portal.Services.Email;
+using GG.Portal.Services.EmailTemplate;
+using GG.Portal.Services.SecretKeyEncryption;
+using GG.Portal.Services.Setup;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -11,10 +21,24 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-builder.Services.AddCascadingAuthenticationState();
-builder.Services.AddScoped<IdentityUserAccessor>();
-builder.Services.AddScoped<IdentityRedirectManager>();
-builder.Services.AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthenticationStateProvider>();
+var services = builder.Services;
+
+services.AddCascadingAuthenticationState();
+services.AddScoped<IdentityUserAccessor>();
+services.AddScoped<IdentityRedirectManager>();
+services.AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthenticationStateProvider>();
+
+services.AddScoped<AccountService>();
+services.AddScoped<AppEmailService>();
+services.AddScoped<AppEmailTemplateService>();
+services.AddScoped<EmailService>();
+services.AddScoped<EmailTemplateService>();
+services.AddScoped<SecretKeyEncryptionService>();
+services.AddScoped<AppConfigService>();
+services.AddScoped<ApiKeyService>();
+services.AddScoped<SetupService>();
+services.AddScoped<ApiKeyAuthFilter>();
+services.AddScoped<UserNameEnricher>();
 
 builder.Services.AddAuthentication(options =>
     {
