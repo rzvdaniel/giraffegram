@@ -12,7 +12,7 @@ public class EmailController(EmailService emailService) : AppControllerBase
 {
     [HttpPost("send")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<IActionResult> Send(EmailSend sendEmailDto, CancellationToken cancellationToken)
+    public async Task<IActionResult> Send(SendEmailCommand sendEmailDto, CancellationToken cancellationToken)
     {
         string userApiKey = HttpContext.Request.Headers[ApiKeyAuthFilter.ApiKeyHeaderName].ToString();
 

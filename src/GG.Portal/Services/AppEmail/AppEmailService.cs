@@ -10,7 +10,7 @@ public class AppEmailService(AppConfigService configService, EmailService emailS
 {
     public async Task SendRegistrationEmail(AppUserDetails userRegistration, CancellationToken cancellationToken)
     {
-        var email = new EmailSend
+        var email = new SendEmailCommand
         {
             Template = "RegisterUser",
             From = new EmailAddress
@@ -43,7 +43,7 @@ public class AppEmailService(AppConfigService configService, EmailService emailS
     {
         var resetPasswordUrl = $"{configService.AppConfig.WebsiteUrl}/reset-password?email={userForgotPassword.Email}&token={HttpUtility.UrlEncode(userForgotPassword.Token)}";
 
-        var email = new EmailSend
+        var email = new SendEmailCommand
         {
             Template = "ResetPassword",
             From = new EmailAddress
@@ -72,9 +72,9 @@ public class AppEmailService(AppConfigService configService, EmailService emailS
         await SendEmail(email, cancellationToken);
     }
 
-    private async Task SendEmail(EmailSend emailDto, CancellationToken cancellationToken)
+    private async Task SendEmail(SendEmailCommand emailDto, CancellationToken cancellationToken)
     {
-        var renderedEmail = await GetAppEmail(emailDto, cancellationToken);
+        var renderedEmail = await GetAppEmail(emailDto.Template, emailDto.Variables, cancellationToken);
 
         if (renderedEmail == null)
             return;
@@ -82,9 +82,9 @@ public class AppEmailService(AppConfigService configService, EmailService emailS
         emailService.SendRenderedEmail(emailDto, renderedEmail, cancellationToken);
     }
 
-    private async Task<EmailRendered?> GetAppEmail(EmailSend emailDto, CancellationToken cancellationToken)
+    private async Task<FluidEmailResult?> GetAppEmail(string template, Dictionary<string, string> variables, CancellationToken cancellationToken)
     {
-        var emailTemplate = await emailAppTemplateService.Get(emailDto.Template, cancellationToken);
+        var emailTemplate = await emailAppTemplateService.Get(template, cancellationToken);
 
         if (emailTemplate == null)
             return null;
@@ -103,7 +103,7 @@ public class AppEmailService(AppConfigService configService, EmailService emailS
 
         var context = new TemplateContext();
 
-        foreach (var contextEntry in emailDto.Variables)
+        foreach (var contextEntry in variables)
         {
             context.SetValue(contextEntry.Key, contextEntry.Value);
         }
@@ -111,7 +111,7 @@ public class AppEmailService(AppConfigService configService, EmailService emailS
         var renderedHtml = htmlTemplate.Render(context);
         var renderedSubject = subjectTemplate.Render(context);
 
-        var renderedEmail = new EmailRendered
+        var renderedEmail = new FluidEmailResult
         {
             Html = renderedHtml,
             Subject = renderedSubject

@@ -1,6 +1,6 @@
 ﻿namespace GG.Portal.Services.Email;
 
-public class EmailSend
+public class SendEmailCommand
 {
     public required string Template { get; set; }
     public required EmailAddress From { get; set; }
@@ -24,10 +24,9 @@ public class EmailConfiguration
     public bool UseSsl { get; set; }
 }
 
-public class EmailRendered
+public class FluidEmailResult
 {
     public string? Subject { get; set; }
-
     public string? Html { get; set; }
 }
 

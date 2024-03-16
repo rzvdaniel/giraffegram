@@ -50,9 +50,9 @@ public class EmailService(ApiKeyService apiKeyService, ApplicationDbContext dbCo
         return emailHtml;
     }
 
-    public async Task Send(EmailSend emailDto, string apiKey, CancellationToken cancellationToken)
+    public async Task Send(SendEmailCommand emailDto, string apiKey, CancellationToken cancellationToken)
     {
-        var renderedEmail = await GetEmail(emailDto, apiKey, cancellationToken);
+        var renderedEmail = await GetEmail(emailDto.Template, emailDto.Variables, apiKey, cancellationToken);
 
         if (renderedEmail == null)
             return;
@@ -60,7 +60,7 @@ public class EmailService(ApiKeyService apiKeyService, ApplicationDbContext dbCo
         SendRenderedEmail(emailDto, renderedEmail, cancellationToken);
     }
 
-    public void SendRenderedEmail(EmailSend emailDto, EmailRendered renderedEmail, CancellationToken cancellationToken)
+    public void SendRenderedEmail(SendEmailCommand emailDto, FluidEmailResult renderedEmail, CancellationToken cancellationToken)
     {
         var message = new MimeMessage();
         message.From.Add(new MailboxAddress(emailDto.From.Name, emailDto.From.Email));
@@ -82,16 +82,47 @@ public class EmailService(ApiKeyService apiKeyService, ApplicationDbContext dbCo
         client.Disconnect(true, cancellationToken);
     }
 
-    private async Task<EmailRendered?> GetEmail(EmailSend emailDto, string apiKey, CancellationToken cancellationToken)
+    private async Task<FluidEmailResult?> GetEmail(string template, Dictionary<string, string> variables, string apiKey, CancellationToken cancellationToken)
     {
         var userId = await apiKeyService.GetUserId(apiKey, cancellationToken);
 
-        var renderedEmail = await GetAppEmail(emailDto, userId, cancellationToken);
+        var emailTemplate = await dbContext.EmailTemplates.SingleOrDefaultAsync(x => x.Name == template && x.EmailTemplateUsers.Any(x => x.UserId == userId), cancellationToken);
+
+        if (emailTemplate == null)
+            return null;
+
+        var parser = new FluidParser();
+
+        if (!parser.TryParse(emailTemplate.Html, out var htmlTemplate, out var error))
+        {
+            throw new Exception("Could not parse email template body");
+        }
+
+        if (!parser.TryParse(emailTemplate.Subject, out var subjectTemplate, out var subjectError))
+        {
+            throw new Exception("Could not parse email template subject");
+        }
+
+        var context = new TemplateContext();
+
+        foreach (var contextEntry in variables)
+        {
+            context.SetValue(contextEntry.Key, contextEntry.Value);
+        }
+
+        var renderedHtml = htmlTemplate.Render(context);
+        var renderedSubject = subjectTemplate.Render(context);
+
+        var renderedEmail = new FluidEmailResult
+        {
+            Html = renderedHtml,
+            Subject = renderedSubject
+        };
 
         return renderedEmail;
     }
 
-    private async Task<EmailRendered?> GetAppEmail(EmailSend emailDto, Guid userId, CancellationToken cancellationToken)
+    private async Task<FluidEmailResult?> GetAppEmail(SendEmailCommand emailDto, Guid userId, CancellationToken cancellationToken)
     {
         var emailTemplate = await dbContext.EmailTemplates.SingleOrDefaultAsync(x => x.Name == emailDto.Template && x.EmailTemplateUsers.Any(x => x.UserId == userId), cancellationToken);
 
@@ -120,7 +151,7 @@ public class EmailService(ApiKeyService apiKeyService, ApplicationDbContext dbCo
         var renderedHtml = htmlTemplate.Render(context);
         var renderedSubject = subjectTemplate.Render(context);
 
-        var renderedEmail = new EmailRendered
+        var renderedEmail = new FluidEmailResult
         {
             Html = renderedHtml,
             Subject = renderedSubject
