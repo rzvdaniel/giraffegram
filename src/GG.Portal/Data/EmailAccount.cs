@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace GG.Portal.Data;
 
-public class AppEmailTemplateEntity
+public class EmailAccount
 {
     [Key]
     [Required]
@@ -14,12 +14,19 @@ public class AppEmailTemplateEntity
     [MaxLength(256)]
     public required string Name { get; set; }
 
-    public string Subject { get; set; }
+    [Required]
+    [MaxLength(256)]
+    public required string Host { get; set; }
 
-    public string Html { get; set; }
+    [Required]
+    public required int Port { get; set; }
+
+    public bool? UseSsl { get; set; }
 
     [Required]
     public DateTime Created { get; set; }
 
     public DateTime? Updated { get; set; }
+
+    public virtual ICollection<EmailAccountUser> EmailAccountUsers { get; set; }
 }

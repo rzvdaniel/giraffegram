@@ -1,13 +1,12 @@
-﻿using GG.Auth.Entities;
-using GG.Portal.Data;
+﻿using GG.Portal.Data;
 using GG.Portal.Enums;
 using Microsoft.AspNetCore.Identity;
 
 namespace GG.Portal.Services.Account;
 
 public class AccountService(
-    UserManager<ApplicationUser> userManager, 
-    RoleManager<UserRoleEntity> roleManager)
+    UserManager<ApplicationUser> userManager 
+    )
 {
     public async Task<IdentityResult> CreateUser(UserRegistrationCommand userRegistration, CancellationToken cancellationToken)
     {
@@ -145,7 +144,7 @@ public class AccountService(
         return await userManager.GetRolesAsync(user);
     }
     
-    public async Task AddUserToRole(string userId, string roleName)
+    public async Task AddUserToRole(Guid userId, string roleName)
     {
         var user = await GetUserById(userId) ??
             throw new Exception("Error in adding user role!");
@@ -159,21 +158,21 @@ public class AccountService(
 
     public async Task AddUserToRole(Guid userId, Guid roleId)
     {
-        var role = await roleManager.FindByIdAsync(roleId.ToString())
-            ?? throw new ArgumentException("Invalid argument", nameof(roleId));
+        //var role = await roleManager.FindByIdAsync(roleId.ToString())
+        //    ?? throw new ArgumentException("Invalid argument", nameof(roleId));
 
-        if (string.IsNullOrEmpty(role.Name))
-            throw new Exception("Invalid role");
+        //if (string.IsNullOrEmpty(role.Name))
+        //    throw new Exception("Invalid role");
 
-        var user = await GetUserById(userId) ??
-            throw new Exception("Error in adding user role!");
+        //var user = await GetUserById(userId) ??
+        //    throw new Exception("Error in adding user role!");
 
-        var result = await userManager.AddToRoleAsync(user, role.Name);
+        //var result = await userManager.AddToRoleAsync(user, role.Name);
 
-        if (!result.Succeeded)
-        {
-            throw new Exception("Error in Adding Role!");
-        }
+        //if (!result.Succeeded)
+        //{
+        //    throw new Exception("Error in Adding Role!");
+        //}
     }
 
     public async Task RemoveUserRole(Guid userId, string roleName)
@@ -190,20 +189,20 @@ public class AccountService(
 
     public async Task RemoveUserRole(Guid userId, Guid roleId)
     {
-        var role = await roleManager.FindByIdAsync(roleId.ToString())
-            ?? throw new ArgumentException("Invalid argument", nameof(roleId));
+        //var role = await roleManager.FindByIdAsync(roleId.ToString())
+        //    ?? throw new ArgumentException("Invalid argument", nameof(roleId));
 
-        if (string.IsNullOrEmpty(role.Name))
-            throw new Exception("Invalid role");
+        //if (string.IsNullOrEmpty(role.Name))
+        //    throw new Exception("Invalid role");
 
-        var user = await GetUserById(userId) ??
-            throw new Exception("Error in removing user role!");
+        //var user = await GetUserById(userId) ??
+        //    throw new Exception("Error in removing user role!");
 
-        var result = await userManager.RemoveFromRoleAsync(user, role.Name);
+        //var result = await userManager.RemoveFromRoleAsync(user, role.Name);
 
-        if (!result.Succeeded)
-        {
-            throw new Exception("Error in Removing Role!");
-        }
+        //if (!result.Succeeded)
+        //{
+        //    throw new Exception("Error in Removing Role!");
+        //}
     }
 }

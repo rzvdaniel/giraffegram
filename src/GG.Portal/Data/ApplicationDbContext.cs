@@ -1,24 +1,25 @@
+using GG.Portal.Enums;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace GG.Portal.Data
 {
-    public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : IdentityDbContext<ApplicationUser>(options)
+    public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : IdentityDbContext<ApplicationUser, UserRole, Guid>(options)
     {
-        public DbSet<EmailAccountEntity> EmailAccounts => Set<EmailAccountEntity>();
-        public DbSet<EmailAccountUserEntity> EmailAccountUsers => Set<EmailAccountUserEntity>();
-        public DbSet<AppEmailTemplateEntity> AppEmailTemplates => Set<AppEmailTemplateEntity>();
-        public DbSet<EmailTemplateEntity> EmailTemplates => Set<EmailTemplateEntity>();
-        public DbSet<EmailTemplateUserEntity> EmailTemplateUsers => Set<EmailTemplateUserEntity>();
+        public DbSet<EmailAccount> EmailAccounts => Set<EmailAccount>();
+        public DbSet<EmailAccountUser> EmailAccountUsers => Set<EmailAccountUser>();
+        public DbSet<AppEmailTemplate> AppEmailTemplates => Set<AppEmailTemplate>();
+        public DbSet<EmailTemplate> EmailTemplates => Set<EmailTemplate>();
+        public DbSet<EmailTemplateUser> EmailTemplateUsers => Set<EmailTemplateUser>();
         public DbSet<ApiKeyEntity> ApiKeys => Set<ApiKeyEntity>();
-        public DbSet<ApiKeyUserEntity> ApiKeyUsers => Set<ApiKeyUserEntity>();
-        public DbSet<LogEntity> Logs => Set<LogEntity>();
+        public DbSet<ApiKeyUser> ApiKeyUsers => Set<ApiKeyUser>();
+        public DbSet<Log> Logs => Set<Log>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<EmailAccountUserEntity>(entity =>
+            modelBuilder.Entity<EmailAccountUser>(entity =>
             {
                 entity.HasKey(e => new { e.EmailAccountId, e.UserId });
                 entity.HasIndex(e => e.EmailAccountId, "IX_EmailAccountUser_EmailAccountId");
@@ -26,7 +27,7 @@ namespace GG.Portal.Data
                 entity.Property(e => e.EmailAccountId).IsRequired();
             });
 
-            modelBuilder.Entity<EmailTemplateUserEntity>(entity =>
+            modelBuilder.Entity<EmailTemplateUser>(entity =>
             {
                 entity.HasKey(e => new { e.EmailTemplateId, e.UserId });
                 entity.HasIndex(e => e.EmailTemplateId, "IX_EmailTemplateUser_EmailTemplateId");
@@ -34,7 +35,7 @@ namespace GG.Portal.Data
                 entity.Property(e => e.EmailTemplateId).IsRequired();
             });
 
-            modelBuilder.Entity<ApiKeyUserEntity>(entity =>
+            modelBuilder.Entity<ApiKeyUser>(entity =>
             {
                 entity.HasKey(e => new { e.ApiKeyId, e.UserId });
                 entity.HasIndex(e => e.ApiKeyId, "IX_ApiKeyUser_ApiKeyId");

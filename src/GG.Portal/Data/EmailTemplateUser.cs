@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace GG.Portal.Data;
 
-public class EmailTemplateUserEntity
+public class EmailTemplateUser
 {
     [Required]
     public Guid UserId { get; set; }

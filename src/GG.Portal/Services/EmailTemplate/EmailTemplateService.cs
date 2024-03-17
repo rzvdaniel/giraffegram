@@ -44,7 +44,7 @@ public class EmailTemplateService(ApplicationDbContext dbContext)
 
     public async Task<Guid> Create(EmailTemplateCreateCommand emailAccountDto, Guid userId, CancellationToken cancellationToken)
     {
-        var emailTemplate = new EmailTemplateEntity
+        var emailTemplate = new Data.EmailTemplate
         {
             Id = Guid.NewGuid(),
             Name = emailAccountDto.Name,
@@ -55,7 +55,7 @@ public class EmailTemplateService(ApplicationDbContext dbContext)
 
         dbContext.EmailTemplates.Add(emailTemplate);
 
-        var emailTemplateUser = new EmailTemplateUserEntity
+        var emailTemplateUser = new EmailTemplateUser
         {
             EmailTemplateId = emailTemplate.Id,
             UserId = userId

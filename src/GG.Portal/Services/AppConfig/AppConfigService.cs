@@ -6,6 +6,7 @@ public class AppConfigService
 
     public AppConfig AppConfig { get; private set; } = new();
     public EmailConfig EmailConfig { get; private set; } = new();
+    public UserPasswordConfig UserPasswordConfig { get; private set; } = new();
 
     public const string MsSqlDatabaseType = "MsSql";
     public const string MySqlDatabaseType = "MySql";
@@ -15,6 +16,7 @@ public class AppConfigService
         this.configuration = configuration;
         this.configuration.GetSection(nameof(AppConfig)).Bind(AppConfig);
         this.configuration.GetSection(nameof(EmailConfig)).Bind(EmailConfig);
+        this.configuration.GetSection(nameof(UserPasswordConfig)).Bind(UserPasswordConfig);
     }
 
     public bool IsDatabaseTypeMsSql()

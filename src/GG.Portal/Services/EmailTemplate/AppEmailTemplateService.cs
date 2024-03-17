@@ -62,7 +62,7 @@ public class AppEmailTemplateService(ApplicationDbContext dbContext)
 
     public async Task<Guid> Create(EmailTemplateCreateCommand emailAccountDto, CancellationToken cancellationToken)
     {
-        var emailTemplate = new AppEmailTemplateEntity
+        var emailTemplate = new AppEmailTemplate
         {
             Id = Guid.NewGuid(),
             Name = emailAccountDto.Name,

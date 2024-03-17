@@ -69,7 +69,7 @@ public class ApiKeyService(ApplicationDbContext dbContext)
 
         dbContext.ApiKeys.Add(apiKey);
 
-        var apiKeyUser = new ApiKeyUserEntity
+        var apiKeyUser = new ApiKeyUser
         {
             ApiKeyId = apiKey.Id,
             UserId = userId

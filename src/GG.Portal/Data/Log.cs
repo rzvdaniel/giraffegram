@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GG.Portal.Data;
 
-public class LogEntity
+public class Log
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

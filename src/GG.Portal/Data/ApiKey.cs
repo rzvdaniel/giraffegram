@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace GG.Portal.Data;
 
-public class EmailTemplateEntity
+public class ApiKeyEntity
 {
     [Key]
     [Required]
@@ -14,14 +14,14 @@ public class EmailTemplateEntity
     [MaxLength(256)]
     public required string Name { get; set; }
 
-    public string Subject { get; set; }
-
-    public string Html { get; set; }
+    [Required]
+    [MaxLength(256)]
+    public required string Key { get; set; }
 
     [Required]
     public DateTime Created { get; set; }
 
     public DateTime? Updated { get; set; }
 
-    public virtual ICollection<EmailTemplateUserEntity> EmailTemplateUsers { get; set; }
+    public virtual ICollection<ApiKeyUser> ApiKeyUsers { get; set; }
 }

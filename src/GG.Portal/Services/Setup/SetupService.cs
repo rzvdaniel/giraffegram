@@ -1,5 +1,4 @@
-﻿using GG.Auth.Entities;
-using GG.Portal.Data;
+﻿using GG.Portal.Data;
 using GG.Portal.Enums;
 using GG.Portal.Resources;
 using GG.Portal.Services.Account;
@@ -47,7 +46,7 @@ public class SetupService(
         {
             if (!dbContext.Roles.Any(r => r.Name == role))
             {
-                dbContext.Roles.Add(new UserRoleEntity { Name = role, NormalizedName = role.ToUpper() });
+                dbContext.Roles.Add(new UserRole { Name = role, NormalizedName = role.ToUpper() });
             }
         }
 
