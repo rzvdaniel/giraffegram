@@ -83,7 +83,7 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 services.AddIdentityCore<ApplicationUser>(options =>
 {
-    options.SignIn.RequireConfirmedAccount = true;
+    options.SignIn.RequireConfirmedAccount = false;
     options.User.RequireUniqueEmail = true;
     options.Password.RequireDigit = configurationService.UserPasswordConfig.RequireDigit;
     options.Password.RequireLowercase = configurationService.UserPasswordConfig.RequireLowercase;
