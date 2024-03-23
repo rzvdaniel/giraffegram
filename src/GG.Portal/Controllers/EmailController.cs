@@ -6,8 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace GG.Api.Controllers;
 
 [ApiKey]
-[ApiController]
-[Route("api/[controller]")]
 public class EmailController(EmailService emailService) : AppControllerBase
 {
     [HttpPost("send")]
